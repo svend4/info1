@@ -1,0 +1,181 @@
+name: Project Health Metrics
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  calculate-metrics:
+    name: Calculate and Check Health Metrics
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for cycle analysis
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Calculate health metrics
+        id: metrics
+        run: |
+          echo "## 📊 Project Health Metrics (⇑⇓↔)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python3 tools/health_metrics.py --format text >> $GITHUB_STEP_SUMMARY
+
+      - name: Check metric thresholds
+        id: check
+        run: |
+          if python3 tools/health_metrics.py --check-thresholds; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "✅ All metrics within optimal ranges" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "status=warning" >> $GITHUB_OUTPUT
+            echo "⚠️  Some metrics are outside optimal ranges" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Generate visualizations
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🗺️ Project Structure" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          python3 tools/visualize_connections.py --format ascii >> $GITHUB_STEP_SUMMARY || true
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Export metrics as JSON artifact
+        run: |
+          python3 tools/health_metrics.py --format json > metrics.json
+
+      - name: Upload metrics artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: health-metrics
+          path: metrics.json
+          retention-days: 90
+
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const metrics = JSON.parse(fs.readFileSync('metrics.json', 'utf8'));
+
+            let body = '## 📊 Project Health Metrics (⇑⇓↔)\n\n';
+
+            // Format metrics
+            const metricsData = [
+              { name: 'CD (Connectivity Density)', key: 'cd' },
+              { name: 'VT (Vertical Traceability)', key: 'vt' },
+              { name: 'CR (Convergence Rate)', key: 'cr' },
+              { name: 'DB (Directional Balance)', key: 'db' }
+            ];
+
+            for (const m of metricsData) {
+              const data = metrics[m.key];
+              const status = data.status === 'optimal' || data.status === 'excellent' || data.status === 'good' ? '✅' : '⚠️';
+              body += `- **${m.name}**: ${data.value}${data.unit} ${status} (${data.status})\n`;
+            }
+
+            body += `\n**Documents**: ${metrics.metadata.total_documents} | **Connections**: ${metrics.metadata.total_connections} | **Cycles**: ${metrics.metadata.total_cycles}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+  visualize-connections:
+    name: Generate Connection Visualizations
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Generate DOT graph
+        run: |
+          python3 tools/visualize_connections.py --format dot --output graph.dot
+
+      - name: Generate HTML visualization
+        run: |
+          python3 tools/visualize_connections.py --format html --output graph.html
+
+      - name: Generate JSON graph
+        run: |
+          python3 tools/visualize_connections.py --format json --output graph.json
+
+      - name: Upload visualizations
+        uses: actions/upload-artifact@v3
+        with:
+          name: connection-visualizations
+          path: |
+            graph.dot
+            graph.html
+            graph.json
+          retention-days: 90
+
+  track-metrics-over-time:
+    name: Track Metrics History
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Calculate metrics
+        run: |
+          python3 tools/health_metrics.py --format json > current_metrics.json
+
+      - name: Checkout metrics branch
+        run: |
+          git fetch origin metrics-history:metrics-history || git checkout -b metrics-history
+          git checkout metrics-history || git checkout --orphan metrics-history
+
+      - name: Append to history
+        run: |
+          mkdir -p history
+          DATE=$(date +%Y-%m-%d-%H-%M-%S)
+          COMMIT=$(git rev-parse HEAD)
+          cp current_metrics.json history/${DATE}_${COMMIT:0:7}.json
+
+          # Keep only last 100 entries
+          cd history
+          ls -t *.json | tail -n +101 | xargs -r rm
+          cd ..
+
+      - name: Commit and push history
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add history/
+          git commit -m "Update metrics history: $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git push origin metrics-history || echo "Push failed, continuing"
