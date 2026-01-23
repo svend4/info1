@@ -121,7 +121,18 @@ class HealthMetricsCalculator:
     def _extract_links(self, content: str) -> List[str]:
         """Extract markdown links"""
         links = re.findall(r'\[([^\]]+)\]\(([^)]+)\)', content)
-        return [link[1] for link in links if not link[1].startswith('http')]
+        # Filter out HTTP links and anchors-only
+        result = []
+        for link in links:
+            path = link[1]
+            # Skip HTTP/HTTPS links
+            if path.startswith('http://') or path.startswith('https://'):
+                continue
+            # Skip anchor-only links
+            if path.startswith('#'):
+                continue
+            result.append(path)
+        return result
 
     def _extract_connections(self):
         """Extract connections between documents"""
@@ -149,11 +160,33 @@ class HealthMetricsCalculator:
     def _resolve_link(self, source_path: str, link: str) -> Optional[str]:
         """Resolve relative link"""
         try:
+            # Remove anchor if present (path.md#anchor -> path.md)
+            clean_link = link.split('#')[0]
+            if not clean_link:
+                return None
+
             source_dir = Path(source_path).parent
-            target_path = (source_dir / link).resolve()
-            rel_target = target_path.relative_to(self.root)
-            return str(rel_target)
-        except:
+
+            # Try to resolve the link
+            if clean_link.startswith('/'):
+                # Absolute path from root
+                target_path = (self.root / clean_link.lstrip('/')).resolve()
+            else:
+                # Relative path from source directory
+                target_path = (source_dir / clean_link).resolve()
+
+            # Check if path is within project root
+            try:
+                rel_target = target_path.relative_to(self.root.resolve())
+            except ValueError:
+                # Path is outside project root
+                return None
+
+            # Normalize to string with forward slashes
+            rel_target_str = str(rel_target).replace('\\', '/')
+
+            return rel_target_str
+        except Exception:
             return None
 
     def _extract_cycle_data(self):
