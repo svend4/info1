@@ -471,7 +471,7 @@ class CardManager:
         total = len(self.index.by_id)
 
         by_type = {
-            t.value: len(ids)
+            t: len(ids)
             for t, ids in self.index.by_type.items()
         }
 
