@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # CLI приложение
+  cli:
+    build: .
+    container_name: card-system-cli
+    volumes:
+      - cards-data:/data/cards
+    environment:
+      - CARDS_DIR=/data/cards
+    command: bash -c "card-cli list && tail -f /dev/null"
+
+  # Flask API
+  api:
+    build: .
+    container_name: card-system-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - cards-data:/data/cards
+      - ./examples:/app/examples
+    environment:
+      - CARDS_DIR=/data/cards
+      - FLASK_APP=examples/flask_api_example.py
+      - FLASK_ENV=development
+    command: python examples/flask_api_example.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Telegram Bot (опционально)
+  bot:
+    build: .
+    container_name: card-system-bot
+    volumes:
+      - cards-data:/data/cards
+      - ./examples:/app/examples
+    environment:
+      - CARDS_DIR=/data/cards
+      - BOT_TOKEN=${BOT_TOKEN}  # Должна быть установлена в .env файле
+    command: python examples/telegram_bot_example.py
+    restart: unless-stopped
+    profiles:
+      - bot  # Запускается только с флагом --profile bot
+
+  # Automation service (запуск периодических задач)
+  automation:
+    build: .
+    container_name: card-system-automation
+    volumes:
+      - cards-data:/data/cards
+      - ./card_system:/app/card_system
+    environment:
+      - CARDS_DIR=/data/cards
+    command: card-automation --daemon
+    restart: unless-stopped
+
+volumes:
+  cards-data:
+    driver: local
+
+networks:
+  default:
+    name: card-system-network

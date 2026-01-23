@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Test data
+test_cards/
+cards/
+api_cards/
+bot_cards/
+
+# Git
+.git/
+.gitignore
+
+# Documentation (не нужна в образе)
+../../*.md
+../01-Концепция/
+../02-Информационная-система/
+
+# CI/CD
+.github/
+
+# Other
+*.log
+.DS_Store
+Thumbs.db
