@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашняя информационная система</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <h1>🏠 Домашняя информационная система</h1>
+            <p class="tagline">Организуй свою жизнь с помощью умных карточек</p>
+        </header>
+
+        <!-- Навигация -->
+        <nav class="nav">
+            <button class="nav-btn active" data-view="all">📊 Все карточки</button>
+            <button class="nav-btn" data-view="tasks">✓ Задачи</button>
+            <button class="nav-btn" data-view="medicines">💊 Лекарства</button>
+            <button class="nav-btn" data-view="contacts">👤 Контакты</button>
+            <button class="nav-btn" data-view="appointments">📅 Встречи</button>
+            <button class="nav-btn" data-view="shopping">🛒 Покупки</button>
+            <button class="nav-btn" data-view="notes">📝 Заметки</button>
+            <button class="nav-btn" data-view="projects">📁 Проекты</button>
+            <button class="btn-create" id="btnCreateCard">+ Создать карточку</button>
+        </nav>
+
+        <!-- Статистика -->
+        <div class="stats" id="statsContainer">
+            <div class="stat-card">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Всего карточек</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statActive">0</div>
+                <div class="stat-label">Активных</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCompleted">0</div>
+                <div class="stat-label">Завершено</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statOverdue">0</div>
+                <div class="stat-label">Просрочено</div>
+            </div>
+        </div>
+
+        <!-- Фильтры и поиск -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Поиск по карточкам...">
+            </div>
+            <div class="filters">
+                <select id="filterStatus" class="filter-select">
+                    <option value="">Все статусы</option>
+                    <option value="pending">Ожидает</option>
+                    <option value="active">Активно</option>
+                    <option value="completed">Завершено</option>
+                    <option value="cancelled">Отменено</option>
+                </select>
+                <select id="filterPriority" class="filter-select">
+                    <option value="">Все приоритеты</option>
+                    <option value="low">Низкий</option>
+                    <option value="medium">Средний</option>
+                    <option value="high">Высокий</option>
+                </select>
+                <button id="btnRefresh" class="btn-refresh">🔄 Обновить</button>
+            </div>
+        </div>
+
+        <!-- Список карточек -->
+        <main class="cards-container" id="cardsContainer">
+            <div class="loading">Загрузка карточек...</div>
+        </main>
+
+        <!-- Модальное окно для создания/редактирования карточки -->
+        <div class="modal" id="cardModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Создать карточку</h2>
+                    <button class="btn-close" id="btnCloseModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="cardForm">
+                        <!-- Тип карточки -->
+                        <div class="form-group">
+                            <label for="cardType">Тип карточки *</label>
+                            <select id="cardType" required>
+                                <option value="">Выберите тип...</option>
+                                <option value="task">✓ Задача</option>
+                                <option value="medicine">💊 Лекарство</option>
+                                <option value="contact">👤 Контакт</option>
+                                <option value="appointment">📅 Встреча</option>
+                                <option value="shopping">🛒 Покупка</option>
+                                <option value="note">📝 Заметка</option>
+                                <option value="project">📁 Проект</option>
+                            </select>
+                        </div>
+
+                        <!-- Общие поля -->
+                        <div class="form-group">
+                            <label for="cardTitle">Название *</label>
+                            <input type="text" id="cardTitle" required placeholder="Введите название...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardDescription">Описание</label>
+                            <textarea id="cardDescription" rows="3" placeholder="Описание (опционально)..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardStatus">Статус</label>
+                                <select id="cardStatus">
+                                    <option value="pending">Ожидает</option>
+                                    <option value="active">Активно</option>
+                                    <option value="completed">Завершено</option>
+                                    <option value="cancelled">Отменено</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cardPriority">Приоритет</label>
+                                <select id="cardPriority">
+                                    <option value="low">Низкий</option>
+                                    <option value="medium" selected>Средний</option>
+                                    <option value="high">Высокий</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Динамические поля (зависят от типа) -->
+                        <div id="dynamicFields"></div>
+
+                        <div class="form-group">
+                            <label for="cardTags">Теги (через запятую)</label>
+                            <input type="text" id="cardTags" placeholder="работа, срочно, важно">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-secondary" id="btnCancel">Отмена</button>
+                            <button type="submit" class="btn-primary" id="btnSave">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
