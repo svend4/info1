@@ -436,6 +436,190 @@ class RecipeCard(Card):
         return self.prep_time + self.cook_time
 
 
+@dataclass
+class ShoppingCard(Card):
+    """Карточка-покупка"""
+
+    items: List[Dict] = field(default_factory=list)  # [{"name": "Молоко", "quantity": 1, "unit": "л", "checked": False}]
+    store: str = ""
+    estimated_cost: float = 0.0
+
+    def __post_init__(self):
+        self.type = CardType.SHOPPING
+
+    @classmethod
+    def create_shopping(
+        cls,
+        title: str,
+        items: List[Dict] = None,
+        store: str = "",
+        **kwargs
+    ) -> 'ShoppingCard':
+        """Создать карточку покупки"""
+        now = datetime.datetime.now()
+        card_id = cls.generate_id()
+
+        return cls(
+            id=card_id,
+            type=CardType.SHOPPING,
+            title=title,
+            created=now,
+            modified=now,
+            items=items or [],
+            store=store,
+            **kwargs
+        )
+
+    def add_item(self, name: str, quantity: float = 1, unit: str = "", checked: bool = False):
+        """Добавить товар в список"""
+        self.items.append({
+            "name": name,
+            "quantity": quantity,
+            "unit": unit,
+            "checked": checked
+        })
+        self.modified = datetime.datetime.now()
+
+    def check_item(self, index: int):
+        """Отметить товар как купленный"""
+        if 0 <= index < len(self.items):
+            self.items[index]["checked"] = True
+            self.modified = datetime.datetime.now()
+
+    def get_unchecked_items(self) -> List[Dict]:
+        """Получить некупленные товары"""
+        return [item for item in self.items if not item.get("checked", False)]
+
+
+@dataclass
+class ContactCard(Card):
+    """Карточка-контакт"""
+
+    person_name: str = ""
+    phone: str = ""
+    email: str = ""
+    address: str = ""
+    relationship: str = ""  # родственник, друг, врач, сосед и т.д.
+    notes: str = ""
+
+    def __post_init__(self):
+        self.type = CardType.CONTACT
+
+    @classmethod
+    def create_contact(
+        cls,
+        title: str,
+        person_name: str = "",
+        phone: str = "",
+        email: str = "",
+        relationship: str = "",
+        **kwargs
+    ) -> 'ContactCard':
+        """Создать карточку контакта"""
+        now = datetime.datetime.now()
+        card_id = cls.generate_id()
+
+        return cls(
+            id=card_id,
+            type=CardType.CONTACT,
+            title=title,
+            created=now,
+            modified=now,
+            person_name=person_name or title,
+            phone=phone,
+            email=email,
+            relationship=relationship,
+            **kwargs
+        )
+
+
+@dataclass
+class AppointmentCard(Card):
+    """Карточка-встреча"""
+
+    appointment_date: Optional[datetime.datetime] = None
+    duration: int = 60  # минуты
+    location: str = ""
+    participants: List[str] = field(default_factory=list)
+    reminder_time: Optional[datetime.datetime] = None
+
+    def __post_init__(self):
+        self.type = CardType.APPOINTMENT
+
+    @classmethod
+    def create_appointment(
+        cls,
+        title: str,
+        appointment_date: datetime.datetime = None,
+        location: str = "",
+        duration: int = 60,
+        **kwargs
+    ) -> 'AppointmentCard':
+        """Создать карточку встречи"""
+        now = datetime.datetime.now()
+        card_id = cls.generate_id()
+
+        return cls(
+            id=card_id,
+            type=CardType.APPOINTMENT,
+            title=title,
+            created=now,
+            modified=now,
+            appointment_date=appointment_date or now,
+            location=location,
+            duration=duration,
+            **kwargs
+        )
+
+    def is_upcoming(self) -> bool:
+        """Проверить, предстоит ли встреча"""
+        if not self.appointment_date:
+            return False
+        return self.appointment_date > datetime.datetime.now()
+
+    def time_until(self) -> Optional[datetime.timedelta]:
+        """Время до встречи"""
+        if not self.appointment_date:
+            return None
+        return self.appointment_date - datetime.datetime.now()
+
+
+@dataclass
+class NoteCard(Card):
+    """Карточка-заметка"""
+
+    category: str = ""
+    subcategory: str = ""
+
+    def __post_init__(self):
+        self.type = CardType.NOTE
+
+    @classmethod
+    def create_note(
+        cls,
+        title: str,
+        content: str = "",
+        category: str = "",
+        tags: List[str] = None,
+        **kwargs
+    ) -> 'NoteCard':
+        """Создать карточку заметки"""
+        now = datetime.datetime.now()
+        card_id = cls.generate_id()
+
+        return cls(
+            id=card_id,
+            type=CardType.NOTE,
+            title=title,
+            created=now,
+            modified=now,
+            content=content,
+            category=category,
+            tags=tags or [],
+            **kwargs
+        )
+
+
 # Демонстрация использования
 if __name__ == "__main__":
     print("=== Демонстрация карточной системы [α=-4] ===\n")
