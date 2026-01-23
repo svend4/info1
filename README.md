@@ -1,5 +1,11 @@
 # Концепция Информационно-Операционной Системы для Домашнего Использования
 
+![Build Status](https://img.shields.io/github/actions/workflow/status/svend4/info1/tests.yml?branch=main&label=tests)
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.0-orange)
+![Status](https://img.shields.io/badge/status-Production%20Ready-success)
+
 ## 🚀 Быстрая навигация
 
 **Новичок?** → Начните с [Резюме проекта](РЕЗЮМЕ-ПРОЕКТА.md) (5 минут)
