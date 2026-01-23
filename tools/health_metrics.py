@@ -357,6 +357,133 @@ class HealthMetricsCalculator:
 
         return 'unknown'
 
+    def detect_antipatterns(self) -> Dict:
+        """Detect anti-patterns in project structure"""
+        antipatterns = {
+            'orphan_documents': [],
+            'dead_ends': [],
+            'hub_documents': [],
+            'missing_alpha': [],
+            'unbalanced_directions': {},
+            'empty_cycles': [],
+            'isolated_clusters': []
+        }
+
+        # Build connection graph
+        outgoing = defaultdict(list)
+        incoming = defaultdict(list)
+
+        for source, target, conn_type, delta in self.connections:
+            outgoing[source].append(target)
+            incoming[target].append(source)
+
+        # 1. Orphan Documents (no connections at all)
+        for doc_path in self.documents:
+            if doc_path not in outgoing and doc_path not in incoming:
+                antipatterns['orphan_documents'].append({
+                    'path': doc_path,
+                    'title': self.documents[doc_path].get('title', 'Untitled'),
+                    'severity': 'high'
+                })
+
+        # 2. Dead Ends (no outgoing connections)
+        for doc_path in self.documents:
+            if doc_path not in outgoing and doc_path in incoming:
+                antipatterns['dead_ends'].append({
+                    'path': doc_path,
+                    'title': self.documents[doc_path].get('title', 'Untitled'),
+                    'incoming_count': len(incoming[doc_path]),
+                    'severity': 'medium'
+                })
+
+        # 3. Hub Documents (too many connections)
+        HUB_THRESHOLD = 20
+        for doc_path in outgoing:
+            connection_count = len(outgoing[doc_path]) + len(incoming.get(doc_path, []))
+            if connection_count > HUB_THRESHOLD:
+                antipatterns['hub_documents'].append({
+                    'path': doc_path,
+                    'title': self.documents[doc_path].get('title', 'Untitled'),
+                    'connection_count': connection_count,
+                    'severity': 'medium'
+                })
+
+        # 4. Missing Alpha (documents without α-level)
+        for doc_path, doc_info in self.documents.items():
+            if doc_info.get('alpha') is None:
+                antipatterns['missing_alpha'].append({
+                    'path': doc_path,
+                    'title': doc_info.get('title', 'Untitled'),
+                    'severity': 'low'
+                })
+
+        # 5. Unbalanced Directions (check if one direction dominates)
+        up_count = sum(1 for d in self.documents.values() if d.get('direction') == 'up')
+        down_count = sum(1 for d in self.documents.values() if d.get('direction') == 'down')
+        horiz_count = sum(1 for d in self.documents.values() if d.get('direction') == 'horizontal')
+
+        total_directional = up_count + down_count + horiz_count
+        if total_directional > 0:
+            up_pct = (up_count / total_directional) * 100
+            down_pct = (down_count / total_directional) * 100
+            horiz_pct = (horiz_count / total_directional) * 100
+
+            antipatterns['unbalanced_directions'] = {
+                'up': {'count': up_count, 'percentage': round(up_pct, 1)},
+                'down': {'count': down_count, 'percentage': round(down_pct, 1)},
+                'horizontal': {'count': horiz_count, 'percentage': round(horiz_pct, 1)},
+                'severity': 'high' if max(up_pct, down_pct, horiz_pct) > 70 else 'medium'
+            }
+
+        # 6. Empty Cycles (cycles without documents)
+        if self.cycles:
+            all_cycle_nums = set(range(1, self.cycles[-1][0] + 1))
+            existing_cycle_nums = set(c[0] for c in self.cycles)
+            missing_cycles = all_cycle_nums - existing_cycle_nums
+
+            for cycle_num in missing_cycles:
+                antipatterns['empty_cycles'].append({
+                    'cycle': cycle_num,
+                    'severity': 'medium'
+                })
+
+        # 7. Isolated Clusters (documents that only link within a small group)
+        # Simple heuristic: if a document has no path to high-level docs (α≥+2)
+        high_level_docs = [p for p, d in self.documents.items()
+                          if d.get('alpha') and int(d['alpha']) >= 2]
+
+        if high_level_docs:
+            for doc_path in self.documents:
+                # Check if doc can reach any high-level doc
+                can_reach_high = False
+                visited = set()
+                queue = [doc_path]
+
+                while queue and not can_reach_high:
+                    current = queue.pop(0)
+                    if current in visited:
+                        continue
+                    visited.add(current)
+
+                    if current in high_level_docs:
+                        can_reach_high = True
+                        break
+
+                    # Add connected documents to queue
+                    queue.extend(outgoing.get(current, []))
+
+                if not can_reach_high and doc_path not in high_level_docs:
+                    alpha = self.documents[doc_path].get('alpha')
+                    if alpha and int(alpha) < 2:  # Only flag low-level isolated docs
+                        antipatterns['isolated_clusters'].append({
+                            'path': doc_path,
+                            'title': self.documents[doc_path].get('title', 'Untitled'),
+                            'alpha': alpha,
+                            'severity': 'medium'
+                        })
+
+        return antipatterns
+
     def check_thresholds(self) -> bool:
         """Check if all metrics are within optimal ranges"""
         metrics = self.get_all_metrics()
@@ -372,12 +499,15 @@ class HealthMetricsCalculator:
 
         return all_ok
 
-    def format_report(self, format: str = 'text') -> str:
+    def format_report(self, format: str = 'text', include_antipatterns: bool = False) -> str:
         """Format metrics report"""
         metrics = self.get_all_metrics()
 
         if format == 'json':
-            return json.dumps(metrics, indent=2, ensure_ascii=False)
+            result = metrics
+            if include_antipatterns:
+                result['antipatterns'] = self.detect_antipatterns()
+            return json.dumps(result, indent=2, ensure_ascii=False)
 
         # Text format
         lines = [
@@ -433,6 +563,89 @@ class HealthMetricsCalculator:
         lines.append(f"Analysis date: {meta['analysis_date']}")
         lines.append("")
 
+        # Anti-patterns (if requested)
+        if include_antipatterns:
+            antipatterns = self.detect_antipatterns()
+
+            lines.append("=" * 70)
+            lines.append("ANTI-PATTERNS DETECTED")
+            lines.append("=" * 70)
+            lines.append("")
+
+            total_issues = sum(len(v) if isinstance(v, list) else (1 if v else 0)
+                             for v in antipatterns.values())
+
+            if total_issues == 0:
+                lines.append("✅ No anti-patterns detected!")
+                lines.append("")
+            else:
+                lines.append(f"⚠️  Found {total_issues} potential issues\n")
+
+                # 1. Orphan Documents
+                if antipatterns['orphan_documents']:
+                    lines.append(f"🔴 Orphan Documents ({len(antipatterns['orphan_documents'])}):")
+                    lines.append("   Documents with no connections at all")
+                    for item in antipatterns['orphan_documents'][:5]:  # Show first 5
+                        lines.append(f"   - {item['path']}")
+                    if len(antipatterns['orphan_documents']) > 5:
+                        lines.append(f"   ... and {len(antipatterns['orphan_documents']) - 5} more")
+                    lines.append("")
+
+                # 2. Dead Ends
+                if antipatterns['dead_ends']:
+                    lines.append(f"🟡 Dead Ends ({len(antipatterns['dead_ends'])}):")
+                    lines.append("   Documents with no outgoing links")
+                    for item in antipatterns['dead_ends'][:5]:
+                        lines.append(f"   - {item['path']} ({item['incoming_count']} incoming)")
+                    if len(antipatterns['dead_ends']) > 5:
+                        lines.append(f"   ... and {len(antipatterns['dead_ends']) - 5} more")
+                    lines.append("")
+
+                # 3. Hub Documents
+                if antipatterns['hub_documents']:
+                    lines.append(f"🟡 Hub Documents ({len(antipatterns['hub_documents'])}):")
+                    lines.append("   Documents with too many connections (>20)")
+                    for item in antipatterns['hub_documents']:
+                        lines.append(f"   - {item['path']} ({item['connection_count']} connections)")
+                    lines.append("")
+
+                # 4. Missing Alpha
+                if antipatterns['missing_alpha']:
+                    lines.append(f"🟢 Missing α-level ({len(antipatterns['missing_alpha'])}):")
+                    lines.append("   Documents without abstraction level")
+                    for item in antipatterns['missing_alpha'][:5]:
+                        lines.append(f"   - {item['path']}")
+                    if len(antipatterns['missing_alpha']) > 5:
+                        lines.append(f"   ... and {len(antipatterns['missing_alpha']) - 5} more")
+                    lines.append("")
+
+                # 5. Unbalanced Directions
+                if antipatterns['unbalanced_directions']:
+                    ub = antipatterns['unbalanced_directions']
+                    severity_symbol = '🔴' if ub['severity'] == 'high' else '🟡'
+                    lines.append(f"{severity_symbol} Unbalanced Directions:")
+                    lines.append(f"   ⇑ UP: {ub['up']['count']} ({ub['up']['percentage']}%)")
+                    lines.append(f"   ⇓ DOWN: {ub['down']['count']} ({ub['down']['percentage']}%)")
+                    lines.append(f"   ↔ HORIZONTAL: {ub['horizontal']['count']} ({ub['horizontal']['percentage']}%)")
+                    lines.append("")
+
+                # 6. Empty Cycles
+                if antipatterns['empty_cycles']:
+                    lines.append(f"🟡 Empty Cycles ({len(antipatterns['empty_cycles'])}):")
+                    cycles_str = ', '.join(str(c['cycle']) for c in antipatterns['empty_cycles'])
+                    lines.append(f"   Missing: {cycles_str}")
+                    lines.append("")
+
+                # 7. Isolated Clusters
+                if antipatterns['isolated_clusters']:
+                    lines.append(f"🟡 Isolated Clusters ({len(antipatterns['isolated_clusters'])}):")
+                    lines.append("   Low-level docs not connected to high-level architecture")
+                    for item in antipatterns['isolated_clusters'][:5]:
+                        lines.append(f"   - {item['path']} (α={item['alpha']})")
+                    if len(antipatterns['isolated_clusters']) > 5:
+                        lines.append(f"   ... and {len(antipatterns['isolated_clusters']) - 5} more")
+                    lines.append("")
+
         # Overall assessment
         lines.append("=" * 70)
         all_ok = self.check_thresholds()
@@ -467,6 +680,11 @@ def main():
         help='Exit with code 1 if metrics are out of optimal range'
     )
     parser.add_argument(
+        '--detect-antipatterns',
+        action='store_true',
+        help='Include anti-pattern detection in report'
+    )
+    parser.add_argument(
         '--root',
         type=str,
         default='.',
@@ -481,7 +699,7 @@ def main():
 
     # Output
     if args.metric == 'all':
-        print(calculator.format_report(args.format))
+        print(calculator.format_report(args.format, include_antipatterns=args.detect_antipatterns))
     else:
         # Single metric
         metrics = calculator.get_all_metrics()

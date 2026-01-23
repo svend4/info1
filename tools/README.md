@@ -42,6 +42,9 @@ python3 tools/health_metrics.py --format json
 # Проверка соответствия целевым диапазонам (exit code 1 если вне диапазона)
 python3 tools/health_metrics.py --check-thresholds
 
+# Детектирование anti-паттернов ⭐ НОВОЕ в CYCLE 20!
+python3 tools/health_metrics.py --detect-antipatterns
+
 # Для другого проекта
 python3 tools/health_metrics.py --root /path/to/project
 ```
@@ -115,6 +118,109 @@ Analysis date: 2026-01-23T10:30:00
     "total_connections": 112,
     "total_cycles": 15,
     "analysis_date": "2026-01-23T10:30:00"
+  }
+}
+```
+
+### Anti-Pattern Detection ⭐ НОВОЕ в CYCLE 20!
+
+Health metrics теперь может детектировать **7 типов anti-паттернов** в структуре проекта:
+
+```bash
+# Запустить детектирование
+python3 tools/health_metrics.py --detect-antipatterns
+```
+
+#### Типы детектируемых anti-паттернов:
+
+| Anti-Pattern | Описание | Severity |
+|--------------|----------|----------|
+| 🔴 **Orphan Documents** | Документы без связей (ни входящих, ни исходящих) | High |
+| 🟡 **Dead Ends** | Документы без исходящих ссылок | Medium |
+| 🟡 **Hub Documents** | Документы с >20 связями (слишком центральные) | Medium |
+| 🟢 **Missing α-level** | Документы без указанного уровня абстракции | Low |
+| 🔴 **Unbalanced Directions** | Одно направление (⇑⇓↔) доминирует >70% | High/Medium |
+| 🟡 **Empty Cycles** | Пропущенные номера циклов | Medium |
+| 🟡 **Isolated Clusters** | Низкоуровневые документы не связаны с архитектурой | Medium |
+
+#### Пример вывода
+
+```
+======================================================================
+ANTI-PATTERNS DETECTED
+======================================================================
+
+⚠️  Found 77 potential issues
+
+🔴 Orphan Documents (1):
+   Documents with no connections at all
+   - 03-Принципы/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md
+
+🟡 Dead Ends (35):
+   Documents with no outgoing links
+   - DEPLOYMENT.md (7 incoming)
+   - МЕТА-АНАЛИЗ-МЕТОДОЛОГИИ.md (14 incoming)
+   - КАРТА-СВЯЗЕЙ.md (12 incoming)
+   ... and 32 more
+
+🟡 Hub Documents (5):
+   Documents with too many connections (>20)
+   - ДОКУМЕНТАЦИЯ.md (105 connections)  ← Критично много!
+   - README.md (63 connections)
+   ... and 3 more
+
+🔴 Unbalanced Directions:
+   ⇑ UP: 44 (93.6%)      ← Доминирует
+   ⇓ DOWN: 1 (2.1%)      ← Недостаточно
+   ↔ HORIZONTAL: 2 (4.3%) ← Недостаточно
+
+🟡 Empty Cycles (12):
+   Missing: 2, 3, 4, 7, 8, 9, 10, 12, 13, 14, 15, 17
+
+🟡 Isolated Clusters (13):
+   Low-level docs not connected to high-level architecture
+   - DEPLOYMENT.md (α=-2)
+   - 08-Программная-реализация/EXAMPLES.md (α=-3)
+   ... and 11 more
+```
+
+#### Как использовать результаты
+
+1. **Orphan Documents** → Добавьте ссылки на эти документы или удалите их
+2. **Dead Ends** → Добавьте исходящие ссылки на связанные документы
+3. **Hub Documents** → Разбейте большой документ на несколько меньших
+4. **Unbalanced Directions** → Создайте больше документов в недостающих направлениях
+5. **Isolated Clusters** → Свяжите низкоуровневые документы с архитектурой (⇑ ссылки)
+
+#### JSON формат (для CI/CD)
+
+```bash
+python3 tools/health_metrics.py --detect-antipatterns --format json > antipatterns.json
+```
+
+```json
+{
+  "cd": { ... },
+  "vt": { ... },
+  "antipatterns": {
+    "orphan_documents": [
+      {
+        "path": "03-Принципы/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md",
+        "title": "...",
+        "severity": "high"
+      }
+    ],
+    "dead_ends": [...],
+    "hub_documents": [...],
+    "missing_alpha": [...],
+    "unbalanced_directions": {
+      "up": {"count": 44, "percentage": 93.6},
+      "down": {"count": 1, "percentage": 2.1},
+      "horizontal": {"count": 2, "percentage": 4.3},
+      "severity": "high"
+    },
+    "empty_cycles": [...],
+    "isolated_clusters": [...]
   }
 }
 ```
