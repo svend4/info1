@@ -10,6 +10,7 @@
 
 - **health_metrics.py** — автоматический расчёт метрик здоровья проекта (CD, VT, CR, DB)
 - **visualize_connections.py** — визуализация графа связей между документами
+- **dashboard.py** ⭐ — унифицированный CLI dashboard с рекомендациями (НОВОЕ в CYCLE 21!)
 - **CI/CD workflows** — автоматическая проверка метрик при каждом коммите
 
 **Философия:** Методология стала **самоподдерживающейся** — инструменты автоматически проверяют соблюдение принципов ⇑⇓↔.
@@ -425,7 +426,134 @@ top_docs = degrees.most_common(5)
 
 ---
 
-## 3. CI/CD Integration — Автоматическая проверка
+## 3. dashboard.py — Unified Dashboard ⭐ НОВОЕ в CYCLE 21!
+
+### Описание
+
+**Унифицированный CLI-интерфейс**, объединяющий health_metrics.py и visualize_connections.py в единое целое с **приоритизированными рекомендациями**.
+
+**Ключевые возможности:**
+- 📊 **Quick Summary** — моментальный обзор (<10 строк)
+- 📈 **Full Dashboard** — полный отчёт с метриками, anti-паттернами и статистикой
+- 💡 **Prioritized Recommendations** — конкретные действия по улучшению (8 категорий)
+- 📄 **Markdown Export** — экспорт отчёта для документации
+
+### Использование
+
+```bash
+# Быстрый обзор (используйте каждый день!)
+python3 tools/dashboard.py --quick
+
+# Полный отчёт с рекомендациями
+python3 tools/dashboard.py
+
+# Только рекомендации
+python3 tools/dashboard.py --recommendations
+
+# Экспорт в markdown
+python3 tools/dashboard.py --export report.md
+
+# Для другого проекта
+python3 tools/dashboard.py --root /path/to/project
+```
+
+### Пример вывода (--quick)
+
+```
+============================================================
+📊 PROJECT HEALTH SUMMARY (⇑⇓↔)
+============================================================
+
+Documents: 55 | Connections: 306 | Cycles: 7
+
+CD: 20.61% ⚠️ | VT: 23.2% ⚠️ | CR: 1.05 ✅ | DB: 127.91% ❌
+
+Anti-patterns: 78 issues found
+
+Overall: ⚠️  NEEDS ATTENTION
+============================================================
+```
+
+### Пример вывода (--recommendations)
+
+```
+======================================================================
+📋 RECOMMENDATIONS (8)
+======================================================================
+
+1. 🔴 CRITICAL Severe Directional Imbalance
+   DB is 127.91% (target: <30%). One direction dominates.
+   → Balance next cycles: create documents in ⇓ DOWN and ↔ HORIZONTAL
+
+2. 🔴 CRITICAL ⇑ UP dominates (93.6%)
+   Extreme imbalance in development directions
+   → Next 3-5 cycles: minimize ⇑ UP, focus on other directions
+
+3. 🔴 CRITICAL 1 Orphan Document(s)
+   Documents with no connections at all
+   → Add links to/from orphan documents or remove them if obsolete
+
+4. ⚠️  HIGH Low Vertical Traceability
+   VT is 23.2% (target: 50-70%). Weak links between abstraction levels.
+   → Add vertical links (|Δα| ≥ 2): architecture → implementation, philosophy → code
+
+...
+```
+
+### Структура Dashboard
+
+**Full Dashboard состоит из 6 секций:**
+
+1. **📊 HEALTH METRICS** — 4 основные метрики (CD, VT, CR, DB) с визуальной индикацией
+2. **🔴 ANTI-PATTERNS** — детекция 7 типов структурных проблем
+3. **📈 DOCUMENT STATISTICS** — распределение по α-уровням и направлениям
+4. **🔗 CONNECTION STATISTICS** — типы связей (vertical_up/down, horizontal)
+5. **🎯 CYCLE STATISTICS** — активность по циклам
+6. **💡 RECOMMENDATIONS** — приоритизированные действия (CRITICAL → HIGH → MEDIUM → LOW)
+
+### Категории рекомендаций (8 типов)
+
+| Приоритет | Условие | Действие |
+|-----------|---------|----------|
+| 🔴 **CRITICAL** | DB > 50% | Восстановить баланс направлений |
+| 🔴 **CRITICAL** | Одно направление > 70% | Фокус на других направлениях |
+| 🔴 **CRITICAL** | Orphan documents > 0 | Добавить связи или удалить |
+| ⚠️ **HIGH** | VT < 40% | Добавить вертикальные связи |
+| ⚠️ **HIGH** | CD < 5% or CD > 30% | Отрегулировать плотность связей |
+| 🟡 **MEDIUM** | Hub documents (>20 связей) | Разделить на меньшие документы |
+| 🟡 **MEDIUM** | Dead-end documents > 20% | Добавить исходящие ссылки |
+| 🟢 **LOW** | Missing α-level > 5 | Добавить метаданные |
+
+### Интеграция с другими инструментами
+
+Dashboard.py использует:
+- `HealthMetricsCalculator` из health_metrics.py
+- `ProjectAnalyzer` из visualize_connections.py
+
+**Архитектура:**
+
+```
+┌─────────────────────┐
+│  dashboard.py       │  ← Unified Interface
+└─────────────────────┘
+         ↓
+    ┌────┴────┐
+    ↓         ↓
+┌─────────┐ ┌──────────────────┐
+│ health_ │ │ visualize_       │
+│ metrics │ │ connections.py   │
+└─────────┘ └──────────────────┘
+```
+
+**Преимущества dashboard.py:**
+- ✅ Единая точка входа для всех инструментов
+- ✅ Приоритизация проблем (не нужно угадывать, что исправлять)
+- ✅ Быстрый обзор без лишней информации
+- ✅ Экспорт для документации
+
+---
+
+## 4. CI/CD Integration — Автоматическая проверка
 
 ### GitHub Actions (.github/workflows/metrics.yml)
 
@@ -491,7 +619,7 @@ ls history/
 
 ---
 
-## Применение к вашему проекту
+## 5. Применение к вашему проекту
 
 ### Шаг 1: Скопируйте инструменты
 
@@ -542,7 +670,7 @@ health-check:
 
 ---
 
-## Расширенное использование
+## 6. Расширенное использование
 
 ### Pre-commit hook
 
@@ -611,7 +739,7 @@ if __name__ == '__main__':
 
 ---
 
-## Устранение неполадок
+## 7. Устранение неполадок
 
 ### Проблема: "No module named 'pathlib'"
 
@@ -647,7 +775,7 @@ python3 --version  # Должно быть >= 3.4
 
 ---
 
-## Дополнительные ресурсы
+## 8. Дополнительные ресурсы
 
 - [МЕТРИКИ-ЗДОРОВЬЯ.md](../МЕТРИКИ-ЗДОРОВЬЯ.md) — подробное руководство по метрикам
 - [ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md](../ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md) — мета-анализ эволюции
@@ -655,7 +783,7 @@ python3 --version  # Должно быть >= 3.4
 
 ---
 
-## Философское заключение
+## 9. Философское заключение
 
 Эти инструменты завершают **ЭТАП 5: Автоматизация** эволюции методологии ⇑⇓↔.
 

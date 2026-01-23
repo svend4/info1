@@ -35,6 +35,14 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           python3 tools/health_metrics.py --format text >> $GITHUB_STEP_SUMMARY
 
+      - name: Detect anti-patterns ⭐ NEW!
+        id: antipatterns
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 Anti-Pattern Detection" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python3 tools/health_metrics.py --detect-antipatterns >> $GITHUB_STEP_SUMMARY
+
       - name: Check metric thresholds
         id: check
         run: |
@@ -66,6 +74,10 @@ jobs:
           path: metrics.json
           retention-days: 90
 
+      - name: Generate anti-patterns JSON
+        run: |
+          python3 tools/health_metrics.py --detect-antipatterns --format json > antipatterns.json
+
       - name: Comment on PR (if applicable)
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v6
@@ -73,6 +85,13 @@ jobs:
           script: |
             const fs = require('fs');
             const metrics = JSON.parse(fs.readFileSync('metrics.json', 'utf8'));
+
+            let antipatterns = {};
+            try {
+              antipatterns = JSON.parse(fs.readFileSync('antipatterns.json', 'utf8'));
+            } catch (e) {
+              console.log('Anti-patterns file not found, skipping');
+            }
 
             let body = '## 📊 Project Health Metrics (⇑⇓↔)\n\n';
 
@@ -91,6 +110,22 @@ jobs:
             }
 
             body += `\n**Documents**: ${metrics.metadata.total_documents} | **Connections**: ${metrics.metadata.total_connections} | **Cycles**: ${metrics.metadata.total_cycles}`;
+
+            // Add anti-pattern summary if available
+            if (antipatterns.summary) {
+              const sum = antipatterns.summary;
+              body += `\n\n### 🔍 Anti-Patterns Detected\n\n`;
+              body += `- **Total Issues**: ${sum.total_antipatterns}\n`;
+              if (sum.critical_count > 0) {
+                body += `- 🔴 **Critical**: ${sum.critical_count}\n`;
+              }
+              if (sum.high_count > 0) {
+                body += `- ⚠️  **High**: ${sum.high_count}\n`;
+              }
+              if (sum.medium_count > 0) {
+                body += `- 🟡 **Medium**: ${sum.medium_count}\n`;
+              }
+            }
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
