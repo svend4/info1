@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Project Connections Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #graph {
+            width: 100vw;
+            height: 100vh;
+        }
+        .node {
+            stroke: #fff;
+            stroke-width: 2px;
+            cursor: pointer;
+        }
+        .link {
+            stroke-opacity: 0.6;
+        }
+        .link-vertical_up { stroke: blue; }
+        .link-vertical_down { stroke: red; }
+        .link-horizontal { stroke: green; }
+        .link-unknown { stroke: gray; }
+        .tooltip {
+            position: absolute;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="graph"></div>
+    <div class="tooltip"></div>
+
+    <script>
+        const data = {"nodes": [{"id": 0, "name": "Руководство по развертыванию системы", "type": "document", "alpha": "-2", "cycle": null, "path": "DEPLOYMENT.md"}, {"id": 1, "name": "Итоговый обзор проекта", "type": "document", "alpha": "+4", "cycle": 1, "path": "ИТОГОВЫЙ-ОБЗОР-ПРОЕКТА.md"}, {"id": 2, "name": "Мета-анализ методологии параллельного двунаправленного развития", "type": "document", "alpha": "+4", "cycle": 1, "path": "МЕТА-АНАЛИЗ-МЕТОДОЛОГИИ.md"}, {"id": 3, "name": "Карта связей элементов проекта", "type": "map", "alpha": "+4", "cycle": 6, "path": "КАРТА-СВЯЗЕЙ.md"}, {"id": 4, "name": "Contributing — Руководство для контрибьюторов", "type": "document", "alpha": "+4", "cycle": null, "path": "CONTRIBUTING.md"}, {"id": 5, "name": "Roadmap — План развития проекта", "type": "map", "alpha": null, "cycle": 11, "path": "ROADMAP.md"}, {"id": 6, "name": "Quick Start — Быстрый старт за 5 минут", "type": "document", "alpha": null, "cycle": null, "path": "QUICKSTART.md"}, {"id": 7, "name": "Эволюция методологии", "type": "document", "alpha": "+4", "cycle": 1, "path": "ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md"}, {"id": 8, "name": "Концепция Информационно-Операционной Системы для Домашнего Использования", "type": "readme", "alpha": "+4", "cycle": 5, "path": "README.md"}, {"id": 9, "name": "Реализация принципов проектирования в коде", "type": "document", "alpha": "+4", "cycle": null, "path": "ПРИНЦИПЫ-В-КОДЕ.md"}, {"id": 10, "name": "Путеводитель по проекту", "type": "document", "alpha": "+3", "cycle": null, "path": "ПУТЕВОДИТЕЛЬ.md"}, {"id": 11, "name": "Architecture — Архитектура системы", "type": "document", "alpha": "+2", "cycle": null, "path": "ARCHITECTURE.md"}, {"id": 12, "name": "Changelog — История изменений проекта", "type": "changelog", "alpha": "+4", "cycle": 16, "path": "CHANGELOG.md"}, {"id": 13, "name": "Будущее методологии ⇑⇓↔", "type": "document", "alpha": "+4", "cycle": 16, "path": "БУДУЩЕЕ-МЕТОДОЛОГИИ.md"}, {"id": 14, "name": "Резюме проекта", "type": "summary", "alpha": "+4", "cycle": 16, "path": "РЕЗЮМЕ-ПРОЕКТА.md"}, {"id": 15, "name": "Документация проекта — Полный индекс", "type": "document", "alpha": "+4", "cycle": 18, "path": "ДОКУМЕНТАЦИЯ.md"}, {"id": 16, "name": "Визуализация иерархии знаний проекта", "type": "document", "alpha": "+4", "cycle": null, "path": "ВИЗУАЛИЗАЦИЯ-ИЕРАРХИИ.md"}, {"id": 17, "name": "Применение методологии ⇑⇓↔ к другим проектам", "type": "application", "alpha": "+4", "cycle": 1, "path": "ПРИМЕНЕНИЕ-МЕТОДОЛОГИИ.md"}, {"id": 18, "name": "План параллельной двунаправленной разработки документации", "type": "document", "alpha": "+3", "cycle": null, "path": "ПЛАН-РАЗВИТИЯ.md"}, {"id": 19, "name": "Анализ кластеров и паттернов связей [Метауровень]", "type": "document", "alpha": "+4", "cycle": 5, "path": "АНАЛИЗ-КЛАСТЕРОВ-СВЯЗЕЙ.md"}, {"id": 20, "name": "Метрики здоровья проекта — Руководство по CD, VT, CR, DB", "type": "metrics", "alpha": "+4", "cycle": 11, "path": "МЕТРИКИ-ЗДОРОВЬЯ.md"}, {"id": 21, "name": "Методология параллельного двунаправленного развития", "type": "methodology", "alpha": "+4", "cycle": 1, "path": "01-Концепция/МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ.md"}, {"id": 22, "name": "Практический пример применения методологии", "type": "examples", "alpha": "+3", "cycle": null, "path": "01-Концепция/ПРИМЕР-ПРИМЕНЕНИЯ-МЕТОДОЛОГИИ.md"}, {"id": 23, "name": "Принципы и паттерны [α=+1]", "type": "document", "alpha": "+2", "cycle": null, "path": "01-Концепция/ПРИНЦИПЫ-И-ПАТТЕРНЫ.md"}, {"id": 24, "name": "Универсальные законы [α=+2]", "type": "document", "alpha": "+3", "cycle": null, "path": "01-Концепция/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md"}, {"id": 25, "name": "Методология работы с информацией: Двунаправленное развитие знаний", "type": "methodology", "alpha": "+3", "cycle": null, "path": "01-Концепция/МЕТОДОЛОГИЯ-РАБОТЫ-С-ИНФОРМАЦИЕЙ.md"}, {"id": 26, "name": "Онтология систем [α=+4]", "type": "document", "alpha": "+4", "cycle": null, "path": "01-Концепция/ОНТОЛОГИЯ-СИСТЕМ.md"}, {"id": 27, "name": "Философия применимости информационных систем", "type": "philosophy", "alpha": "+4", "cycle": null, "path": "01-Концепция/ФИЛОСОФИЯ-ПРИМЕНИМОСТИ.md"}, {"id": 28, "name": "Философия проекта [α=+3]", "type": "philosophy", "alpha": "+3", "cycle": null, "path": "01-Концепция/ФИЛОСОФИЯ-ПРОЕКТА.md"}, {"id": 29, "name": "Docker — Запуск в контейнере", "type": "readme", "alpha": null, "cycle": null, "path": "08-Программная-реализация/DOCKER-README.md"}, {"id": 30, "name": "Примеры использования карточной системы", "type": "examples", "alpha": "-3", "cycle": null, "path": "08-Программная-реализация/EXAMPLES.md"}, {"id": 31, "name": "API Reference — Карточная система", "type": "api", "alpha": "-2", "cycle": null, "path": "08-Программная-реализация/API-REFERENCE.md"}, {"id": 32, "name": "Карточная система — Программная реализация", "type": "readme", "alpha": "-4", "cycle": null, "path": "08-Программная-реализация/README.md"}, {"id": 33, "name": "Веб-интерфейс домашней информационной системы", "type": "readme", "alpha": "-3", "cycle": null, "path": "08-Программная-реализация/web/README.md"}, {"id": 34, "name": "Card System — Карточная система для домашнего использования", "type": "readme", "alpha": "+3", "cycle": null, "path": "08-Программная-реализация/card_system/README.md"}, {"id": 35, "name": "Концепция распределенной робототехнической системы для домашнего хозяйства", "type": "readme", "alpha": null, "cycle": null, "path": "03-Робототехника-и-автоматизация/README.md"}, {"id": 36, "name": "Исследования и аналитика: Обзор концепций автоматизации домашнего хозяйства", "type": "readme", "alpha": null, "cycle": null, "path": "06-Исследования-и-аналитика/README.md"}, {"id": 37, "name": "УНИВЕРСАЛЬНЫЕ ЗАКОНЫ ПРОЕКТИРОВАНИЯ СИСТЕМ", "type": "document", "alpha": "+4", "cycle": null, "path": "03-Принципы/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md"}, {"id": 38, "name": "УНИВЕРСАЛЬНЫЕ ЗАКОНЫ В КОДЕ CARD SYSTEM", "type": "document", "alpha": "+4", "cycle": null, "path": "03-Принципы/ЗАКОНЫ-В-КОДЕ.md"}, {"id": 39, "name": "Информационная операционная система для домашнего использования", "type": "readme", "alpha": null, "cycle": null, "path": "02-Информационная-система/README.md"}, {"id": 40, "name": "РУКОВОДСТВО ПОЛЬЗОВАТЕЛЯ: КАРТОЧНАЯ СИСТЕМА", "type": "document", "alpha": "-3", "cycle": null, "path": "02-Информационная-система/USER-GUIDE.md"}, {"id": 41, "name": "Технические спецификации карточной системы [α=-1]", "type": "document", "alpha": "0", "cycle": null, "path": "02-Информационная-система/Карточки/ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ.md"}, {"id": 42, "name": "Шаблоны карточек [α=-2]", "type": "document", "alpha": "-1", "cycle": null, "path": "02-Информационная-система/Карточки/ШАБЛОНЫ-КАРТОЧЕК.md"}, {"id": 43, "name": "Примеры карточек-контактов для пожилых людей [α=-3]", "type": "examples", "alpha": "-2", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/04-контакты.md"}, {"id": 44, "name": "Примеры карточек-лекарств для пожилых людей [α=-3]", "type": "examples", "alpha": "-3", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/02-лекарства.md"}, {"id": 45, "name": "Примеры карточек-заметок (NoteCard)", "type": "examples", "alpha": null, "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/07-заметки.md"}, {"id": 46, "name": "Примеры карточек-встреч для пожилых людей [α=-3]", "type": "examples", "alpha": "-2", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/05-встречи.md"}, {"id": 47, "name": "Примеры карточек-покупок для пожилых людей [α=-3]", "type": "examples", "alpha": "-2", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/06-покупки.md"}, {"id": 48, "name": "Примеры карточек-рецептов для пожилых людей [α=-3]", "type": "examples", "alpha": "-1", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/03-рецепты.md"}, {"id": 49, "name": "Примеры карточек-задач для пожилых людей [α=-3]", "type": "examples", "alpha": "-1", "cycle": null, "path": "02-Информационная-система/Карточки/Примеры/01-задачи.md"}, {"id": 50, "name": "Практические примеры применения системы", "type": "examples", "alpha": null, "cycle": null, "path": "07-Практические-примеры/README.md"}, {"id": 51, "name": "Инструменты автоматизации ⇑⇓↔", "type": "readme", "alpha": "+3", "cycle": 5, "path": "tools/README.md"}, {"id": 52, "name": "Бытовые циклы и задания", "type": "readme", "alpha": null, "cycle": null, "path": "04-Бытовые-циклы-и-задания/README.md"}], "links": []};
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3.select("#graph")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        const tooltip = d3.select(".tooltip");
+
+        // Color scheme
+        const colorScale = d3.scaleOrdinal()
+            .domain(['philosophy', 'methodology', 'api', 'examples', 'code', 'readme', 'summary', 'map', 'metrics', 'document'])
+            .range(['#FFE6E6', '#E6F3FF', '#E6FFE6', '#FFF9E6', '#F0F0F0', '#FFE6F0', '#E6E6FF', '#FFFFE6', '#E6FFFF', '#FFFFFF']);
+
+        // Force simulation
+        const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(30));
+
+        // Links
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(data.links)
+            .enter().append("line")
+            .attr("class", d => `link link-${d.type}`)
+            .attr("stroke-width", 2);
+
+        // Nodes
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(data.nodes)
+            .enter().append("circle")
+            .attr("class", "node")
+            .attr("r", 10)
+            .attr("fill", d => colorScale(d.type))
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+            .on("mouseover", function(event, d) {
+                tooltip
+                    .style("opacity", 1)
+                    .html(`<strong>${d.name}</strong><br>Type: ${d.type}<br>α=${d.alpha || 'N/A'}<br>Cycle: ${d.cycle || 'N/A'}<br>${d.path}`);
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 10) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("opacity", 0);
+            });
+
+        // Labels
+        const label = svg.append("g")
+            .selectAll("text")
+            .data(data.nodes)
+            .enter().append("text")
+            .attr("text-anchor", "middle")
+            .attr("dy", -15)
+            .style("font-size", "10px")
+            .text(d => d.name.substring(0, 20));
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+
+            label
+                .attr("x", d => d.x)
+                .attr("y", d => d.y);
+        });
+
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
+    </script>
+</body>
+</html>
