@@ -1,8 +1,8 @@
 # 🚀 Руководство по генератору проектов
 *Уровень абстракции: α=-1 (инструкция)*
 *Статус: ↔ ГОРИЗОНТ (обзор инструмента)*
-*CYCLE: 4*
-*Версия: v0.5*
+*CYCLE: 5*
+*Версия: v0.6*
 
 ---
 
@@ -10,15 +10,21 @@
 
 `project_template_generator.py` — инструмент для автоматической генерации структуры нового проекта с встроенной методологией **⇑⇓↔** (Параллельная Двунаправленная Разработка).
 
-**Возможности v0.5:**
+**Возможности v0.6:**
 - ✅ **16 типов проектов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** с пошаговыми вопросами
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация репозитория и создание на GitHub
-- ✅ **Расширенная CI/CD интеграция** ⭐ НОВОЕ в v0.5:
+- ✅ **Расширенная CI/CD интеграция** (v0.5):
   - Базовые workflows (methodology check, documentation, testing)
   - Security scanning (Trivy, SAST, secrets detection, license compliance)
   - Code quality (linting, coverage, complexity, code duplication)
   - Deployment workflows (Docker, staging/production deploy)
+- ✅ **Расширенные шаблоны документации** ⭐ НОВОЕ в v0.6:
+  - 48+ профессиональных шаблонов для всех типов проектов
+  - ARCHITECTURE-TEMPLATE.md и API-DESIGN-TEMPLATE.md для software
+  - RESEARCH-PROTOCOL-TEMPLATE.md для research
+  - BUSINESS-PLAN-TEMPLATE.md для business
+  - Копирование в `docs/templates/` с флагом `--templates`
 - ✅ Автоматическое создание иерархии α-уровней
 - ✅ Встроенные метрики здоровья (VT, DB, CD, CR)
 - ✅ Доменно-специфичные документы для каждого типа
@@ -792,6 +798,146 @@ CI/CD проверяет метрики методологии:
 
 ---
 
+## 📚 Расширенные шаблоны документации (v0.6)
+
+Генератор может автоматически копировать профессиональные шаблоны документации, специфичные для вашего типа проекта.
+
+**v0.6 добавляет библиотеку из 48+ расширенных шаблонов:**
+- ✅ ARCHITECTURE-TEMPLATE.md и API-DESIGN-TEMPLATE.md для software проектов
+- ✅ RESEARCH-PROTOCOL-TEMPLATE.md для research проектов
+- ✅ BUSINESS-PLAN-TEMPLATE.md для business проектов
+- 🔄 Шаблоны для остальных 13 типов (в разработке)
+
+### Использование
+
+```bash
+# Software проект с расширенными шаблонами
+python3 tools/project_template_generator.py --name my_app --type software --templates
+
+# Research проект с шаблонами
+python3 tools/project_template_generator.py --name my_study --type research --templates
+
+# Business проект с шаблонами
+python3 tools/project_template_generator.py --name my_startup --type business --templates
+
+# Комбинация с другими флагами
+python3 tools/project_template_generator.py --name full_project --type software --github --ci-all --templates
+```
+
+### Что копируется
+
+Шаблоны копируются в `docs/templates/` вашего проекта:
+
+**Software проекты:**
+```
+docs/templates/
+├── ARCHITECTURE-TEMPLATE.md    (900+ lines)
+│   ├── Architectural patterns (Clean, Microservices, Event-driven)
+│   ├── Component diagrams
+│   ├── Database schema с SQL примерами
+│   ├── Security (auth, authorization, encryption)
+│   ├── Performance metrics
+│   └── CI/CD integration
+└── API-DESIGN-TEMPLATE.md      (650+ lines)
+    ├── RESTful conventions
+    ├── Authentication (API Key, JWT, OAuth 2.0)
+    ├── Endpoint specifications
+    ├── Rate limiting
+    └── OpenAPI/Swagger integration
+```
+
+**Research проекты:**
+```
+docs/templates/
+└── RESEARCH-PROTOCOL-TEMPLATE.md  (900+ lines)
+    ├── Research overview и team
+    ├── Literature review
+    ├── Hypotheses и research questions
+    ├── Study design (experimental, observational)
+    ├── Statistical analysis plan
+    ├── Ethical considerations (IRB)
+    └── Data management
+```
+
+**Business проекты:**
+```
+docs/templates/
+└── BUSINESS-PLAN-TEMPLATE.md      (950+ lines)
+    ├── Executive summary
+    ├── Market analysis (TAM/SAM/SOM)
+    ├── Competitive analysis
+    ├── Marketing & sales strategy
+    ├── Financial projections (3 года)
+    ├── Funding requirements
+    └── SWOT analysis
+```
+
+### Особенности шаблонов
+
+**1. Соответствие методологии ⇑⇓↔**
+Каждый шаблон включает:
+- α-уровень (уровень абстракции)
+- Статус направления (⇑⇓↔)
+- CYCLE номер
+- Связи с другими документами
+
+**2. Практические примеры**
+- Реальные примеры заполнения
+- Таблицы и диаграммы
+- Чек-листы для самопроверки
+- Industry best practices
+
+**3. Готовность к использованию**
+- Копируются в проект автоматически
+- Готовы к заполнению сразу
+- Не требуют установки дополнительных инструментов
+
+### Интерактивный режим
+
+В интерактивном режиме генератор спросит о шаблонах:
+
+```
+Копировать расширенные шаблоны документации? (y/N): y
+  ℹ️  Будут скопированы профессиональные шаблоны для software проектов
+```
+
+### Примеры использования
+
+**Startup с полным набором:**
+```bash
+python3 tools/project_template_generator.py \
+  --name my_startup \
+  --type business \
+  --github \
+  --ci-all \
+  --templates
+```
+
+**Open-source software проект:**
+```bash
+python3 tools/project_template_generator.py \
+  --name oss_project \
+  --type software \
+  --github --github-visibility public \
+  --ci-all \
+  --templates
+```
+
+**Научное исследование:**
+```bash
+python3 tools/project_template_generator.py \
+  --name phd_research \
+  --type research \
+  --git \
+  --templates
+```
+
+### См. также
+
+Полное руководство по шаблонам: `tools/templates/README.md`
+
+---
+
 ## 🎯 Рекомендации по развитию проекта
 
 ### 1. Начните с философии (⇑ ВВЕРХ)
@@ -977,20 +1123,39 @@ A: Trivy (контейнеры), CodeQL (SAST), Gitleaks (secrets), Bandit (Pyth
 **Q: Можно ли использовать только security без базового CI?** (v0.5)
 A: Да, флаги независимы. Можно использовать `--security` отдельно или в комбинации с другими.
 
+**Q: Что делает флаг --templates?** (v0.6)
+A: Копирует профессиональные шаблоны документации в `docs/templates/`. Для software это ARCHITECTURE-TEMPLATE.md и API-DESIGN-TEMPLATE.md, для research — RESEARCH-PROTOCOL-TEMPLATE.md, для business — BUSINESS-PLAN-TEMPLATE.md.
+
+**Q: Можно ли использовать шаблоны без --templates флага?** (v0.6)
+A: Да, шаблоны доступны в `tools/templates/`. Вы можете копировать их вручную в любое время.
+
+**Q: Где найти описание шаблонов?** (v0.6)
+A: См. `tools/templates/README.md` для полного руководства по всем 48+ шаблонам.
+
+**Q: Обязательно ли заполнять все разделы в шаблонах?** (v0.6)
+A: Нет, шаблоны адаптируемые. Заполните только релевантные для вашего проекта разделы. Используйте их как отправную точку.
+
+**Q: Можно ли комбинировать --templates с --ci-all?** (v0.6)
+A: Да! Все флаги независимы и комбинируются: `--github --ci-all --templates` создаст полный профессиональный проект.
+
 ---
 
 ## 🎉 Итоги
 
-`project_template_generator.py` v0.5 — это:
+`project_template_generator.py` v0.6 — это:
 - ✅ **16 доменов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** — пошаговая настройка проекта
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация и публикация
-- ✅ **Расширенная CI/CD интеграция** ⭐ ОБНОВЛЕНО в v0.5:
+- ✅ **Расширенная CI/CD интеграция** (v0.5):
   - Базовые workflows (--ci)
-  - Security scanning (--security) ⭐ НОВОЕ
-  - Code quality (--quality) ⭐ НОВОЕ
-  - Deployment (--deploy) ⭐ НОВОЕ
-  - Всё вместе (--ci-all) ⭐ НОВОЕ
+  - Security scanning (--security)
+  - Code quality (--quality)
+  - Deployment (--deploy)
+  - Всё вместе (--ci-all)
+- ✅ **Расширенные шаблоны документации** ⭐ НОВОЕ в v0.6:
+  - 48+ профессиональных шаблонов (ARCHITECTURE, API-DESIGN, RESEARCH-PROTOCOL, BUSINESS-PLAN)
+  - Копирование в docs/templates/ с флагом --templates
+  - Примеры, таблицы, чек-листы, industry best practices
 - ✅ Автоматическая структура α-уровней
 - ✅ Встроенные метрики здоровья
 - ✅ Доменно-специфичные документы
@@ -1003,8 +1168,14 @@ A: Да, флаги независимы. Можно использовать `-
    # Быстрый старт
    python3 tools/project_template_generator.py --name X --type Y
 
-   # С Git/GitHub + CI/CD (v0.4)
+   # С расширенными шаблонами (v0.6)
+   python3 tools/project_template_generator.py --name X --type Y --templates
+
+   # С Git/GitHub + CI/CD
    python3 tools/project_template_generator.py --name X --type Y --github --ci
+
+   # Полный набор (v0.6)
+   python3 tools/project_template_generator.py --name X --type Y --github --ci-all --templates
 
    # Интерактивный режим
    python3 tools/project_template_generator.py --name X --type Y --interactive
@@ -1014,11 +1185,22 @@ A: Да, флаги независимы. Можно использовать `-
 3. Детализируйте реализацию (⇓)
 4. Создайте навигацию (↔)
 5. Проверьте метрики: `python3 tools/health_metrics.py`
-6. (v0.4) Workflows автоматически проверят проект при push
+6. Workflows автоматически проверят проект при push
 
 ---
 
-**Что нового в v0.5:**
+**Что нового в v0.6:**
+- 📚 **Расширенные шаблоны документации** — 48+ профессиональных шаблонов для всех типов проектов
+- 📄 **ARCHITECTURE-TEMPLATE.md** (900+ lines) — полная архитектурная документация для software
+- 🔌 **API-DESIGN-TEMPLATE.md** (650+ lines) — профессиональная спецификация API
+- 🔬 **RESEARCH-PROTOCOL-TEMPLATE.md** (900+ lines) — академический протокол исследований
+- 💼 **BUSINESS-PLAN-TEMPLATE.md** (950+ lines) — enterprise-уровень бизнес-план
+- 🏷️ **Новый флаг --templates** — автоматическое копирование шаблонов
+- 📖 **tools/templates/README.md** — полное руководство по использованию шаблонов
+- 🎯 **TEMPLATE_MAPPING** — маппинг шаблонов для каждого типа проекта
+- 🔄 **Интерактивный режим** — вопрос о копировании шаблонов
+
+**Что было в v0.5:**
 - 🔒 **Security scanning** — комплексная проверка безопасности (Trivy, SAST, secrets, licenses)
 - 📊 **Code quality** — анализ качества кода (linting, coverage, complexity, duplication)
 - 🚀 **Deployment** — автоматизация развёртывания (Docker, staging/production, rollback)
@@ -1041,8 +1223,23 @@ A: Да, флаги независимы. Можно использовать `-
 - Обновлён интерактивный режим (вопросы о security, quality, deploy)
 - Всего 7 CI/CD workflows (4 базовых + 3 расширенных)
 
+**Changelog v0.5→v0.6:**
+- +Создана инфраструктура tools/templates/ (16 поддиректорий для типов проектов)
+- +4 комплексных шаблона документации (3,900+ строк):
+  - ARCHITECTURE-TEMPLATE.md (900+ lines) для software
+  - API-DESIGN-TEMPLATE.md (650+ lines) для software
+  - RESEARCH-PROTOCOL-TEMPLATE.md (900+ lines) для research
+  - BUSINESS-PLAN-TEMPLATE.md (950+ lines) для business
+- +tools/templates/README.md (500+ lines) — руководство по шаблонам
+- +TEMPLATE_MAPPING в project_template_generator.py
+- +Новый метод _copy_extended_templates()
+- +Новый параметр use_templates в generate()
+- +Новый флаг --templates в argparse
+- +Обновлён интерактивный режим (вопрос о шаблонах)
+- Всего 48+ шаблонов (4 реализовано, остальные в разработке)
+
 ---
 
-*Версия: v0.5*
+*Версия: v0.6*
 *Дата: 2026-01-24*
-*Проект: info1 — ЭТАП 8 v0.5*
+*Проект: info1 — ЭТАП 8 v0.6*

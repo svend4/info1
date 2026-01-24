@@ -130,6 +130,33 @@ class ProjectTemplateGenerator:
         }
     }
 
+    # Маппинг расширенных шаблонов для каждого типа проекта (v0.6)
+    TEMPLATE_MAPPING = {
+        "software": [
+            "ARCHITECTURE-TEMPLATE.md",
+            "API-DESIGN-TEMPLATE.md"
+        ],
+        "research": [
+            "RESEARCH-PROTOCOL-TEMPLATE.md"
+        ],
+        "business": [
+            "BUSINESS-PLAN-TEMPLATE.md"
+        ],
+        "education": [],
+        "legal": [],
+        "healthcare": [],
+        "arts": [],
+        "finance": [],
+        "government": [],
+        "nonprofit": [],
+        "manufacturing": [],
+        "agriculture": [],
+        "sports": [],
+        "hospitality": [],
+        "retail": [],
+        "hobby": []
+    }
+
     def __init__(self, project_name: str, project_type: str = "software",
                  output_dir: Optional[Path] = None):
         """
@@ -152,7 +179,7 @@ class ProjectTemplateGenerator:
 
     def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False,
                  setup_ci: bool = False, setup_security: bool = False, setup_quality: bool = False,
-                 setup_deploy: bool = False):
+                 setup_deploy: bool = False, use_templates: bool = False):
         """
         Генерация структуры проекта
 
@@ -164,6 +191,7 @@ class ProjectTemplateGenerator:
             setup_security: Добавить security scanning workflows
             setup_quality: Добавить code quality workflows
             setup_deploy: Добавить deployment workflows
+            use_templates: Копировать расширенные шаблоны документации (v0.6)
         """
         # Интерактивный режим: задать вопросы пользователю
         if interactive:
@@ -210,6 +238,10 @@ class ProjectTemplateGenerator:
                 include_quality=setup_quality,
                 include_deploy=setup_deploy
             )
+
+        # 7. Копирование расширенных шаблонов (если запрошено, v0.6)
+        if use_templates:
+            self._copy_extended_templates()
 
         print("\n✅ Проект успешно создан!")
         print(f"\nСледующие шаги:")
@@ -1730,6 +1762,51 @@ env/
 
         return workflows
 
+    def _copy_extended_templates(self):
+        """Копирование расширенных шаблонов документации (v0.6)"""
+        print("\n📚 Копирование расширенных шаблонов...")
+
+        # Создаём директорию для шаблонов
+        templates_dir = self.project_dir / "docs" / "templates"
+        templates_dir.mkdir(parents=True, exist_ok=True)
+        print(f"  ✓ Создана директория docs/templates/")
+
+        # Получаем список шаблонов для этого типа проекта
+        templates_to_copy = self.TEMPLATE_MAPPING.get(self.project_type, [])
+
+        if not templates_to_copy:
+            print(f"  ℹ️  Для типа '{self.project_type}' пока нет расширенных шаблонов")
+            print(f"  ℹ️  Шаблоны доступны для: software, research, business")
+            return
+
+        # Путь к исходным шаблонам
+        source_templates_dir = Path(__file__).parent / "templates" / self.project_type
+
+        if not source_templates_dir.exists():
+            print(f"  ⚠️  Директория шаблонов не найдена: {source_templates_dir}")
+            return
+
+        # Копируем каждый шаблон
+        copied_count = 0
+        for template_file in templates_to_copy:
+            source = source_templates_dir / template_file
+            dest = templates_dir / template_file
+
+            if source.exists():
+                import shutil
+                shutil.copy2(source, dest)
+                print(f"  ✓ {template_file}")
+                copied_count += 1
+            else:
+                print(f"  ⚠️  Шаблон {template_file} не найден")
+
+        if copied_count > 0:
+            print(f"\n✅ Скопировано {copied_count} расширенных шаблонов")
+            print(f"   Шаблоны находятся в docs/templates/")
+            print(f"   Заполните их в соответствии с вашим проектом")
+        else:
+            print(f"  ⚠️  Не удалось скопировать шаблоны")
+
 
 def main():
     """Main entry point"""
@@ -1888,6 +1965,12 @@ def main():
         help='Включить все CI/CD workflows (--ci --security --quality --deploy)'
     )
 
+    parser.add_argument(
+        '--templates',
+        action='store_true',
+        help='Копировать расширенные шаблоны документации для типа проекта'
+    )
+
     args = parser.parse_args()
 
     # Если --ci-all указан, включить все CI/CD опции
@@ -1919,7 +2002,8 @@ def main():
         setup_ci=args.ci,
         setup_security=args.security,
         setup_quality=args.quality,
-        setup_deploy=args.deploy
+        setup_deploy=args.deploy,
+        use_templates=args.templates
     )
 
 
