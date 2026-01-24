@@ -150,7 +150,9 @@ class ProjectTemplateGenerator:
             raise ValueError(f"Неизвестный тип проекта: {project_type}. "
                            f"Доступные: {', '.join(self.PROJECT_TYPES.keys())}")
 
-    def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False, setup_ci: bool = False):
+    def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False,
+                 setup_ci: bool = False, setup_security: bool = False, setup_quality: bool = False,
+                 setup_deploy: bool = False):
         """
         Генерация структуры проекта
 
@@ -159,6 +161,9 @@ class ProjectTemplateGenerator:
             init_git: Инициализировать git репозиторий
             create_github_repo: Создать GitHub репозиторий (требует gh CLI)
             setup_ci: Настроить CI/CD (GitHub Actions workflows)
+            setup_security: Добавить security scanning workflows
+            setup_quality: Добавить code quality workflows
+            setup_deploy: Добавить deployment workflows
         """
         # Интерактивный режим: задать вопросы пользователю
         if interactive:
@@ -170,6 +175,12 @@ class ProjectTemplateGenerator:
                 create_github_repo = self._create_github
             if hasattr(self, '_setup_ci'):
                 setup_ci = self._setup_ci
+            if hasattr(self, '_setup_security'):
+                setup_security = self._setup_security
+            if hasattr(self, '_setup_quality'):
+                setup_quality = self._setup_quality
+            if hasattr(self, '_setup_deploy'):
+                setup_deploy = self._setup_deploy
 
         print(f"🚀 Генерация проекта: {self.project_name}")
         print(f"📦 Тип: {self.PROJECT_TYPES[self.project_type]['name']}")
@@ -192,17 +203,26 @@ class ProjectTemplateGenerator:
             self._setup_git_integration(init_git=init_git, create_github=create_github_repo)
 
         # 6. CI/CD интеграция (если запрошено)
-        if setup_ci:
-            self._setup_cicd_integration()
+        if setup_ci or setup_security or setup_quality or setup_deploy:
+            self._setup_cicd_integration(
+                include_basic=setup_ci,
+                include_security=setup_security,
+                include_quality=setup_quality,
+                include_deploy=setup_deploy
+            )
 
         print("\n✅ Проект успешно создан!")
         print(f"\nСледующие шаги:")
         print(f"  1. cd {self.project_name}")
         print(f"  2. Отредактируйте README.md с описанием проекта")
         print(f"  3. Запустите: python3 tools/health_metrics.py")
-        if setup_ci:
+        if setup_ci or setup_security or setup_quality or setup_deploy:
             print(f"  4. Проверьте GitHub Actions workflows в .github/workflows/")
-            print(f"  5. Начните развивать проект по методологии ⇑⇓↔\n")
+            if setup_security:
+                print(f"  5. Настройте security scanning в GitHub Security settings")
+            if setup_deploy:
+                print(f"  6. Настройте deployment secrets и environments в GitHub")
+            print(f"  7. Начните развивать проект по методологии ⇑⇓↔\n")
         else:
             print(f"  4. Начните развивать проект по методологии ⇑⇓↔\n")
 
@@ -1504,11 +1524,30 @@ python3 health_metrics.py
             self._create_github = False
 
         # 4. CI/CD интеграция
-        setup_ci = input("Настроить CI/CD (GitHub Actions)? (y/N): ").strip().lower()
+        setup_ci = input("Настроить базовые CI/CD workflows? (y/N): ").strip().lower()
         self._setup_ci = setup_ci == 'y'
 
         if self._setup_ci:
-            print("  ℹ️  Будут созданы GitHub Actions workflows для автоматического тестирования")
+            print("  ℹ️  Базовые workflows: methodology check, documentation check, тестирование")
+
+        # 4.1. Расширенные CI/CD опции (v0.5)
+        setup_security = input("Добавить security scanning workflows? (Trivy, SAST) (y/N): ").strip().lower()
+        self._setup_security = setup_security == 'y'
+
+        if self._setup_security:
+            print("  ℹ️  Security: уязвимости, secrets detection, SAST, license compliance")
+
+        setup_quality = input("Добавить code quality workflows? (linting, coverage) (y/N): ").strip().lower()
+        self._setup_quality = setup_quality == 'y'
+
+        if self._setup_quality:
+            print("  ℹ️  Quality: code analysis, coverage, complexity, documentation quality")
+
+        setup_deploy = input("Добавить deployment workflows? (Docker, staging, production) (y/N): ").strip().lower()
+        self._setup_deploy = setup_deploy == 'y'
+
+        if self._setup_deploy:
+            print("  ℹ️  Deployment: Docker images, staging/production deploy, rollback")
 
         # 5. Подтверждение
         print("\n" + "=" * 60)
@@ -1520,6 +1559,12 @@ python3 health_metrics.py
         if self._init_git and self._create_github:
             print(f"  GitHub repo:  Да ({self._github_visibility})")
         print(f"  CI/CD:        {'Да' if self._setup_ci else 'Нет'}")
+        if hasattr(self, '_setup_security') and self._setup_security:
+            print(f"  Security:     Да")
+        if hasattr(self, '_setup_quality') and self._setup_quality:
+            print(f"  Quality:      Да")
+        if hasattr(self, '_setup_deploy') and self._setup_deploy:
+            print(f"  Deployment:   Да")
         print()
 
         confirm = input("Продолжить создание проекта? (Y/n): ").strip().lower()
@@ -1611,7 +1656,8 @@ env/
         finally:
             os.chdir(original_dir)
 
-    def _setup_cicd_integration(self):
+    def _setup_cicd_integration(self, include_basic: bool = True, include_security: bool = False,
+                                include_quality: bool = False, include_deploy: bool = False):
         """Настройка CI/CD (GitHub Actions workflows)"""
         print("\n⚙️  Настройка CI/CD...")
 
@@ -1621,7 +1667,12 @@ env/
         print(f"  ✓ Создана директория .github/workflows/")
 
         # Определяем, какие workflows нужны для этого типа проекта
-        workflows_to_copy = self._get_cicd_workflows_for_type()
+        workflows_to_copy = self._get_cicd_workflows_for_type(
+            include_basic=include_basic,
+            include_security=include_security,
+            include_quality=include_quality,
+            include_deploy=include_deploy
+        )
 
         # Путь к CI шаблонам
         ci_templates_dir = Path(__file__).parent / "ci_templates"
@@ -1645,36 +1696,39 @@ env/
         else:
             print(f"  ⚠️  Не удалось скопировать workflows")
 
-    def _get_cicd_workflows_for_type(self) -> list:
+    def _get_cicd_workflows_for_type(self, include_basic: bool = True, include_security: bool = False,
+                                     include_quality: bool = False, include_deploy: bool = False) -> list:
         """Определяет, какие CI/CD workflows нужны для типа проекта"""
 
-        # Универсальные workflows для всех типов
-        common_workflows = [
-            "methodology_check.yml",
-            "documentation_check.yml"
-        ]
+        workflows = []
 
-        # Специфичные workflows для типов проектов
-        type_specific = {
-            "software": common_workflows + ["software_ci.yml"],
-            "research": common_workflows + ["research_ci.yml"],
-            "business": common_workflows,
-            "education": common_workflows,
-            "legal": common_workflows,
-            "healthcare": common_workflows,
-            "arts": common_workflows,
-            "finance": common_workflows,
-            "government": common_workflows,
-            "nonprofit": common_workflows,
-            "manufacturing": common_workflows,
-            "agriculture": common_workflows,
-            "sports": common_workflows,
-            "hospitality": common_workflows,
-            "retail": common_workflows,
-            "hobby": common_workflows
-        }
+        # Базовые workflows (если запрошены)
+        if include_basic:
+            # Универсальные workflows для всех типов
+            workflows.extend([
+                "methodology_check.yml",
+                "documentation_check.yml"
+            ])
 
-        return type_specific.get(self.project_type, common_workflows)
+            # Специфичные workflows для типов проектов
+            if self.project_type == "software":
+                workflows.append("software_ci.yml")
+            elif self.project_type == "research":
+                workflows.append("research_ci.yml")
+
+        # Security scanning workflows (v0.5)
+        if include_security:
+            workflows.append("security_scan.yml")
+
+        # Code quality workflows (v0.5)
+        if include_quality:
+            workflows.append("code_quality.yml")
+
+        # Deployment workflows (v0.5)
+        if include_deploy:
+            workflows.append("deployment.yml")
+
+        return workflows
 
 
 def main():
@@ -1807,10 +1861,41 @@ def main():
         '--cicd',
         action='store_true',
         dest='ci',
-        help='Настроить CI/CD (GitHub Actions workflows)'
+        help='Настроить базовые CI/CD workflows (methodology, documentation, testing)'
+    )
+
+    parser.add_argument(
+        '--security',
+        action='store_true',
+        help='Добавить security scanning workflows (Trivy, SAST, secrets detection)'
+    )
+
+    parser.add_argument(
+        '--quality',
+        action='store_true',
+        help='Добавить code quality workflows (linting, coverage, complexity)'
+    )
+
+    parser.add_argument(
+        '--deploy',
+        action='store_true',
+        help='Добавить deployment workflows (Docker, staging, production)'
+    )
+
+    parser.add_argument(
+        '--ci-all',
+        action='store_true',
+        help='Включить все CI/CD workflows (--ci --security --quality --deploy)'
     )
 
     args = parser.parse_args()
+
+    # Если --ci-all указан, включить все CI/CD опции
+    if args.ci_all:
+        args.ci = True
+        args.security = True
+        args.quality = True
+        args.deploy = True
 
     # Если --github указан, автоматически включить --git
     if args.github:
@@ -1831,7 +1916,10 @@ def main():
         interactive=args.interactive,
         init_git=args.git,
         create_github_repo=args.github,
-        setup_ci=args.ci
+        setup_ci=args.ci,
+        setup_security=args.security,
+        setup_quality=args.quality,
+        setup_deploy=args.deploy
     )
 
 

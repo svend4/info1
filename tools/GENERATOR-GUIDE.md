@@ -1,8 +1,8 @@
 # 🚀 Руководство по генератору проектов
 *Уровень абстракции: α=-1 (инструкция)*
 *Статус: ↔ ГОРИЗОНТ (обзор инструмента)*
-*CYCLE: 3*
-*Версия: v0.4*
+*CYCLE: 4*
+*Версия: v0.5*
 
 ---
 
@@ -10,11 +10,15 @@
 
 `project_template_generator.py` — инструмент для автоматической генерации структуры нового проекта с встроенной методологией **⇑⇓↔** (Параллельная Двунаправленная Разработка).
 
-**Возможности v0.4:**
+**Возможности v0.5:**
 - ✅ **16 типов проектов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** с пошаговыми вопросами
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация репозитория и создание на GitHub
-- ✅ **CI/CD интеграция** — GitHub Actions workflows для автоматического тестирования ⭐ НОВОЕ
+- ✅ **Расширенная CI/CD интеграция** ⭐ НОВОЕ в v0.5:
+  - Базовые workflows (methodology check, documentation, testing)
+  - Security scanning (Trivy, SAST, secrets detection, license compliance)
+  - Code quality (linting, coverage, complexity, code duplication)
+  - Deployment workflows (Docker, staging/production deploy)
 - ✅ Автоматическое создание иерархии α-уровней
 - ✅ Встроенные метрики здоровья (VT, DB, CD, CR)
 - ✅ Доменно-специфичные документы для каждого типа
@@ -625,18 +629,37 @@ python3 tools/project_template_generator.py --name community --type nonprofit --
 
 ---
 
-## ⚙️ CI/CD интеграция (v0.4)
+## ⚙️ CI/CD интеграция (v0.4 → v0.5)
 
 ### Автоматическое тестирование
 
 Генератор может автоматически настроить CI/CD с помощью GitHub Actions workflows.
 
+**v0.5 расширяет возможности CI/CD:**
+- Базовые workflows (--ci)
+- Security scanning (--security) ⭐ НОВОЕ
+- Code quality analysis (--quality) ⭐ НОВОЕ
+- Deployment automation (--deploy) ⭐ НОВОЕ
+- Всё вместе (--ci-all) ⭐ НОВОЕ
+
 ```bash
-# С CI/CD
+# Базовые CI/CD workflows
 python3 tools/project_template_generator.py --name my_project --type software --ci
 
-# С Git + GitHub + CI/CD
-python3 tools/project_template_generator.py --name my_project --type software --github --ci
+# С security scanning
+python3 tools/project_template_generator.py --name secure_app --type software --security
+
+# С code quality анализом
+python3 tools/project_template_generator.py --name quality_project --type software --quality
+
+# С deployment automation
+python3 tools/project_template_generator.py --name web_service --type software --deploy
+
+# Всё вместе (6 workflows)
+python3 tools/project_template_generator.py --name full_stack --type software --ci-all
+
+# Комбинации
+python3 tools/project_template_generator.py --name app --type software --ci --security --quality
 ```
 
 ### Что создаётся
@@ -677,10 +700,40 @@ python3 tools/project_template_generator.py --name my_project --type software --
   - Проверка репродуцируемости (requirements.txt)
   - Проверка исследовательской документации (HYPOTHESIS.md, METHODOLOGY.md)
 
+**Расширенные workflows (v0.5):**
+
+**Security Scanning (--security):**
+- **security_scan.yml** — комплексная проверка безопасности
+  - **Dependency scanning:** Trivy для файловой системы, Safety для Python, npm audit
+  - **SAST (Static Analysis):** CodeQL, Bandit для Python, ESLint security plugin
+  - **Secrets detection:** Gitleaks для поиска секретов в коде и истории Git
+  - **Container scanning:** Trivy для Docker images, Hadolint для Dockerfile
+  - **License compliance:** проверка лицензий зависимостей (pip-licenses, license-checker)
+  - **Security summary:** агрегированный отчёт по всем проверкам
+
+**Code Quality (--quality):**
+- **code_quality.yml** — анализ качества кода
+  - **Code analysis:** Flake8, Pylint, MyPy, Black, isort для Python
+  - **Code coverage:** pytest-cov с порогом 70%, загрузка в Codecov
+  - **Code complexity:** Radon для расчёта цикломатической сложности
+  - **Code duplication:** CPD (Copy-Paste Detector) для поиска дублирования
+  - **Documentation quality:** pydocstyle для docstrings, markdownlint для .md файлов
+  - **Methodology compliance:** проверка α-уровней и директивных статусов
+
+**Deployment (--deploy):**
+- **deployment.yml** — автоматизация развёртывания
+  - **Build & Push:** Docker образы в GitHub Container Registry (ghcr.io)
+  - **Staging deployment:** автоматический deploy в staging при push в main/master
+  - **Production deployment:** deploy в production при создании тега (v*)
+  - **Smoke tests:** базовые проверки после deployment
+  - **Rollback:** возможность отката при сбое
+  - **Manual trigger:** ручной запуск через workflow_dispatch
+
 ### Примеры использования
 
+**Базовые (v0.4):**
 ```bash
-# Software проект с полным CI/CD
+# Software проект с базовым CI/CD
 python3 tools/project_template_generator.py --name web_app --type software --github --ci
 
 # Research проект с валидацией данных
@@ -688,6 +741,27 @@ python3 tools/project_template_generator.py --name experiment --type research --
 
 # Hobby проект с базовыми проверками
 python3 tools/project_template_generator.py --name photography --type hobby --ci
+```
+
+**Расширенные (v0.5):**
+```bash
+# Безопасный проект с security scanning
+python3 tools/project_template_generator.py --name secure_app --type software --ci --security
+
+# Высококачественный проект с code quality checks
+python3 tools/project_template_generator.py --name quality_code --type software --ci --quality
+
+# Production-ready проект с deployment
+python3 tools/project_template_generator.py --name production_service --type software --ci --deploy
+
+# Enterprise проект со всеми workflows (6 файлов)
+python3 tools/project_template_generator.py --name enterprise_app --type software --ci-all
+
+# Комбинированная настройка
+python3 tools/project_template_generator.py --name api_service --type software --github --ci --security --deploy
+
+# Публичный open-source проект с полным CI/CD
+python3 tools/project_template_generator.py --name oss_project --type software --github --github-visibility public --ci-all
 ```
 
 ### Триггеры workflows
@@ -884,15 +958,39 @@ A: Универсальные (проверка методологии и док
 **Q: Будут ли workflows работать без GitHub?**
 A: Workflows используют GitHub Actions, поэтому требуют GitHub репозиторий. Для локального CI можно адаптировать workflows.
 
+**Q: Чем отличаются --ci, --security, --quality, --deploy?** (v0.5)
+A: Это разные наборы workflows:
+  - `--ci` — базовые (methodology, documentation, testing)
+  - `--security` — проверка безопасности (уязвимости, secrets, SAST)
+  - `--quality` — качество кода (linting, coverage, complexity)
+  - `--deploy` — автоматизация развёртывания (Docker, staging, production)
+
+**Q: Как включить все CI/CD workflows сразу?** (v0.5)
+A: Используйте флаг `--ci-all`, который включает все 6 workflows.
+
+**Q: Нужно ли настраивать GitHub Secrets для deployment?** (v0.5)
+A: Да, для production deployment нужно настроить GitHub Environments и Secrets. Шаблон deployment.yml содержит комментарии с инструкциями.
+
+**Q: Какие инструменты используются для security scanning?** (v0.5)
+A: Trivy (контейнеры), CodeQL (SAST), Gitleaks (secrets), Bandit (Python), ESLint security (JS/TS).
+
+**Q: Можно ли использовать только security без базового CI?** (v0.5)
+A: Да, флаги независимы. Можно использовать `--security` отдельно или в комбинации с другими.
+
 ---
 
 ## 🎉 Итоги
 
-`project_template_generator.py` v0.4 — это:
+`project_template_generator.py` v0.5 — это:
 - ✅ **16 доменов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** — пошаговая настройка проекта
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация и публикация
-- ✅ **CI/CD интеграция** — GitHub Actions workflows для автоматического тестирования ⭐ НОВОЕ
+- ✅ **Расширенная CI/CD интеграция** ⭐ ОБНОВЛЕНО в v0.5:
+  - Базовые workflows (--ci)
+  - Security scanning (--security) ⭐ НОВОЕ
+  - Code quality (--quality) ⭐ НОВОЕ
+  - Deployment (--deploy) ⭐ НОВОЕ
+  - Всё вместе (--ci-all) ⭐ НОВОЕ
 - ✅ Автоматическая структура α-уровней
 - ✅ Встроенные метрики здоровья
 - ✅ Доменно-специфичные документы
@@ -920,22 +1018,31 @@ A: Workflows используют GitHub Actions, поэтому требуют 
 
 ---
 
-**Что нового в v0.4:**
+**Что нового в v0.5:**
+- 🔒 **Security scanning** — комплексная проверка безопасности (Trivy, SAST, secrets, licenses)
+- 📊 **Code quality** — анализ качества кода (linting, coverage, complexity, duplication)
+- 🚀 **Deployment** — автоматизация развёртывания (Docker, staging/production, rollback)
+- ⚙️ **Расширенные флаги** — --security, --quality, --deploy, --ci-all
+- 🤖 **Интерактивный режим** — вопросы о расширенных CI/CD опциях
+- 📈 **Отчёты** — детальные security и quality отчёты
+
+**Что было в v0.4:**
 - ⚙️ **CI/CD интеграция** — автоматическое тестирование через GitHub Actions
 - 📊 **Проверка методологии** — автоматическая валидация метрик ⇑⇓↔
 - 📝 **Проверка документации** — линтинг, битые ссылки, структура
 - 🔬 **Специфичные workflows** — software CI (тесты, линтинг), research CI (данные, notebooks)
-- 🔒 **Security scanning** — Trivy для software проектов
-- 📈 **Отчёты** — автоматическая генерация отчётов о качестве
 
-**Changelog v0.3→v0.4:**
-- +4 CI/CD workflow шаблона
-- +1 флаг --ci/--cicd
-- +2 метода в генераторе (_setup_cicd_integration, _get_cicd_workflows_for_type)
-- Обновлён интерактивный режим (вопрос о CI/CD)
+**Changelog v0.4→v0.5:**
+- +3 новых CI/CD workflow шаблона (security_scan.yml, code_quality.yml, deployment.yml)
+- +4 новых флага (--security, --quality, --deploy, --ci-all)
+- Обновлён метод generate() (3 новых параметра)
+- Обновлён метод _setup_cicd_integration() (поддержка расширенных workflows)
+- Переписан метод _get_cicd_workflows_for_type() (гибкая конфигурация)
+- Обновлён интерактивный режим (вопросы о security, quality, deploy)
+- Всего 7 CI/CD workflows (4 базовых + 3 расширенных)
 
 ---
 
-*Версия: v0.4*
+*Версия: v0.5*
 *Дата: 2026-01-24*
-*Проект: info1 — ЭТАП 8 v0.4*
+*Проект: info1 — ЭТАП 8 v0.5*

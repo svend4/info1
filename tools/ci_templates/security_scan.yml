@@ -1,0 +1,194 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Run security scans weekly on Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner (filesystem)
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-fs-results.sarif'
+        severity: 'CRITICAL,HIGH'
+
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-fs-results.sarif'
+
+    - name: Check Python dependencies (if Python project)
+      run: |
+        if [ -f "requirements.txt" ]; then
+          echo "🐍 Checking Python dependencies..."
+          pip install safety
+          safety check --file requirements.txt || echo "⚠️  Vulnerabilities found in dependencies"
+        fi
+
+    - name: Check npm dependencies (if Node.js project)
+      run: |
+        if [ -f "package.json" ]; then
+          echo "📦 Checking npm dependencies..."
+          npm audit --audit-level=high || echo "⚠️  Vulnerabilities found in dependencies"
+        fi
+
+  sast-scan:
+    name: Static Application Security Testing (SAST)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: 'python, javascript'
+        queries: security-extended
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+    - name: Run Bandit (Python security linter)
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🔒 Running Bandit security linter for Python..."
+        pip install bandit
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . || echo "⚠️  Security issues found by Bandit"
+
+    - name: Run ESLint security plugin (JavaScript/TypeScript)
+      if: hashFiles('**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx') != ''
+      run: |
+        if [ -f "package.json" ]; then
+          echo "🔒 Running ESLint security checks..."
+          npm install eslint-plugin-security --save-dev || true
+          npx eslint . --ext .js,.ts,.jsx,.tsx || echo "⚠️  Security issues found by ESLint"
+        fi
+
+  secrets-scan:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for all branches
+
+    - name: Run Gitleaks
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check for common secret patterns
+      run: |
+        echo "🔍 Scanning for hardcoded secrets..."
+
+        # Check for API keys
+        if grep -r "api[_-]key\s*=\s*['\"][^'\"]\+" . --exclude-dir=".git" --exclude-dir="node_modules"; then
+          echo "⚠️  Potential API keys found!"
+        fi
+
+        # Check for passwords
+        if grep -r "password\s*=\s*['\"][^'\"]\+" . --exclude-dir=".git" --exclude-dir="node_modules"; then
+          echo "⚠️  Potential hardcoded passwords found!"
+        fi
+
+        echo "✅ Secret scanning completed"
+
+  container-scan:
+    name: Container Image Scan
+    runs-on: ubuntu-latest
+    if: hashFiles('Dockerfile') != ''
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t test-image:latest .
+
+    - name: Run Trivy vulnerability scanner (image)
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'test-image:latest'
+        format: 'sarif'
+        output: 'trivy-image-results.sarif'
+        severity: 'CRITICAL,HIGH'
+
+    - name: Upload Trivy image results
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-image-results.sarif'
+
+    - name: Check for Docker best practices
+      run: |
+        echo "🐳 Checking Dockerfile best practices..."
+        docker run --rm -i hadolint/hadolint < Dockerfile || echo "⚠️  Dockerfile issues found"
+
+  license-scan:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check Python licenses
+      if: hashFiles('requirements.txt') != ''
+      run: |
+        echo "📜 Checking Python package licenses..."
+        pip install pip-licenses
+        pip-licenses --summary || true
+
+    - name: Check npm licenses
+      if: hashFiles('package.json') != ''
+      run: |
+        echo "📜 Checking npm package licenses..."
+        npx license-checker --summary || true
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, sast-scan, secrets-scan, container-scan, license-scan]
+    if: always()
+
+    steps:
+    - name: Generate security report
+      run: |
+        echo "📊 Security Scan Summary"
+        echo "========================"
+        echo "Dependency Scan: ${{ needs.dependency-scan.result }}"
+        echo "SAST Scan: ${{ needs.sast-scan.result }}"
+        echo "Secrets Scan: ${{ needs.secrets-scan.result }}"
+        echo "Container Scan: ${{ needs.container-scan.result }}"
+        echo "License Scan: ${{ needs.license-scan.result }}"
+        echo ""
+        echo "✅ Security scanning completed"
+        echo "Review detailed results in the Security tab"
