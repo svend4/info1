@@ -57,7 +57,8 @@ class AdaptiveThresholdOptimizer:
         - webapp: веб-приложение
         - mobile: мобильное приложение
         - datascience: Data Science проект
-        - info_system: информационная система (как info1)
+        - methodology: методологический/теоретический проект
+        - info_system: информационная система
         """
         # Простая эвристика на основе структуры проекта
         characteristics = {
@@ -70,7 +71,18 @@ class AdaptiveThresholdOptimizer:
         # Проверка наличия характерных файлов
         project_files = list(self.project_root.glob('*'))
 
-        if any('card_system' in str(f) for f in project_files):
+        # Определение методологического проекта по наличию философских документов
+        philosophy_markers = [
+            'ФИЛОСОФИЯ', 'МЕТОДОЛОГИЯ', 'ОНТОЛОГИЯ', 'МЕТА-АНАЛИЗ',
+            'ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ', 'ЭТАП-', 'philosophy', 'methodology'
+        ]
+        md_files = list(self.project_root.glob('*.md'))
+        philosophy_count = sum(1 for f in md_files if any(marker in f.name.upper() for marker in philosophy_markers))
+
+        if philosophy_count >= 5:
+            characteristics['type'] = 'methodology'
+            characteristics['focus'] = 'theory_oriented'
+        elif any('card_system' in str(f) for f in project_files):
             characteristics['type'] = 'info_system'
             characteristics['focus'] = 'user_oriented'
 
@@ -130,6 +142,13 @@ class AdaptiveThresholdOptimizer:
                 'vt': {'min': 30.0, 'max': 50.0, 'reason': 'Низкая трассируемость в DS проектах'},
                 'cr': {'min': 1.0, 'max': 2.0, 'reason': 'Быстрое экспериментирование'},
                 'db': {'min': 0.0, 'max': 40.0, 'reason': 'Экспериментальный характер'}
+            }
+        elif project_type == 'methodology':
+            recommendations = {
+                'cd': {'min': 15.0, 'max': 30.0, 'reason': 'Методологические проекты имеют высокую связность концепций'},
+                'vt': {'min': 20.0, 'max': 40.0, 'reason': 'Фокус на теории, меньше вертикальных связей с кодом'},
+                'cr': {'min': 0.5, 'max': 1.2, 'reason': 'Медленное развитие теоретических концепций'},
+                'db': {'min': 0.0, 'max': 120.0, 'reason': 'Методологические проекты фокусируются на теории (α>0), дисбаланс нормален'}
             }
         elif project_type == 'info_system':
             recommendations = {

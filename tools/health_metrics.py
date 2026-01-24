@@ -53,13 +53,49 @@ class HealthMetricsCalculator:
         self.connections: List[Tuple[str, str, str, int]] = []
         self.cycles: List[Tuple[int, int]] = []  # (cycle_num, new_docs)
 
-        # Thresholds
+        # Thresholds (default, will be replaced by adaptive if available)
         self.thresholds = {
             'cd': {'min': 10.0, 'max': 20.0, 'unit': '%'},
             'vt': {'min': 50.0, 'max': 70.0, 'unit': '%'},
             'cr': {'min': 0.7, 'max': 1.5, 'unit': ''},
             'db': {'min': 0.0, 'max': 30.0, 'unit': '%'}
         }
+
+        # Load adaptive thresholds if available
+        self._load_adaptive_thresholds()
+
+    def _load_adaptive_thresholds(self):
+        """Load adaptive thresholds from adaptive_metrics.py if available"""
+        try:
+            from adaptive_metrics import AdaptiveThresholdOptimizer
+
+            optimizer = AdaptiveThresholdOptimizer(str(self.root))
+            characteristics = optimizer.analyze_project_characteristics()
+            project_type = characteristics.get('type', 'info_system')
+
+            # Get recommendations for project type
+            recommendations = optimizer.recommend_thresholds_for_project_type(project_type)
+
+            # Apply size and maturity adjustments
+            size = characteristics.get('size', 'medium')
+            maturity = characteristics.get('maturity', 'mature')
+
+            size_multipliers = {'small': 0.9, 'medium': 1.0, 'large': 1.1}
+            maturity_multipliers = {'early': 1.2, 'developing': 1.1, 'mature': 1.0}
+
+            size_mult = size_multipliers.get(size, 1.0)
+            maturity_mult = maturity_multipliers.get(maturity, 1.0)
+
+            # Update thresholds
+            for metric in ['cd', 'vt', 'cr', 'db']:
+                if metric in recommendations:
+                    rec = recommendations[metric]
+                    self.thresholds[metric]['min'] = round(rec['min'] * size_mult * maturity_mult, 1)
+                    self.thresholds[metric]['max'] = round(rec['max'] * size_mult * maturity_mult, 1)
+
+        except Exception:
+            # If adaptive metrics not available, use default thresholds
+            pass
 
     def analyze(self):
         """Analyze project and calculate all metrics"""
