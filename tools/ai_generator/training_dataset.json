@@ -1,0 +1,488 @@
+[
+  {
+    "id": "001",
+    "description": "Хочу создать веб-приложение для управления задачами",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {
+      "platform": "web",
+      "domain": "task management"
+    }
+  },
+  {
+    "id": "002",
+    "description": "Научное исследование воздействия климата на урожайность",
+    "primary_type": "research",
+    "secondary_types": ["agriculture"],
+    "features": {
+      "domain": "climate science",
+      "methodology": "field study"
+    }
+  },
+  {
+    "id": "003",
+    "description": "Стартап в области fintech для учёта личных финансов",
+    "primary_type": "business",
+    "secondary_types": ["finance", "software"],
+    "features": {
+      "stage": "startup",
+      "domain": "fintech"
+    }
+  },
+  {
+    "id": "004",
+    "description": "Онлайн-курс по программированию на Python",
+    "primary_type": "education",
+    "secondary_types": ["software"],
+    "features": {
+      "format": "online",
+      "subject": "programming"
+    }
+  },
+  {
+    "id": "005",
+    "description": "Юридическая консультация по налоговым спорам",
+    "primary_type": "legal",
+    "secondary_types": ["finance"],
+    "features": {
+      "service": "consultation",
+      "specialization": "tax law"
+    }
+  },
+  {
+    "id": "006",
+    "description": "Система управления клиникой с электронными медкартами",
+    "primary_type": "healthcare",
+    "secondary_types": ["software"],
+    "features": {
+      "solution": "EHR system",
+      "size": "clinic"
+    }
+  },
+  {
+    "id": "007",
+    "description": "Выставка современного искусства в галерее",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {
+      "type": "exhibition",
+      "genre": "contemporary art"
+    }
+  },
+  {
+    "id": "008",
+    "description": "Портфельное управление инвестициями на фондовом рынке",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {
+      "service": "investment management",
+      "market": "stocks"
+    }
+  },
+  {
+    "id": "009",
+    "description": "Портал госуслуг для граждан онлайн",
+    "primary_type": "government",
+    "secondary_types": ["software"],
+    "features": {
+      "service": "public services",
+      "platform": "web portal"
+    }
+  },
+  {
+    "id": "010",
+    "description": "Благотворительный фонд помощи животным",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {
+      "mission": "animal welfare",
+      "type": "charity"
+    }
+  },
+  {
+    "id": "011",
+    "description": "Производство биоразлагаемой упаковки",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "bioplastic packaging",
+      "industry": "eco-friendly"
+    }
+  },
+  {
+    "id": "012",
+    "description": "Управление фермерским хозяйством с животноводством",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "type": "farm",
+      "focus": "livestock"
+    }
+  },
+  {
+    "id": "013",
+    "description": "Спортивная академия для юных футболистов",
+    "primary_type": "sports",
+    "secondary_types": ["education"],
+    "features": {
+      "sport": "football",
+      "target": "youth"
+    }
+  },
+  {
+    "id": "014",
+    "description": "Гостиница в центре города на 50 номеров",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {
+      "type": "hotel",
+      "capacity": 50,
+      "location": "city center"
+    }
+  },
+  {
+    "id": "015",
+    "description": "Интернет-магазин одежды с доставкой",
+    "primary_type": "retail",
+    "secondary_types": ["software"],
+    "features": {
+      "channel": "ecommerce",
+      "product": "clothing"
+    }
+  },
+  {
+    "id": "016",
+    "description": "Блог о путешествиях по России",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "format": "blog",
+      "topic": "travel"
+    }
+  },
+  {
+    "id": "017",
+    "description": "Мобильное приложение для заказа такси с React Native",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {
+      "platform": "mobile",
+      "tech": "React Native",
+      "service": "ride-hailing"
+    }
+  },
+  {
+    "id": "018",
+    "description": "Разработка API для интеграции с платёжными системами",
+    "primary_type": "software",
+    "secondary_types": ["finance"],
+    "features": {
+      "component": "API",
+      "integration": "payment systems"
+    }
+  },
+  {
+    "id": "019",
+    "description": "Исследование эффективности новых лекарственных препаратов",
+    "primary_type": "research",
+    "secondary_types": ["healthcare"],
+    "features": {
+      "field": "pharmacology",
+      "method": "clinical trials"
+    }
+  },
+  {
+    "id": "020",
+    "description": "Диссертация по квантовой физике",
+    "primary_type": "research",
+    "secondary_types": ["education"],
+    "features": {
+      "level": "PhD",
+      "field": "quantum physics"
+    }
+  },
+  {
+    "id": "021",
+    "description": "Открытие ресторана средиземноморской кухни",
+    "primary_type": "business",
+    "secondary_types": ["hospitality"],
+    "features": {
+      "type": "restaurant",
+      "cuisine": "Mediterranean"
+    }
+  },
+  {
+    "id": "022",
+    "description": "Бизнес-план для привлечения инвестиций в IT-стартап",
+    "primary_type": "business",
+    "secondary_types": ["software", "finance"],
+    "features": {
+      "document": "business plan",
+      "industry": "IT",
+      "stage": "fundraising"
+    }
+  },
+  {
+    "id": "023",
+    "description": "Курс повышения квалификации для учителей математики",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {
+      "type": "professional development",
+      "target": "teachers",
+      "subject": "mathematics"
+    }
+  },
+  {
+    "id": "024",
+    "description": "Учебная программа по data science для университета",
+    "primary_type": "education",
+    "secondary_types": ["software"],
+    "features": {
+      "level": "university",
+      "subject": "data science"
+    }
+  },
+  {
+    "id": "025",
+    "description": "Юридическое сопровождение сделки M&A",
+    "primary_type": "legal",
+    "secondary_types": ["business"],
+    "features": {
+      "service": "transaction support",
+      "type": "M&A"
+    }
+  },
+  {
+    "id": "026",
+    "description": "Подготовка договоров аренды коммерческой недвижимости",
+    "primary_type": "legal",
+    "secondary_types": ["business"],
+    "features": {
+      "document": "contracts",
+      "focus": "real estate"
+    }
+  },
+  {
+    "id": "027",
+    "description": "Телемедицинская платформа для консультаций врачей",
+    "primary_type": "healthcare",
+    "secondary_types": ["software"],
+    "features": {
+      "service": "telemedicine",
+      "platform": "digital"
+    }
+  },
+  {
+    "id": "028",
+    "description": "Медицинский центр с отделением кардиологии",
+    "primary_type": "healthcare",
+    "secondary_types": ["business"],
+    "features": {
+      "type": "medical center",
+      "specialization": "cardiology"
+    }
+  },
+  {
+    "id": "029",
+    "description": "Музыкальный фестиваль электронной музыки",
+    "primary_type": "arts",
+    "secondary_types": ["business"],
+    "features": {
+      "type": "festival",
+      "genre": "electronic music"
+    }
+  },
+  {
+    "id": "030",
+    "description": "Творческая студия дизайна интерьеров",
+    "primary_type": "arts",
+    "secondary_types": ["business"],
+    "features": {
+      "service": "interior design",
+      "type": "creative studio"
+    }
+  },
+  {
+    "id": "031",
+    "description": "Управление инвестиционным портфелем на 100M$",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {
+      "service": "portfolio management",
+      "aum": "$100M"
+    }
+  },
+  {
+    "id": "032",
+    "description": "Краудфандинговая платформа для стартапов",
+    "primary_type": "finance",
+    "secondary_types": ["software", "business"],
+    "features": {
+      "type": "crowdfunding",
+      "target": "startups"
+    }
+  },
+  {
+    "id": "033",
+    "description": "Программа цифровизации госуслуг для города",
+    "primary_type": "government",
+    "secondary_types": ["software"],
+    "features": {
+      "initiative": "digitalization",
+      "level": "municipal"
+    }
+  },
+  {
+    "id": "034",
+    "description": "Система мониторинга бюджетных расходов",
+    "primary_type": "government",
+    "secondary_types": ["software", "finance"],
+    "features": {
+      "system": "budget monitoring",
+      "sector": "public"
+    }
+  },
+  {
+    "id": "035",
+    "description": "НКО по поддержке малого бизнеса",
+    "primary_type": "nonprofit",
+    "secondary_types": ["business"],
+    "features": {
+      "mission": "SME support",
+      "type": "NGO"
+    }
+  },
+  {
+    "id": "036",
+    "description": "Волонтёрская программа помощи пожилым",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {
+      "type": "volunteer program",
+      "target": "elderly"
+    }
+  },
+  {
+    "id": "037",
+    "description": "Завод по производству автокомпонентов",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "auto parts",
+      "type": "factory"
+    }
+  },
+  {
+    "id": "038",
+    "description": "Производственная линия для электроники",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "electronics",
+      "asset": "production line"
+    }
+  },
+  {
+    "id": "039",
+    "description": "Выращивание органических овощей в теплицах",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "product": "organic vegetables",
+      "method": "greenhouse"
+    }
+  },
+  {
+    "id": "040",
+    "description": "Молочная ферма с 200 коровами",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "type": "dairy farm",
+      "herd_size": 200
+    }
+  },
+  {
+    "id": "041",
+    "description": "Тренировочная программа для марафонцев",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {
+      "sport": "marathon",
+      "type": "training program"
+    }
+  },
+  {
+    "id": "042",
+    "description": "Фитнес-клуб с бассейном и тренажёрным залом",
+    "primary_type": "sports",
+    "secondary_types": ["business"],
+    "features": {
+      "type": "fitness club",
+      "facilities": ["pool", "gym"]
+    }
+  },
+  {
+    "id": "043",
+    "description": "Бутик-отель на 20 номеров с рестораном",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {
+      "type": "boutique hotel",
+      "capacity": 20,
+      "amenities": ["restaurant"]
+    }
+  },
+  {
+    "id": "044",
+    "description": "Туристическое агентство по организации туров",
+    "primary_type": "hospitality",
+    "secondary_types": ["business"],
+    "features": {
+      "service": "tour operator",
+      "type": "travel agency"
+    }
+  },
+  {
+    "id": "045",
+    "description": "Сеть продуктовых магазинов формата у дома",
+    "primary_type": "retail",
+    "secondary_types": ["business"],
+    "features": {
+      "format": "convenience stores",
+      "product": "groceries",
+      "scale": "chain"
+    }
+  },
+  {
+    "id": "046",
+    "description": "Маркетплейс для продажи товаров ручной работы",
+    "primary_type": "retail",
+    "secondary_types": ["software"],
+    "features": {
+      "platform": "marketplace",
+      "product": "handmade goods"
+    }
+  },
+  {
+    "id": "047",
+    "description": "Коллекция марок и монет",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "type": "collection",
+      "items": ["stamps", "coins"]
+    }
+  },
+  {
+    "id": "048",
+    "description": "Канал на YouTube о кулинарии",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "platform": "YouTube",
+      "topic": "cooking"
+    }
+  }
+]
