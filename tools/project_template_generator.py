@@ -1530,105 +1530,345 @@ python3 health_metrics.py
         print(f"  ✓ tools/README.md")
 
     def _interactive_project_setup(self):
-        """Интерактивный режим: задать вопросы пользователю"""
-        print("\n🤖 Интерактивный режим настройки проекта\n")
-        print("=" * 60)
+        """Интерактивный режим: задать вопросы пользователю (enhanced Q1 2026)"""
+        print("\n" + "=" * 70)
+        print("🤖  ИНТЕРАКТИВНЫЙ РЕЖИМ НАСТРОЙКИ ПРОЕКТА")
+        print("    Методология ⇑⇓↔ — Универсальная генерация проектов")
+        print("=" * 70)
 
         # 1. Подтверждение типа проекта или выбор нового
-        print(f"\nВыбран тип проекта: {self.PROJECT_TYPES[self.project_type]['name']}")
-        print(f"Описание: {self.PROJECT_TYPES[self.project_type]['description']}")
-        print(f"Фокус α-уровней: {self.PROJECT_TYPES[self.project_type]['alpha_focus']}")
+        print("\n" + "─" * 70)
+        print("📋 ШАГ 1: Выбор типа проекта")
+        print("─" * 70)
 
-        change_type = input("\nИзменить тип проекта? (y/N): ").strip().lower()
+        print(f"\n✓ Текущий тип: {self.PROJECT_TYPES[self.project_type]['name']}")
+        print(f"  Описание:    {self.PROJECT_TYPES[self.project_type]['description']}")
+        print(f"  Фокус:       {self.PROJECT_TYPES[self.project_type]['alpha_focus']}")
+
+        change_type = input("\n→ Изменить тип проекта? (y/N): ").strip().lower()
 
         if change_type == 'y':
-            print("\nДоступные типы проектов:\n")
+            print("\n📚 ДОСТУПНЫЕ ТИПЫ ПРОЕКТОВ (16/16)\n")
+
+            # Группировка по категориям
+            categories = {
+                "Технические": ["software", "research"],
+                "Бизнес и управление": ["business", "finance", "government", "nonprofit"],
+                "Производство": ["manufacturing", "agriculture"],
+                "Образование и здоровье": ["education", "healthcare"],
+                "Креативные и сервис": ["legal", "arts", "sports", "hospitality", "retail", "hobby"]
+            }
+
             types_list = list(self.PROJECT_TYPES.keys())
-            for idx, ptype in enumerate(types_list, 1):
-                info = self.PROJECT_TYPES[ptype]
-                print(f"  {idx:2d}. {ptype:15s} - {info['description']}")
+            idx = 1
+            type_to_idx = {}
+
+            for category, ptypes in categories.items():
+                print(f"\n  {category}:")
+                for ptype in ptypes:
+                    if ptype in self.PROJECT_TYPES:
+                        info = self.PROJECT_TYPES[ptype]
+                        type_to_idx[idx] = ptype
+                        icon = "💻" if ptype == "software" else "📊" if ptype == "research" else \
+                               "💼" if ptype == "business" else "💰" if ptype == "finance" else \
+                               "🏛️" if ptype == "government" else "🤝" if ptype == "nonprofit" else \
+                               "🏭" if ptype == "manufacturing" else "🌾" if ptype == "agriculture" else \
+                               "📚" if ptype == "education" else "🏥" if ptype == "healthcare" else \
+                               "⚖️" if ptype == "legal" else "🎨" if ptype == "arts" else \
+                               "⚽" if ptype == "sports" else "🏨" if ptype == "hospitality" else \
+                               "🛒" if ptype == "retail" else "🎯"
+                        print(f"    {idx:2d}. {icon} {ptype:15s} - {info['description']}")
+                        idx += 1
 
             while True:
                 try:
-                    choice = input(f"\nВыберите тип (1-{len(types_list)}): ").strip()
-                    choice_idx = int(choice) - 1
-                    if 0 <= choice_idx < len(types_list):
-                        self.project_type = types_list[choice_idx]
-                        print(f"✓ Выбран тип: {self.PROJECT_TYPES[self.project_type]['name']}")
+                    choice = input(f"\n→ Выберите тип (1-16) или 'h' для помощи: ").strip()
+
+                    if choice.lower() == 'h':
+                        print("\n💡 Подсказка:")
+                        print("  • Примеры заполнения: tools/templates/TEMPLATE-EXAMPLES.md")
+                        print("  • Чек-листы проектов: tools/templates/PROJECT-CHECKLISTS.md")
+                        print("  • Быстрый старт: tools/GENERATOR-QUICK-START.md")
+                        continue
+
+                    choice_idx = int(choice)
+                    if choice_idx in type_to_idx:
+                        self.project_type = type_to_idx[choice_idx]
+                        print(f"\n✓ Выбран тип: {self.PROJECT_TYPES[self.project_type]['name']}")
                         break
                     else:
-                        print(f"Пожалуйста, введите число от 1 до {len(types_list)}")
+                        print("❌ Пожалуйста, введите число от 1 до 16")
                 except ValueError:
-                    print("Пожалуйста, введите число")
+                    print("❌ Пожалуйста, введите число или 'h' для помощи")
 
-        # 2. Дополнительная настройка проекта
-        print("\n" + "=" * 60)
-        print("\n📋 Дополнительные параметры\n")
+        # 2. Метаданные проекта (новое в Q1 2026)
+        print("\n" + "─" * 70)
+        print("📝 ШАГ 2: Метаданные проекта")
+        print("─" * 70)
 
-        # 3. Git интеграция
-        init_git = input("Инициализировать Git репозиторий? (Y/n): ").strip().lower()
+        # Описание проекта
+        print("\n→ Введите описание проекта (опционально, Enter для пропуска):")
+        project_description = input("  ").strip()
+        if project_description:
+            self._project_description = project_description
+            print(f"✓ Описание сохранено")
+
+        # Автор
+        print("\n→ Автор проекта (опционально, Enter для пропуска):")
+        project_author = input("  ").strip()
+        if project_author:
+            self._project_author = project_author
+            print(f"✓ Автор: {project_author}")
+
+        # 3. Дополнительная настройка проекта
+        print("\n" + "─" * 70)
+        print("🔧 ШАГ 3: Интеграции и инструменты")
+        print("─" * 70 + "\n")
+
+        # Git интеграция
+        print("🔹 Git & GitHub")
+        init_git = input("  → Инициализировать Git репозиторий? (Y/n): ").strip().lower()
         self._init_git = init_git != 'n'
 
         if self._init_git:
-            create_github = input("Создать GitHub репозиторий? (требует gh CLI) (y/N): ").strip().lower()
+            print("  ✓ Git будет инициализирован")
+
+            create_github = input("  → Создать GitHub репозиторий? (требует gh CLI) (y/N): ").strip().lower()
             self._create_github = create_github == 'y'
 
             if self._create_github:
-                self._github_visibility = input("  Visibility (public/private) [private]: ").strip() or "private"
-                self._github_description = input(f"  Описание репозитория [{self.project_name}]: ").strip() or self.project_name
+                self._github_visibility = input("    → Visibility (public/private) [private]: ").strip() or "private"
+                desc_default = getattr(self, '_project_description', self.project_name)
+                self._github_description = input(f"    → Описание репозитория [{desc_default}]: ").strip() or desc_default
+                print(f"  ✓ GitHub repo будет создан ({self._github_visibility})")
         else:
             self._create_github = False
+            print("  ○ Git не будет использоваться")
 
-        # 4. CI/CD интеграция
-        setup_ci = input("Настроить базовые CI/CD workflows? (y/N): ").strip().lower()
+        # CI/CD интеграция
+        print("\n🔹 CI/CD Pipeline")
+        setup_ci = input("  → Настроить базовые CI/CD workflows? (y/N): ").strip().lower()
         self._setup_ci = setup_ci == 'y'
 
         if self._setup_ci:
-            print("  ℹ️  Базовые workflows: methodology check, documentation check, тестирование")
+            print("  ✓ Workflows: methodology check, documentation check, тестирование")
 
-        # 4.1. Расширенные CI/CD опции (v0.5)
-        setup_security = input("Добавить security scanning workflows? (Trivy, SAST) (y/N): ").strip().lower()
+        # Расширенные CI/CD опции (v0.5)
+        print("\n🔹 Расширенные опции CI/CD")
+        setup_security = input("  → Добавить security scanning? (Trivy, SAST) (y/N): ").strip().lower()
         self._setup_security = setup_security == 'y'
 
         if self._setup_security:
-            print("  ℹ️  Security: уязвимости, secrets detection, SAST, license compliance")
+            print("  ✓ Security: уязвимости, secrets detection, SAST, license compliance")
 
-        setup_quality = input("Добавить code quality workflows? (linting, coverage) (y/N): ").strip().lower()
+        setup_quality = input("  → Добавить code quality checks? (linting, coverage) (y/N): ").strip().lower()
         self._setup_quality = setup_quality == 'y'
 
         if self._setup_quality:
-            print("  ℹ️  Quality: code analysis, coverage, complexity, documentation quality")
+            print("  ✓ Quality: code analysis, coverage, complexity, documentation quality")
 
-        setup_deploy = input("Добавить deployment workflows? (Docker, staging, production) (y/N): ").strip().lower()
+        setup_deploy = input("  → Добавить deployment workflows? (Docker, staging, production) (y/N): ").strip().lower()
         self._setup_deploy = setup_deploy == 'y'
 
         if self._setup_deploy:
-            print("  ℹ️  Deployment: Docker images, staging/production deploy, rollback")
+            print("  ✓ Deployment: Docker images, staging/production deploy, rollback")
 
-        # 5. Подтверждение
-        print("\n" + "=" * 60)
-        print("\n📦 Итоговая конфигурация:\n")
+        # 5. Превью структуры проекта (новое в Q1 2026)
+        print("\n" + "─" * 70)
+        print("🔍 ШАГ 4: Превью структуры проекта")
+        print("─" * 70)
+
+        show_preview = input("\n→ Показать превью структуры проекта? (Y/n): ").strip().lower()
+        if show_preview != 'n':
+            self._show_project_structure_preview()
+
+        # 6. Подтверждение
+        print("\n" + "=" * 70)
+        print("📦 ИТОГОВАЯ КОНФИГУРАЦИЯ")
+        print("=" * 70)
+
+        print(f"\n📋 Проект:")
         print(f"  Название:     {self.project_name}")
         print(f"  Тип:          {self.PROJECT_TYPES[self.project_type]['name']}")
         print(f"  Директория:   {self.project_dir}")
-        print(f"  Git init:     {'Да' if self._init_git else 'Нет'}")
-        if self._init_git and self._create_github:
-            print(f"  GitHub repo:  Да ({self._github_visibility})")
-        print(f"  CI/CD:        {'Да' if self._setup_ci else 'Нет'}")
-        if hasattr(self, '_setup_security') and self._setup_security:
-            print(f"  Security:     Да")
-        if hasattr(self, '_setup_quality') and self._setup_quality:
-            print(f"  Quality:      Да")
-        if hasattr(self, '_setup_deploy') and self._setup_deploy:
-            print(f"  Deployment:   Да")
-        print()
+        if hasattr(self, '_project_description') and self._project_description:
+            print(f"  Описание:     {self._project_description}")
+        if hasattr(self, '_project_author') and self._project_author:
+            print(f"  Автор:        {self._project_author}")
 
-        confirm = input("Продолжить создание проекта? (Y/n): ").strip().lower()
+        print(f"\n🔧 Интеграции:")
+        print(f"  Git init:     {'✓ Да' if self._init_git else '○ Нет'}")
+        if self._init_git and self._create_github:
+            print(f"  GitHub repo:  ✓ Да ({self._github_visibility})")
+        print(f"  CI/CD:        {'✓ Да' if self._setup_ci else '○ Нет'}")
+        if hasattr(self, '_setup_security') and self._setup_security:
+            print(f"  Security:     ✓ Да")
+        if hasattr(self, '_setup_quality') and self._setup_quality:
+            print(f"  Quality:      ✓ Да")
+        if hasattr(self, '_setup_deploy') and self._setup_deploy:
+            print(f"  Deployment:   ✓ Да")
+
+        print(f"\n📊 Методология:")
+        print(f"  α-уровни:     {self.PROJECT_TYPES[self.project_type]['alpha_focus']}")
+        print(f"  Метрики:      CD, VT, CR, DB (автоматический расчёт)")
+        print(f"  Чек-лист:     tools/templates/PROJECT-CHECKLISTS.md")
+
+        print("\n" + "─" * 70)
+
+        confirm = input("\n→ Создать проект с этой конфигурацией? (Y/n): ").strip().lower()
         if confirm == 'n':
             print("\n❌ Создание проекта отменено")
+            print("💡 Совет: Вы можете сохранить конфигурацию в файл и использовать позже")
             exit(0)
 
-        print("\n" + "=" * 60 + "\n")
+        print("\n" + "=" * 70)
+        print("🚀 НАЧИНАЮ СОЗДАНИЕ ПРОЕКТА...")
+        print("=" * 70 + "\n")
+
+    def _show_project_structure_preview(self):
+        """Показать превью структуры проекта (новое в Q1 2026)"""
+        print("\n📁 Структура проекта:\n")
+
+        # Основная структура (общая для всех типов)
+        base_structure = [
+            (f"{self.project_name}/", "корневая директория"),
+            ("├── 01-Концепция/", "концептуальные документы (α=+1)"),
+            ("├── 02-Архитектура/", "архитектурные решения (α=0)"),
+            ("├── 03-Реализация/", "реализация проекта (α=-1)"),
+            ("├── docs/", "документация (α=-2)"),
+            ("│   └── templates/", "шаблоны документации"),
+            ("├── tools/", "инструменты проекта"),
+            ("│   ├── health_metrics.py", "расчёт метрик CD, VT, CR, DB"),
+            ("│   └── README.md", "описание инструментов"),
+        ]
+
+        # Domain-specific папки
+        domain_folders = {
+            "software": [
+                ("├── src/", "исходный код"),
+                ("├── tests/", "тесты"),
+                ("└── examples/", "примеры использования"),
+            ],
+            "research": [
+                ("├── data/", "данные исследования"),
+                ("├── analysis/", "анализ данных"),
+                ("├── papers/", "научные статьи"),
+                ("└── protocols/", "протоколы исследования"),
+            ],
+            "healthcare": [
+                ("├── protocols/", "медицинские протоколы"),
+                ("├── cases/", "клинические случаи"),
+                ("└── research/", "медицинские исследования"),
+            ],
+            "business": [
+                ("├── strategy/", "стратегические документы"),
+                ("├── financials/", "финансовые модели"),
+                ("└── marketing/", "маркетинговые материалы"),
+            ],
+            "education": [
+                ("├── lessons/", "планы уроков"),
+                ("├── materials/", "учебные материалы"),
+                ("└── assessments/", "оценки и тесты"),
+            ],
+            "agriculture": [
+                ("├── crops/", "управление культурами"),
+                ("├── livestock/", "управление скотом"),
+                ("└── equipment/", "оборудование"),
+            ],
+            "finance": [
+                ("├── portfolios/", "портфели инвестиций"),
+                ("├── analysis/", "финансовый анализ"),
+                ("└── reports/", "отчёты"),
+            ],
+            "sports": [
+                ("├── training/", "тренировочные программы"),
+                ("├── events/", "спортивные события"),
+                ("└── analytics/", "спортивная аналитика"),
+            ],
+            "manufacturing": [
+                ("├── production/", "производственные процессы"),
+                ("├── quality/", "контроль качества"),
+                ("└── supply-chain/", "цепочка поставок"),
+            ],
+            "legal": [
+                ("├── cases/", "дела и кейсы"),
+                ("├── contracts/", "контракты"),
+                ("└── research/", "юридические исследования"),
+            ],
+            "arts": [
+                ("├── works/", "творческие работы"),
+                ("├── portfolio/", "портфолио"),
+                ("└── exhibitions/", "выставки"),
+            ],
+            "government": [
+                ("├── policies/", "политики и законы"),
+                ("├── consultations/", "общественные консультации"),
+                ("└── reports/", "отчёты"),
+            ],
+            "nonprofit": [
+                ("├── programs/", "программы помощи"),
+                ("├── grants/", "гранты и заявки"),
+                ("└── impact/", "оценка влияния"),
+            ],
+            "hospitality": [
+                ("├── services/", "сервисы"),
+                ("├── menus/", "меню"),
+                ("└── events/", "мероприятия"),
+            ],
+            "retail": [
+                ("├── inventory/", "инвентарь"),
+                ("├── merchandising/", "мерчандайзинг"),
+                ("└── customer/", "работа с клиентами"),
+            ],
+            "hobby": [
+                ("├── projects/", "проекты"),
+                ("├── learning/", "обучение"),
+                ("└── showcase/", "демонстрация"),
+            ],
+        }
+
+        # Основные файлы
+        base_files = [
+            ("├── README.md", "главная страница проекта (α=+1)"),
+            ("├── МЕТОДОЛОГИЯ.md", "интеграция методологии ⇑⇓↔ (α=+2)"),
+            ("├── METRICS.md", "метрики проекта"),
+            ("└── .methodology.json", "конфигурация методологии"),
+        ]
+
+        # Вывод структуры
+        for item, desc in base_structure:
+            print(f"  {item:40s} # {desc}")
+
+        # Domain-specific папки
+        if self.project_type in domain_folders:
+            for item, desc in domain_folders[self.project_type]:
+                print(f"  {item:40s} # {desc}")
+
+        # Основные файлы
+        for item, desc in base_files:
+            print(f"  {item:40s} # {desc}")
+
+        # CI/CD файлы
+        if getattr(self, '_setup_ci', False) or getattr(self, '_init_git', False):
+            print(f"\n  📦 Git & CI/CD:")
+            if getattr(self, '_init_git', False):
+                print(f"  ├── .gitignore                           # исключения Git")
+            if getattr(self, '_setup_ci', False):
+                print(f"  └── .github/")
+                print(f"      └── workflows/                       # GitHub Actions")
+                if getattr(self, '_setup_security', False):
+                    print(f"          ├── security.yml             # security scanning")
+                if getattr(self, '_setup_quality', False):
+                    print(f"          ├── quality.yml              # code quality")
+                if getattr(self, '_setup_deploy', False):
+                    print(f"          └── deploy.yml               # deployment")
+
+        # Итоговая информация
+        total_folders = len(base_structure) + len(domain_folders.get(self.project_type, [])) + 1
+        total_files = len(base_files) + 3  # +3 for metrics.py, README in tools, .gitignore
+
+        print(f"\n  📊 Итого: ~{total_folders} папок, ~{total_files}+ файлов")
+        print(f"  💡 Совет: Все файлы будут созданы с шаблонами и примерами\n")
 
     def _setup_git_integration(self, init_git: bool = True, create_github: bool = False):
         """Настройка Git/GitHub интеграции"""
