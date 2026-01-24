@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "project_name": "info1",
+    "project_type": "methodology",
+    "history_length": 7,
+    "export_date": "2026-01-24T06:57:51.093678",
+    "methodology_version": "v1.0 (ЭТАП 6-7)"
+  },
+  "current_state": {
+    "cd": 51.14,
+    "vt": 28.89,
+    "cr": 1.14,
+    "db": 104.97,
+    "total_docs": 75,
+    "total_connections": 1419,
+    "cycle": 10
+  },
+  "trends": {
+    "cd": {
+      "values": [
+        51.14,
+        51.14,
+        51.14
+      ],
+      "first_avg": 51.14,
+      "second_avg": 51.14,
+      "change": 0.0,
+      "change_pct": 0.0,
+      "direction": "стабильный",
+      "emoji": "→",
+      "current": 51.14
+    },
+    "vt": {
+      "values": [
+        28.89,
+        28.89,
+        28.89
+      ],
+      "first_avg": 28.89,
+      "second_avg": 28.89,
+      "change": 0.0,
+      "change_pct": 0.0,
+      "direction": "стабильный",
+      "emoji": "→",
+      "current": 28.89
+    },
+    "cr": {
+      "values": [
+        1.14,
+        1.14,
+        1.14
+      ],
+      "first_avg": 1.14,
+      "second_avg": 1.14,
+      "change": 0.0,
+      "change_pct": 0.0,
+      "direction": "стабильный",
+      "emoji": "→",
+      "current": 1.14
+    },
+    "db": {
+      "values": [
+        141.42,
+        104.97,
+        104.97
+      ],
+      "first_avg": 141.42,
+      "second_avg": 104.97,
+      "change": -36.45,
+      "change_pct": -25.77,
+      "direction": "падающий",
+      "emoji": "📉",
+      "current": 104.97
+    }
+  },
+  "improvements": [
+    {
+      "metric": "DB",
+      "timestamp": "2026-01-24T06:39:34.182758",
+      "prev_value": 141.42,
+      "curr_value": 104.97,
+      "change": -36.45,
+      "change_pct": -25.77,
+      "improvement": true
+    }
+  ],
+  "lessons": [
+    {
+      "id": "lesson_db_improvement",
+      "title": "Исправление логики определения направлений",
+      "category": "metrics",
+      "severity": "critical",
+      "evidence": {
+        "before": 141.42,
+        "after": 104.97,
+        "change": -36.45
+      },
+      "principle": "Семантический анализ надежнее текстового поиска",
+      "confidence": 0.95
+    }
+  ]
+}

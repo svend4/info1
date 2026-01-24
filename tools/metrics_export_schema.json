@@ -1,0 +1,419 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Методология ⇑⇓↔ — Схема экспорта метрик проекта",
+  "description": "Стандартизированный формат для обмена метриками и знаниями между проектами, использующими методологию параллельного двунаправленного развития (ЭТАП 7: Коллективный интеллект)",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["metadata", "current_state", "trends"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["project_name", "project_type", "export_date", "methodology_version"],
+      "properties": {
+        "project_name": {
+          "type": "string",
+          "description": "Название проекта (например, info1)"
+        },
+        "project_type": {
+          "type": "string",
+          "enum": ["library", "webapp", "mobile", "datascience", "methodology", "info_system", "other"],
+          "description": "Тип проекта для адаптивных порогов"
+        },
+        "project_size": {
+          "type": "string",
+          "enum": ["small", "medium", "large"],
+          "description": "Размер проекта"
+        },
+        "project_maturity": {
+          "type": "string",
+          "enum": ["early", "developing", "mature"],
+          "description": "Зрелость проекта"
+        },
+        "history_length": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Количество записей в истории метрик"
+        },
+        "export_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата и время экспорта (ISO 8601)"
+        },
+        "methodology_version": {
+          "type": "string",
+          "description": "Версия методологии (например, v1.0 ЭТАП 6)"
+        },
+        "contributors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Список контрибьюторов (опционально)"
+        }
+      }
+    },
+    "current_state": {
+      "type": "object",
+      "required": ["cd", "vt", "cr", "db", "total_docs", "total_connections"],
+      "properties": {
+        "cd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "CD (Connectivity Density) — плотность связей, %"
+        },
+        "vt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "VT (Vertical Traceability) — вертикальная трассируемость, %"
+        },
+        "cr": {
+          "type": "number",
+          "minimum": 0,
+          "description": "CR (Convergence Rate) — скорость конвергенции"
+        },
+        "db": {
+          "type": "number",
+          "minimum": 0,
+          "description": "DB (Directional Balance) — баланс направлений, %"
+        },
+        "total_docs": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Общее количество документов"
+        },
+        "total_connections": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Общее количество связей"
+        },
+        "cycle": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Номер цикла развития"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Время измерения"
+        }
+      }
+    },
+    "trends": {
+      "type": "object",
+      "description": "Анализ трендов метрик",
+      "patternProperties": {
+        "^(cd|vt|cr|db)$": {
+          "type": "object",
+          "required": ["direction", "change", "change_pct"],
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "История значений метрики"
+            },
+            "first_avg": {
+              "type": "number",
+              "description": "Среднее значение в первой половине истории"
+            },
+            "second_avg": {
+              "type": "number",
+              "description": "Среднее значение во второй половине истории"
+            },
+            "change": {
+              "type": "number",
+              "description": "Абсолютное изменение"
+            },
+            "change_pct": {
+              "type": "number",
+              "description": "Процентное изменение"
+            },
+            "direction": {
+              "type": "string",
+              "enum": ["растущий", "падающий", "стабильный"],
+              "description": "Направление тренда"
+            },
+            "emoji": {
+              "type": "string",
+              "description": "Эмодзи для визуализации (📈📉→)"
+            },
+            "current": {
+              "type": "number",
+              "description": "Текущее значение"
+            }
+          }
+        }
+      }
+    },
+    "improvements": {
+      "type": "array",
+      "description": "Обнаруженные значимые улучшения",
+      "items": {
+        "type": "object",
+        "required": ["metric", "timestamp", "prev_value", "curr_value", "change", "change_pct"],
+        "properties": {
+          "metric": {
+            "type": "string",
+            "enum": ["CD", "VT", "CR", "DB"],
+            "description": "Метрика, которая улучшилась"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Время улучшения"
+          },
+          "prev_value": {
+            "type": "number",
+            "description": "Предыдущее значение"
+          },
+          "curr_value": {
+            "type": "number",
+            "description": "Текущее значение"
+          },
+          "change": {
+            "type": "number",
+            "description": "Абсолютное изменение"
+          },
+          "change_pct": {
+            "type": "number",
+            "description": "Процентное изменение"
+          },
+          "improvement": {
+            "type": "boolean",
+            "description": "true если улучшение, false если ухудшение"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание причины улучшения (опционально)"
+          }
+        }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "description": "Извлеченные уроки (Lessons Learned)",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "category", "severity", "principle"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^lesson_[a-z_]+$",
+            "description": "Уникальный идентификатор урока"
+          },
+          "title": {
+            "type": "string",
+            "description": "Краткое название урока"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["metrics", "architecture", "process", "tooling", "documentation"],
+            "description": "Категория урока"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Важность урока"
+          },
+          "context": {
+            "type": "object",
+            "description": "Контекст проблемы",
+            "properties": {
+              "problem": {
+                "type": "string",
+                "description": "Описание проблемы"
+              },
+              "solution": {
+                "type": "string",
+                "description": "Примененное решение"
+              }
+            }
+          },
+          "principle": {
+            "type": "string",
+            "description": "Принцип или правило, извлеченное из опыта"
+          },
+          "applicability": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Список типов проектов, к которым применим урок"
+          },
+          "evidence": {
+            "type": "object",
+            "description": "Доказательства эффективности"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Уверенность в уроке (0.0-1.0)"
+          },
+          "source": {
+            "type": "string",
+            "description": "Источник урока (commit, issue, PR)"
+          }
+        }
+      }
+    },
+    "adaptive_thresholds": {
+      "type": "object",
+      "description": "Адаптированные пороги для данного типа проекта",
+      "properties": {
+        "cd": {
+          "$ref": "#/definitions/threshold"
+        },
+        "vt": {
+          "$ref": "#/definitions/threshold"
+        },
+        "cr": {
+          "$ref": "#/definitions/threshold"
+        },
+        "db": {
+          "$ref": "#/definitions/threshold"
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Обнаруженные паттерны развития",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "frequency"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^pattern_[a-z_]+$",
+            "description": "Уникальный идентификатор паттерна"
+          },
+          "name": {
+            "type": "string",
+            "description": "Название паттерна"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание паттерна"
+          },
+          "frequency": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Частота проявления паттерна"
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["positive", "negative", "neutral"],
+            "description": "Влияние паттерна"
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Рекомендации для других проектов",
+      "items": {
+        "type": "object",
+        "required": ["priority", "title", "description"],
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Приоритет рекомендации"
+          },
+          "title": {
+            "type": "string",
+            "description": "Заголовок рекомендации"
+          },
+          "description": {
+            "type": "string",
+            "description": "Полное описание"
+          },
+          "expected_impact": {
+            "type": "string",
+            "description": "Ожидаемый эффект (например, '+10% к VT')"
+          },
+          "effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Требуемые усилия"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "threshold": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "Минимальное значение целевого диапазона"
+        },
+        "max": {
+          "type": "number",
+          "description": "Максимальное значение целевого диапазона"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Обоснование выбранного диапазона"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "metadata": {
+        "project_name": "info1",
+        "project_type": "methodology",
+        "project_size": "large",
+        "project_maturity": "mature",
+        "history_length": 7,
+        "export_date": "2026-01-24T06:48:00Z",
+        "methodology_version": "v1.0 (ЭТАП 6-7)"
+      },
+      "current_state": {
+        "cd": 51.14,
+        "vt": 28.89,
+        "cr": 1.14,
+        "db": 104.97,
+        "total_docs": 75,
+        "total_connections": 1419,
+        "cycle": 10
+      },
+      "trends": {
+        "db": {
+          "direction": "падающий",
+          "change": -36.45,
+          "change_pct": -25.8,
+          "current": 104.97
+        }
+      },
+      "improvements": [
+        {
+          "metric": "DB",
+          "timestamp": "2026-01-24T06:39:34Z",
+          "prev_value": 141.42,
+          "curr_value": 104.97,
+          "change": -36.45,
+          "change_pct": -25.8,
+          "improvement": true,
+          "description": "Исправлена логика определения направлений по уровню абстракции α"
+        }
+      ],
+      "lessons": [
+        {
+          "id": "lesson_db_improvement",
+          "title": "Семантический анализ надежнее текстового поиска",
+          "category": "metrics",
+          "severity": "critical",
+          "principle": "Анализируйте семантику (что документ делает), а не синтаксис (что в нем написано)",
+          "confidence": 0.95
+        }
+      ]
+    }
+  ]
+}
