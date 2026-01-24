@@ -7,7 +7,13 @@
 
 ## 🎯 Назначение
 
-Этот документ содержит **практические примеры** заполнения шаблонов для каждого из 16 типов проектов. Используйте их как референс при работе с генератором проектов.
+Этот документ содержит **практические примеры** заполнения шаблонов для 10 из 16 типов проектов. Используйте их как референс при работе с генератором проектов.
+
+**Покрытие Часть 1 (этот файл):** Software, Healthcare, Education, Agriculture, Finance, Sports, Research, Business, Legal, Arts
+
+**Остальные 6 типов:** См. [TEMPLATE-EXAMPLES-PART2.md](TEMPLATE-EXAMPLES-PART2.md) — Government, Nonprofit, Manufacturing, Hospitality, Retail, Hobby
+
+**Итого:** ✅ 16/16 типов проектов покрыты примерами!
 
 ---
 
@@ -2775,6 +2781,9 @@ Video mapping на 3D-модели человеческого торса (ман
 
 ### Дополнительные ресурсы
 
+- **[TEMPLATE-EXAMPLES-PART2.md](TEMPLATE-EXAMPLES-PART2.md)** — Часть 2 (6 типов: Government, Nonprofit, Manufacturing, Hospitality, Retail, Hobby)
+- **[PROJECT-CHECKLISTS.md](PROJECT-CHECKLISTS.md)** — чек-листы для всех 16 типов
+- **[VISUAL-DIAGRAMS.md](VISUAL-DIAGRAMS.md)** — 25+ визуальных диаграмм
 - **[tools/GENERATOR-QUICK-START.md](../GENERATOR-QUICK-START.md)** — быстрый старт с генератором
 - **[tools/templates/](.)** — библиотека всех шаблонов
 - **[demo-projects/](../../demo-projects/)** — готовые демо-проекты
@@ -2782,6 +2791,6 @@ Video mapping на 3D-модели человеческого торса (ман
 ---
 
 *Создано: 2026-01-24*
-*Версия: 1.0*
-*Статус: ⇓ Практические примеры*
+*Версия: 2.0 (Q2 2026 — расширение примеров до 16/16 типов)*
+*Статус: ⇓ Практические примеры (Часть 1: 10/16)*
 *Покрыто: 6 из 16 типов проектов (остальные в следующих версиях)*
