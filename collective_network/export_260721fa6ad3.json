@@ -1,0 +1,29 @@
+{
+  "protocol_version": "7.0",
+  "project_id": "260721fa6ad3",
+  "timestamp": "2026-01-24T07:18:53.195234",
+  "project_type": "library",
+  "project_size": "medium",
+  "project_maturity": "mature",
+  "metrics": {
+    "cd": 12.3,
+    "vt": 65.0,
+    "cr": 0.7,
+    "db": 18.5,
+    "total_docs": 45,
+    "total_connections": 250
+  },
+  "lessons": [
+    {
+      "id": "lesson_high_vt",
+      "title": "Высокая VT критична для библиотек",
+      "principle": "API должен явно прослеживаться до реализации",
+      "confidence": 0.92
+    }
+  ],
+  "privacy": {
+    "anonymized": true,
+    "opt_in": true,
+    "simulated": true
+  }
+}
