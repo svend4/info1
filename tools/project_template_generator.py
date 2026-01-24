@@ -166,10 +166,18 @@ class ProjectTemplateGenerator:
         "manufacturing": [
             "PRODUCTION-PLAN-TEMPLATE.md"
         ],
-        "agriculture": [],
-        "sports": [],
-        "hospitality": [],
-        "retail": [],
+        "agriculture": [
+            "CROP-PLAN-TEMPLATE.md"
+        ],
+        "sports": [
+            "TRAINING-PROGRAM-TEMPLATE.md"
+        ],
+        "hospitality": [
+            "SERVICE-STANDARDS-TEMPLATE.md"
+        ],
+        "retail": [
+            "MERCHANDISING-PLAN-TEMPLATE.md"
+        ],
         "hobby": []
     }
 
