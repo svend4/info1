@@ -11,7 +11,7 @@ Usage:
     python3 project_template_generator.py --domain medicine --interactive
 
 Author: Claude Code (Methodology ⇑⇓↔)
-Version: 1.0
+Version: 1.1
 Date: 2026-01-24
 """
 
@@ -55,6 +55,24 @@ class ProjectTemplateGenerator:
             "description": "Образовательный проект",
             "alpha_focus": "α=0..+3",
             "key_docs": ["README.md", "CURRICULUM.md", "LEARNING-GOALS.md"]
+        },
+        "legal": {
+            "name": "Legal Project",
+            "description": "Юридический проект",
+            "alpha_focus": "α=-1..+3",
+            "key_docs": ["README.md", "LEGAL-FRAMEWORK.md", "CASE-LAW.md"]
+        },
+        "healthcare": {
+            "name": "Healthcare Project",
+            "description": "Проект здравоохранения",
+            "alpha_focus": "α=-2..+3",
+            "key_docs": ["README.md", "CLINICAL-PROTOCOLS.md", "PATIENT-CARE.md"]
+        },
+        "arts": {
+            "name": "Arts & Creative Project",
+            "description": "Творческий/художественный проект",
+            "alpha_focus": "α=-3..+4",
+            "key_docs": ["README.md", "CREATIVE-VISION.md", "PORTFOLIO.md"]
         }
     }
 
@@ -65,7 +83,7 @@ class ProjectTemplateGenerator:
 
         Args:
             project_name: Имя проекта
-            project_type: Тип проекта (software/research/business/education)
+            project_type: Тип проекта (software/research/business/education/legal/healthcare/arts)
             output_dir: Директория для создания проекта (по умолчанию текущая)
         """
         self.project_name = project_name
@@ -129,6 +147,12 @@ class ProjectTemplateGenerator:
             dirs.extend(["reports", "presentations", "financials"])
         elif self.project_type == "education":
             dirs.extend(["lessons", "materials", "assessments"])
+        elif self.project_type == "legal":
+            dirs.extend(["cases", "contracts", "regulations"])
+        elif self.project_type == "healthcare":
+            dirs.extend(["protocols", "cases", "research"])
+        elif self.project_type == "arts":
+            dirs.extend(["works", "sketches", "portfolio"])
 
         for dir_name in dirs:
             dir_path = self.project_dir / dir_name
@@ -157,6 +181,12 @@ class ProjectTemplateGenerator:
             self._create_business_plan_doc()
         elif self.project_type == "education":
             self._create_curriculum_doc()
+        elif self.project_type == "legal":
+            self._create_legal_framework_doc()
+        elif self.project_type == "healthcare":
+            self._create_clinical_protocols_doc()
+        elif self.project_type == "arts":
+            self._create_creative_vision_doc()
 
     def _create_readme(self):
         """Создание README.md"""
@@ -523,6 +553,173 @@ python3 tools/health_metrics.py
         path.write_text(content, encoding='utf-8')
         print(f"  ✓ 01-Концепция/CURRICULUM.md (α=+1)")
 
+    def _create_legal_framework_doc(self):
+        """Создание LEGAL-FRAMEWORK.md для legal проекта"""
+        content = """# Правовая основа проекта
+*Уровень абстракции: α=+1 (методология)*
+*Статус: ⇓ ВНИЗ (детализация правового регулирования)*
+*CYCLE: 1*
+
+---
+
+## Юрисдикция
+
+[Укажите применимую юрисдикцию]
+
+## Применимые законы и регуляции
+
+### Закон 1
+[Описание]
+
+### Закон 2
+[Описание]
+
+## Правовые прецеденты
+
+1. [Дело 1]
+2. [Дело 2]
+
+## Нормативная база
+
+### α=+3: Правовые принципы
+[Фундаментальные принципы права]
+
+### α=+2: Законодательство
+[Кодексы и законы]
+
+### α=+1: Инструкции
+[Подзаконные акты]
+
+### α=-1: Шаблоны документов
+[Типовые формы]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "LEGAL-FRAMEWORK.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/LEGAL-FRAMEWORK.md (α=+1)")
+
+    def _create_clinical_protocols_doc(self):
+        """Создание CLINICAL-PROTOCOLS.md для healthcare проекта"""
+        content = """# Клинические протоколы
+*Уровень абстракции: α=-1 (спецификации)*
+*Статус: ⇓ ВНИЗ (детализация медицинских процедур)*
+*CYCLE: 1*
+
+---
+
+## Иерархия медицинских знаний
+
+### α=+3: Медицинская философия
+[Холистический подход, этика, принципы]
+
+### α=+2: Теории болезней
+[Патофизиология, этиология]
+
+### α=+1: Клинические принципы
+[Диагностика, лечение, профилактика]
+
+### α=0: Диагнозы
+[Классификация заболеваний (МКБ-10)]
+
+### α=-1: Протоколы лечения
+[Стандартные процедуры]
+
+### α=-2: Шаблоны обследований
+[Формы, чек-листы]
+
+### α=-3: Истории болезней
+[Конкретные случаи]
+
+### α=-4: Лабораторные данные
+[Анализы, показатели]
+
+---
+
+## Основные протоколы
+
+### Протокол 1
+[Описание процедуры]
+
+### Протокол 2
+[Описание процедуры]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "CLINICAL-PROTOCOLS.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/CLINICAL-PROTOCOLS.md (α=-1)")
+
+    def _create_creative_vision_doc(self):
+        """Создание CREATIVE-VISION.md для arts проекта"""
+        content = """# Творческое видение
+*Уровень абстракции: α=+3 (философия)*
+*Статус: ⇑ ВВЕРХ (создание художественной концепции)*
+*CYCLE: 1*
+
+---
+
+## Художественная философия
+
+[Опишите вашу творческую философию и ценности]
+
+## Творческие принципы
+
+1. [Принцип 1]
+2. [Принцип 2]
+3. [Принцип 3]
+
+## Иерархия творчества
+
+### α=+4: Онтология искусства
+[Что такое искусство? Зачем творить?]
+
+### α=+3: Эстетическая философия
+[Ваш художественный стиль, ценности]
+
+### α=+2: Творческие концепции
+[Темы, мотивы, идеи]
+
+### α=+1: Художественная методология
+[Техники, подходы, процессы]
+
+### α=0: Проекты
+[Конкретные работы и серии]
+
+### α=-1: Эскизы и наброски
+[Предварительные варианты]
+
+### α=-2: Шаблоны и паттерны
+[Повторяющиеся элементы]
+
+### α=-3: Портфолио
+[Завершённые работы]
+
+### α=-4: Техническое исполнение
+[Материалы, инструменты, техника]
+
+---
+
+## Влияния и вдохновение
+
+### Художники-предшественники
+[Список влияний]
+
+### Культурный контекст
+[Описание контекста]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "CREATIVE-VISION.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/CREATIVE-VISION.md (α=+3)")
+
     def _create_methodology_config(self):
         """Создание файла конфигурации методологии"""
         print("\n⚙️  Создание конфигурации методологии...")
@@ -617,7 +814,16 @@ def main():
   # Создать education проект
   python3 project_template_generator.py --name online_course --type education
 
-Доступные типы проектов: software, research, business, education
+  # Создать legal проект
+  python3 project_template_generator.py --name law_firm --type legal
+
+  # Создать healthcare проект
+  python3 project_template_generator.py --name clinic_system --type healthcare
+
+  # Создать arts проект
+  python3 project_template_generator.py --name art_portfolio --type arts
+
+Доступные типы проектов: software, research, business, education, legal, healthcare, arts
         """
     )
 
@@ -630,7 +836,7 @@ def main():
     parser.add_argument(
         '--type',
         default='software',
-        choices=['software', 'research', 'business', 'education'],
+        choices=['software', 'research', 'business', 'education', 'legal', 'healthcare', 'arts'],
         help='Тип проекта (по умолчанию: software)'
     )
 
