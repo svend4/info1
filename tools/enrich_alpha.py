@@ -168,12 +168,15 @@ class AlphaEnrichment:
             print(f"  ❌ {file_path.name}: {e}")
             return False
 
-    def enrich_directory(self, directory: Path, pattern: str = "*.md") -> Dict[str, int]:
+    def enrich_directory(self, directory: Path, pattern: str = "*.md", recursive: bool = False) -> Dict[str, int]:
         """Обогащение всех документов в директории"""
-        md_files = list(directory.glob(pattern))
+        if recursive:
+            md_files = list(directory.rglob(pattern))
+        else:
+            md_files = list(directory.glob(pattern))
 
         # Исключить некоторые файлы
-        exclude = ['collective_network/', '.git/', 'node_modules/']
+        exclude = ['collective_network/', '.git/', 'node_modules/', '__pycache__']
         md_files = [f for f in md_files if not any(ex in str(f) for ex in exclude)]
 
         print(f"\n🔍 Найдено {len(md_files)} markdown файлов")
@@ -198,14 +201,18 @@ def main():
     import sys
 
     dry_run = '--dry-run' in sys.argv
+    recursive = '--recursive' in sys.argv or '--subdirs' in sys.argv
 
     if dry_run:
         print("🔬 DRY RUN MODE (изменения не будут сохранены)")
 
+    if recursive:
+        print("🔄 RECURSIVE MODE (включая поддиректории)")
+
     enricher = AlphaEnrichment(dry_run=dry_run)
 
     # Обогатить корневую директорию
-    results = enricher.enrich_directory(Path('.'))
+    results = enricher.enrich_directory(Path('.'), recursive=recursive)
 
     if dry_run:
         print("\n💡 Запустите без --dry-run для применения изменений")
