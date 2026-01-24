@@ -73,6 +73,60 @@ class ProjectTemplateGenerator:
             "description": "Творческий/художественный проект",
             "alpha_focus": "α=-3..+4",
             "key_docs": ["README.md", "CREATIVE-VISION.md", "PORTFOLIO.md"]
+        },
+        "finance": {
+            "name": "Finance Project",
+            "description": "Финансовый проект",
+            "alpha_focus": "α=-3..+2",
+            "key_docs": ["README.md", "FINANCIAL-STRATEGY.md", "PORTFOLIO-MANAGEMENT.md"]
+        },
+        "government": {
+            "name": "Government Project",
+            "description": "Проект государственного управления",
+            "alpha_focus": "α=-1..+3",
+            "key_docs": ["README.md", "PUBLIC-POLICY.md", "GOVERNANCE-FRAMEWORK.md"]
+        },
+        "nonprofit": {
+            "name": "Nonprofit Project",
+            "description": "Проект некоммерческой организации",
+            "alpha_focus": "α=-1..+3",
+            "key_docs": ["README.md", "MISSION-IMPACT.md", "FUNDRAISING.md"]
+        },
+        "manufacturing": {
+            "name": "Manufacturing Project",
+            "description": "Производственный проект",
+            "alpha_focus": "α=-4..+2",
+            "key_docs": ["README.md", "PRODUCTION-PROCESS.md", "QUALITY-CONTROL.md"]
+        },
+        "agriculture": {
+            "name": "Agriculture Project",
+            "description": "Сельскохозяйственный проект",
+            "alpha_focus": "α=-3..+2",
+            "key_docs": ["README.md", "CROP-MANAGEMENT.md", "SUSTAINABILITY.md"]
+        },
+        "sports": {
+            "name": "Sports Project",
+            "description": "Спортивный проект",
+            "alpha_focus": "α=-3..+3",
+            "key_docs": ["README.md", "TRAINING-PROGRAM.md", "PERFORMANCE-METRICS.md"]
+        },
+        "hospitality": {
+            "name": "Hospitality & Tourism Project",
+            "description": "Проект гостеприимства и туризма",
+            "alpha_focus": "α=-2..+2",
+            "key_docs": ["README.md", "SERVICE-STANDARDS.md", "GUEST-EXPERIENCE.md"]
+        },
+        "retail": {
+            "name": "Retail Project",
+            "description": "Проект розничной торговли",
+            "alpha_focus": "α=-3..+1",
+            "key_docs": ["README.md", "RETAIL-STRATEGY.md", "CUSTOMER-JOURNEY.md"]
+        },
+        "hobby": {
+            "name": "Hobby & Personal Project",
+            "description": "Проект хобби/увлечений (универсальный шаблон)",
+            "alpha_focus": "α=-3..+3",
+            "key_docs": ["README.md", "PROJECT-VISION.md", "LEARNING-LOG.md"]
         }
     }
 
@@ -83,7 +137,8 @@ class ProjectTemplateGenerator:
 
         Args:
             project_name: Имя проекта
-            project_type: Тип проекта (software/research/business/education/legal/healthcare/arts)
+            project_type: Тип проекта (software/research/business/education/legal/healthcare/arts/
+                         finance/government/nonprofit/manufacturing/agriculture/sports/hospitality/retail/hobby)
             output_dir: Директория для создания проекта (по умолчанию текущая)
         """
         self.project_name = project_name
@@ -95,13 +150,24 @@ class ProjectTemplateGenerator:
             raise ValueError(f"Неизвестный тип проекта: {project_type}. "
                            f"Доступные: {', '.join(self.PROJECT_TYPES.keys())}")
 
-    def generate(self, interactive: bool = False):
+    def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False):
         """
         Генерация структуры проекта
 
         Args:
             interactive: Интерактивный режим с вопросами
+            init_git: Инициализировать git репозиторий
+            create_github_repo: Создать GitHub репозиторий (требует gh CLI)
         """
+        # Интерактивный режим: задать вопросы пользователю
+        if interactive:
+            self._interactive_project_setup()
+            # Обновляем параметры из интерактивного режима
+            if hasattr(self, '_init_git'):
+                init_git = self._init_git
+            if hasattr(self, '_create_github'):
+                create_github_repo = self._create_github
+
         print(f"🚀 Генерация проекта: {self.project_name}")
         print(f"📦 Тип: {self.PROJECT_TYPES[self.project_type]['name']}")
         print(f"📁 Директория: {self.project_dir}\n")
@@ -117,6 +183,10 @@ class ProjectTemplateGenerator:
 
         # 4. Создать инструментальную директорию
         self._create_tools_directory()
+
+        # 5. Git/GitHub интеграция (если запрошено)
+        if init_git or create_github_repo:
+            self._setup_git_integration(init_git=init_git, create_github=create_github_repo)
 
         print("\n✅ Проект успешно создан!")
         print(f"\nСледующие шаги:")
@@ -153,6 +223,24 @@ class ProjectTemplateGenerator:
             dirs.extend(["protocols", "cases", "research"])
         elif self.project_type == "arts":
             dirs.extend(["works", "sketches", "portfolio"])
+        elif self.project_type == "finance":
+            dirs.extend(["portfolios", "analysis", "reports"])
+        elif self.project_type == "government":
+            dirs.extend(["policies", "programs", "regulations"])
+        elif self.project_type == "nonprofit":
+            dirs.extend(["programs", "campaigns", "grants"])
+        elif self.project_type == "manufacturing":
+            dirs.extend(["production", "quality", "inventory"])
+        elif self.project_type == "agriculture":
+            dirs.extend(["crops", "livestock", "equipment"])
+        elif self.project_type == "sports":
+            dirs.extend(["training", "events", "analytics"])
+        elif self.project_type == "hospitality":
+            dirs.extend(["services", "facilities", "events"])
+        elif self.project_type == "retail":
+            dirs.extend(["products", "inventory", "marketing"])
+        elif self.project_type == "hobby":
+            dirs.extend(["projects", "resources", "notes"])
 
         for dir_name in dirs:
             dir_path = self.project_dir / dir_name
@@ -187,6 +275,24 @@ class ProjectTemplateGenerator:
             self._create_clinical_protocols_doc()
         elif self.project_type == "arts":
             self._create_creative_vision_doc()
+        elif self.project_type == "finance":
+            self._create_financial_strategy_doc()
+        elif self.project_type == "government":
+            self._create_public_policy_doc()
+        elif self.project_type == "nonprofit":
+            self._create_mission_impact_doc()
+        elif self.project_type == "manufacturing":
+            self._create_production_process_doc()
+        elif self.project_type == "agriculture":
+            self._create_crop_management_doc()
+        elif self.project_type == "sports":
+            self._create_training_program_doc()
+        elif self.project_type == "hospitality":
+            self._create_service_standards_doc()
+        elif self.project_type == "retail":
+            self._create_retail_strategy_doc()
+        elif self.project_type == "hobby":
+            self._create_project_vision_doc()
 
     def _create_readme(self):
         """Создание README.md"""
@@ -720,6 +826,549 @@ python3 tools/health_metrics.py
         path.write_text(content, encoding='utf-8')
         print(f"  ✓ 01-Концепция/CREATIVE-VISION.md (α=+3)")
 
+    def _create_financial_strategy_doc(self):
+        """Создание FINANCIAL-STRATEGY.md для finance проекта"""
+        content = """# Финансовая стратегия
+*Уровень абстракции: α=+1 (методология)*
+*Статус: ⇓ ВНИЗ (детализация финансовой стратегии)*
+*CYCLE: 1*
+
+---
+
+## Финансовая философия
+
+[Опишите базовые принципы управления финансами]
+
+## Иерархия финансовых решений
+
+### α=+2: Финансовая теория
+[Теории инвестирования, управления рисками]
+
+### α=+1: Финансовая стратегия
+[Долгосрочные цели, allocation принципы]
+
+### α=0: Портфели
+[Структура активов]
+
+### α=-1: Инструменты
+[Акции, облигации, деривативы]
+
+### α=-2: Транзакции
+[Конкретные сделки]
+
+### α=-3: Рыночные данные
+[Котировки, показатели]
+
+---
+
+## Основные стратегии
+
+### Стратегия 1
+[Описание]
+
+### Стратегия 2
+[Описание]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "FINANCIAL-STRATEGY.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/FINANCIAL-STRATEGY.md (α=+1)")
+
+    def _create_public_policy_doc(self):
+        """Создание PUBLIC-POLICY.md для government проекта"""
+        content = """# Публичная политика
+*Уровень абстракции: α=+2 (теория)*
+*Статус: ⇓ ВНИЗ (детализация государственной политики)*
+*CYCLE: 1*
+
+---
+
+## Политическая философия
+
+[Опишите принципы государственного управления]
+
+## Иерархия политических решений
+
+### α=+3: Конституционные принципы
+[Основы государственности, права человека]
+
+### α=+2: Публичная политика
+[Направления государственной политики]
+
+### α=+1: Законодательство
+[Законы, постановления]
+
+### α=0: Программы
+[Государственные программы]
+
+### α=-1: Регламенты
+[Процедуры, инструкции]
+
+### α=-2: Услуги
+[Конкретные государственные услуги]
+
+---
+
+## Ключевые направления
+
+### Направление 1
+[Описание]
+
+### Направление 2
+[Описание]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "PUBLIC-POLICY.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/PUBLIC-POLICY.md (α=+2)")
+
+    def _create_mission_impact_doc(self):
+        """Создание MISSION-IMPACT.md для nonprofit проекта"""
+        content = """# Миссия и социальное воздействие
+*Уровень абстракции: α=+3 (философия)*
+*Статус: ⇑ ВВЕРХ (создание социальной миссии)*
+*CYCLE: 1*
+
+---
+
+## Социальная миссия
+
+[Опишите миссию организации]
+
+## Иерархия социального воздействия
+
+### α=+3: Ценности и философия
+[Базовые ценности организации]
+
+### α=+2: Теория изменений
+[Как организация создаёт перемены]
+
+### α=+1: Стратегия воздействия
+[Направления деятельности]
+
+### α=0: Программы
+[Конкретные программы]
+
+### α=-1: Проекты
+[Отдельные проекты]
+
+### α=-2: Мероприятия
+[События, активности]
+
+### α=-3: Благополучатели
+[Конкретные истории помощи]
+
+---
+
+## Ключевые программы
+
+### Программа 1
+[Описание]
+
+### Программа 2
+[Описание]
+
+---
+
+## Метрики воздействия
+
+[Как измеряется социальный эффект]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "MISSION-IMPACT.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/MISSION-IMPACT.md (α=+3)")
+
+    def _create_production_process_doc(self):
+        """Создание PRODUCTION-PROCESS.md для manufacturing проекта"""
+        content = """# Производственный процесс
+*Уровень абстракции: α=-1 (спецификации)*
+*Статус: ⇓ ВНИЗ (детализация производственных процессов)*
+*CYCLE: 1*
+
+---
+
+## Производственная философия
+
+[Lean, Six Sigma, другие подходы]
+
+## Иерархия производства
+
+### α=+2: Производственная стратегия
+[Стратегические цели производства]
+
+### α=+1: Производственная система
+[Общая организация производства]
+
+### α=0: Производственные линии
+[Основные линии]
+
+### α=-1: Процессы
+[Технологические процессы]
+
+### α=-2: Операции
+[Отдельные операции]
+
+### α=-3: Инструкции
+[Рабочие инструкции]
+
+### α=-4: Параметры оборудования
+[Настройки станков, режимы]
+
+---
+
+## Основные процессы
+
+### Процесс 1
+[Описание]
+
+### Процесс 2
+[Описание]
+
+---
+
+## Контроль качества
+
+[Методы и стандарты]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "PRODUCTION-PROCESS.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/PRODUCTION-PROCESS.md (α=-1)")
+
+    def _create_crop_management_doc(self):
+        """Создание CROP-MANAGEMENT.md для agriculture проекта"""
+        content = """# Управление сельскохозяйственным производством
+*Уровень абстракции: α=0 (концепция)*
+*Статус: ⇓ ВНИЗ (детализация агротехнологий)*
+*CYCLE: 1*
+
+---
+
+## Агрономическая философия
+
+[Органическое/традиционное земледелие, sustainable agriculture]
+
+## Иерархия сельского хозяйства
+
+### α=+2: Агрономическая наука
+[Теории почвоведения, растениеводства]
+
+### α=+1: Системы земледелия
+[Севооборот, системы обработки]
+
+### α=0: Культуры
+[Выращиваемые культуры]
+
+### α=-1: Технологические карты
+[Агротехнологии для каждой культуры]
+
+### α=-2: Полевые работы
+[Посев, уход, уборка]
+
+### α=-3: Данные полей
+[Урожайность, показатели]
+
+---
+
+## Основные культуры
+
+### Культура 1
+[Описание]
+
+### Культура 2
+[Описание]
+
+---
+
+## Устойчивость и экология
+
+[Принципы устойчивого земледелия]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "CROP-MANAGEMENT.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/CROP-MANAGEMENT.md (α=0)")
+
+    def _create_training_program_doc(self):
+        """Создание TRAINING-PROGRAM.md для sports проекта"""
+        content = """# Тренировочная программа
+*Уровень абстракции: α=+1 (методология)*
+*Статус: ⇓ ВНИЗ (детализация тренировочного процесса)*
+*CYCLE: 1*
+
+---
+
+## Философия тренировок
+
+[Спортивная философия, принципы]
+
+## Иерархия спортивной подготовки
+
+### α=+3: Спортивная философия
+[Олимпийские ценности, этика спорта]
+
+### α=+2: Теория спорта
+[Физиология, биомеханика]
+
+### α=+1: Методология тренировок
+[Системы подготовки]
+
+### α=0: Тренировочные планы
+[Макроциклы, мезоциклы]
+
+### α=-1: Тренировочные занятия
+[Отдельные тренировки]
+
+### α=-2: Упражнения
+[Конкретные упражнения]
+
+### α=-3: Показатели
+[Результаты, метрики]
+
+---
+
+## Основные направления подготовки
+
+### Физическая подготовка
+[Описание]
+
+### Техническая подготовка
+[Описание]
+
+### Тактическая подготовка
+[Описание]
+
+### Психологическая подготовка
+[Описание]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "TRAINING-PROGRAM.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/TRAINING-PROGRAM.md (α=+1)")
+
+    def _create_service_standards_doc(self):
+        """Создание SERVICE-STANDARDS.md для hospitality проекта"""
+        content = """# Стандарты обслуживания
+*Уровень абстракции: α=-1 (спецификации)*
+*Статус: ⇓ ВНИЗ (детализация стандартов сервиса)*
+*CYCLE: 1*
+
+---
+
+## Философия гостеприимства
+
+[Принципы работы с гостями]
+
+## Иерархия сервиса
+
+### α=+2: Культура гостеприимства
+[Философия и ценности]
+
+### α=+1: Концепция сервиса
+[Общий подход к обслуживанию]
+
+### α=0: Сервисные модули
+[Регистрация, питание, размещение]
+
+### α=-1: Стандарты
+[Детальные стандарты обслуживания]
+
+### α=-2: Процедуры
+[Пошаговые инструкции]
+
+### α=-3: Взаимодействия
+[Конкретные сценарии с гостями]
+
+---
+
+## Ключевые стандарты
+
+### Стандарт 1
+[Описание]
+
+### Стандарт 2
+[Описание]
+
+---
+
+## Качество обслуживания
+
+[Метрики удовлетворённости гостей]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "SERVICE-STANDARDS.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/SERVICE-STANDARDS.md (α=-1)")
+
+    def _create_retail_strategy_doc(self):
+        """Создание RETAIL-STRATEGY.md для retail проекта"""
+        content = """# Стратегия розничной торговли
+*Уровень абстракции: α=+1 (методология)*
+*Статус: ⇓ ВНИЗ (детализация торговой стратегии)*
+*CYCLE: 1*
+
+---
+
+## Торговая философия
+
+[Клиентоориентированность, ценностное предложение]
+
+## Иерархия розничной торговли
+
+### α=+1: Торговая стратегия
+[Позиционирование, целевая аудитория]
+
+### α=0: Форматы магазинов
+[Типы точек продаж]
+
+### α=-1: Ассортимент
+[Товарные категории]
+
+### α=-2: SKU
+[Конкретные товары]
+
+### α=-3: Транзакции
+[Продажи, чеки]
+
+---
+
+## Customer Journey
+
+### Этап 1: Привлечение
+[Описание]
+
+### Этап 2: Вовлечение
+[Описание]
+
+### Этап 3: Покупка
+[Описание]
+
+### Этап 4: Удержание
+[Описание]
+
+---
+
+## Merchandising
+
+[Принципы выкладки и презентации товара]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+"""
+        path = self.project_dir / "01-Концепция" / "RETAIL-STRATEGY.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/RETAIL-STRATEGY.md (α=+1)")
+
+    def _create_project_vision_doc(self):
+        """Создание PROJECT-VISION.md для hobby проекта (универсальный шаблон)"""
+        content = """# Видение проекта
+*Уровень абстракции: α=+2 (теория)*
+*Статус: ⇑ ВВЕРХ (создание концепции проекта)*
+*CYCLE: 1*
+
+---
+
+## О проекте
+
+[Опишите суть вашего хобби/увлечения]
+
+## Философия и мотивация
+
+### Почему это важно?
+[Ваша мотивация]
+
+### Какие ценности?
+[Ценности, которые вы разделяете]
+
+## Иерархия знаний
+
+### α=+3: Философия домена
+[Фундаментальные принципы вашей области]
+
+### α=+2: Теория и концепции
+[Основные теории, которые вы изучаете]
+
+### α=+1: Методологии и подходы
+[Методы и техники]
+
+### α=0: Проекты
+[Ваши конкретные проекты]
+
+### α=-1: Задачи
+[Детальные задачи]
+
+### α=-2: Эксперименты
+[Что вы пробуете]
+
+### α=-3: Заметки и наблюдения
+[Ваши записи]
+
+---
+
+## Цели и планы
+
+### Краткосрочные цели (1-3 месяца)
+1. [Цель 1]
+2. [Цель 2]
+
+### Долгосрочные цели (год+)
+1. [Цель 1]
+2. [Цель 2]
+
+---
+
+## Ресурсы
+
+### Обучающие материалы
+- [Книги, курсы, статьи]
+
+### Инструменты
+- [Что используете]
+
+### Сообщество
+- [Где общаетесь с единомышленниками]
+
+---
+
+## Прогресс
+
+[Отслеживайте свой прогресс здесь]
+
+---
+
+**Создано с помощью методологии параллельного двунаправленного развития (⇑⇓↔)**
+
+**ПРИМЕЧАНИЕ:** Это универсальный шаблон для хобби и увлечений.
+Адаптируйте его под свой конкретный домен: фотография, музыка,
+программирование, моделирование, кулинария, садоводство и т.д.
+"""
+        path = self.project_dir / "01-Концепция" / "PROJECT-VISION.md"
+        path.write_text(content, encoding='utf-8')
+        print(f"  ✓ 01-Концепция/PROJECT-VISION.md (α=+2)")
+
     def _create_methodology_config(self):
         """Создание файла конфигурации методологии"""
         print("\n⚙️  Создание конфигурации методологии...")
@@ -793,6 +1442,156 @@ python3 health_metrics.py
         (tools_dir / "README.md").write_text(tools_readme, encoding='utf-8')
         print(f"  ✓ tools/README.md")
 
+    def _interactive_project_setup(self):
+        """Интерактивный режим: задать вопросы пользователю"""
+        print("\n🤖 Интерактивный режим настройки проекта\n")
+        print("=" * 60)
+
+        # 1. Подтверждение типа проекта или выбор нового
+        print(f"\nВыбран тип проекта: {self.PROJECT_TYPES[self.project_type]['name']}")
+        print(f"Описание: {self.PROJECT_TYPES[self.project_type]['description']}")
+        print(f"Фокус α-уровней: {self.PROJECT_TYPES[self.project_type]['alpha_focus']}")
+
+        change_type = input("\nИзменить тип проекта? (y/N): ").strip().lower()
+
+        if change_type == 'y':
+            print("\nДоступные типы проектов:\n")
+            types_list = list(self.PROJECT_TYPES.keys())
+            for idx, ptype in enumerate(types_list, 1):
+                info = self.PROJECT_TYPES[ptype]
+                print(f"  {idx:2d}. {ptype:15s} - {info['description']}")
+
+            while True:
+                try:
+                    choice = input(f"\nВыберите тип (1-{len(types_list)}): ").strip()
+                    choice_idx = int(choice) - 1
+                    if 0 <= choice_idx < len(types_list):
+                        self.project_type = types_list[choice_idx]
+                        print(f"✓ Выбран тип: {self.PROJECT_TYPES[self.project_type]['name']}")
+                        break
+                    else:
+                        print(f"Пожалуйста, введите число от 1 до {len(types_list)}")
+                except ValueError:
+                    print("Пожалуйста, введите число")
+
+        # 2. Дополнительная настройка проекта
+        print("\n" + "=" * 60)
+        print("\n📋 Дополнительные параметры\n")
+
+        # 3. Git интеграция
+        init_git = input("Инициализировать Git репозиторий? (Y/n): ").strip().lower()
+        self._init_git = init_git != 'n'
+
+        if self._init_git:
+            create_github = input("Создать GitHub репозиторий? (требует gh CLI) (y/N): ").strip().lower()
+            self._create_github = create_github == 'y'
+
+            if self._create_github:
+                self._github_visibility = input("  Visibility (public/private) [private]: ").strip() or "private"
+                self._github_description = input(f"  Описание репозитория [{self.project_name}]: ").strip() or self.project_name
+        else:
+            self._create_github = False
+
+        # 4. Подтверждение
+        print("\n" + "=" * 60)
+        print("\n📦 Итоговая конфигурация:\n")
+        print(f"  Название:     {self.project_name}")
+        print(f"  Тип:          {self.PROJECT_TYPES[self.project_type]['name']}")
+        print(f"  Директория:   {self.project_dir}")
+        print(f"  Git init:     {'Да' if self._init_git else 'Нет'}")
+        if self._init_git and self._create_github:
+            print(f"  GitHub repo:  Да ({self._github_visibility})")
+        print()
+
+        confirm = input("Продолжить создание проекта? (Y/n): ").strip().lower()
+        if confirm == 'n':
+            print("\n❌ Создание проекта отменено")
+            exit(0)
+
+        print("\n" + "=" * 60 + "\n")
+
+    def _setup_git_integration(self, init_git: bool = True, create_github: bool = False):
+        """Настройка Git/GitHub интеграции"""
+        import subprocess
+        import os
+
+        original_dir = os.getcwd()
+
+        try:
+            os.chdir(self.project_dir)
+
+            if init_git:
+                print("\n🔧 Настройка Git...")
+
+                # Инициализация git
+                result = subprocess.run(['git', 'init'], capture_output=True, text=True)
+                if result.returncode == 0:
+                    print("  ✓ Git репозиторий инициализирован")
+
+                    # Создание .gitignore
+                    gitignore_content = """# Методология ⇑⇓↔
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+
+# Временные файлы
+*.tmp
+*.log
+.cache/
+
+# Виртуальное окружение
+venv/
+env/
+"""
+                    with open('.gitignore', 'w') as f:
+                        f.write(gitignore_content)
+                    print("  ✓ .gitignore создан")
+
+                    # Первый коммит
+                    subprocess.run(['git', 'add', '.'], capture_output=True)
+                    commit_msg = f"Initial commit: {self.PROJECT_TYPES[self.project_type]['name']}\n\nСоздано с помощью методологии ⇑⇓↔"
+                    result = subprocess.run(['git', 'commit', '--no-gpg-sign', '-m', commit_msg], capture_output=True, text=True)
+                    if result.returncode == 0:
+                        print("  ✓ Начальный коммит создан")
+                    else:
+                        print(f"  ⚠️  Ошибка создания коммита: {result.stderr}")
+                else:
+                    print(f"  ⚠️  Ошибка инициализации git: {result.stderr}")
+
+            if create_github:
+                print("\n🐙 Создание GitHub репозитория...")
+
+                # Проверка наличия gh CLI
+                gh_check = subprocess.run(['gh', '--version'], capture_output=True)
+                if gh_check.returncode != 0:
+                    print("  ⚠️  gh CLI не установлен. Пропускаем создание GitHub репозитория")
+                    print("     Установите: https://cli.github.com/")
+                else:
+                    # Получение параметров из интерактивного режима или использование значений по умолчанию
+                    visibility = getattr(self, '_github_visibility', 'private')
+                    description = getattr(self, '_github_description', self.project_name)
+
+                    gh_cmd = [
+                        'gh', 'repo', 'create', self.project_name,
+                        f'--{visibility}',
+                        '--source=.',
+                        '--push',
+                        f'--description={description}'
+                    ]
+
+                    result = subprocess.run(gh_cmd, capture_output=True, text=True)
+                    if result.returncode == 0:
+                        print(f"  ✓ GitHub репозиторий создан ({visibility})")
+                        print(f"  ✓ Код запушен в GitHub")
+                    else:
+                        print(f"  ⚠️  Ошибка создания GitHub репозитория:")
+                        print(f"     {result.stderr}")
+
+        finally:
+            os.chdir(original_dir)
+
 
 def main():
     """Main entry point"""
@@ -823,7 +1622,52 @@ def main():
   # Создать arts проект
   python3 project_template_generator.py --name art_portfolio --type arts
 
-Доступные типы проектов: software, research, business, education, legal, healthcare, arts
+  # v0.3: Новые типы проектов
+
+  # Создать finance проект
+  python3 project_template_generator.py --name investment_fund --type finance
+
+  # Создать government проект
+  python3 project_template_generator.py --name public_service --type government
+
+  # Создать nonprofit проект
+  python3 project_template_generator.py --name charity_org --type nonprofit
+
+  # Создать manufacturing проект
+  python3 project_template_generator.py --name factory --type manufacturing
+
+  # Создать agriculture проект
+  python3 project_template_generator.py --name farm --type agriculture
+
+  # Создать sports проект
+  python3 project_template_generator.py --name athletics_team --type sports
+
+  # Создать hospitality проект
+  python3 project_template_generator.py --name hotel --type hospitality
+
+  # Создать retail проект
+  python3 project_template_generator.py --name store_chain --type retail
+
+  # Создать hobby проект (универсальный шаблон)
+  python3 project_template_generator.py --name photography --type hobby
+
+  # v0.3: Интерактивный режим и Git/GitHub интеграция
+
+  # Интерактивный режим
+  python3 project_template_generator.py --name my_project --type software --interactive
+
+  # С Git инициализацией
+  python3 project_template_generator.py --name my_app --type software --git
+
+  # С созданием GitHub репозитория (приватного)
+  python3 project_template_generator.py --name startup --type business --github
+
+  # С созданием публичного GitHub репозитория
+  python3 project_template_generator.py --name open_source --type software --github --github-visibility public
+
+Доступные типы: software, research, business, education, legal, healthcare, arts,
+                finance, government, nonprofit, manufacturing, agriculture, sports,
+                hospitality, retail, hobby (универсальный)
         """
     )
 
@@ -836,7 +1680,9 @@ def main():
     parser.add_argument(
         '--type',
         default='software',
-        choices=['software', 'research', 'business', 'education', 'legal', 'healthcare', 'arts'],
+        choices=['software', 'research', 'business', 'education', 'legal', 'healthcare', 'arts',
+                'finance', 'government', 'nonprofit', 'manufacturing', 'agriculture', 'sports',
+                'hospitality', 'retail', 'hobby'],
         help='Тип проекта (по умолчанию: software)'
     )
 
@@ -853,7 +1699,30 @@ def main():
         help='Интерактивный режим с вопросами'
     )
 
+    parser.add_argument(
+        '--git',
+        action='store_true',
+        help='Инициализировать Git репозиторий'
+    )
+
+    parser.add_argument(
+        '--github',
+        action='store_true',
+        help='Создать GitHub репозиторий (требует gh CLI и --git)'
+    )
+
+    parser.add_argument(
+        '--github-visibility',
+        choices=['public', 'private'],
+        default='private',
+        help='Visibility GitHub репозитория (по умолчанию: private)'
+    )
+
     args = parser.parse_args()
+
+    # Если --github указан, автоматически включить --git
+    if args.github:
+        args.git = True
 
     generator = ProjectTemplateGenerator(
         project_name=args.name,
@@ -861,7 +1730,16 @@ def main():
         output_dir=args.output
     )
 
-    generator.generate(interactive=args.interactive)
+    # Если используется GitHub, сохранить параметры
+    if args.github:
+        generator._github_visibility = args.github_visibility
+        generator._github_description = args.name
+
+    generator.generate(
+        interactive=args.interactive,
+        init_git=args.git,
+        create_github_repo=args.github
+    )
 
 
 if __name__ == "__main__":

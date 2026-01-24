@@ -1,7 +1,8 @@
 # 🚀 Руководство по генератору проектов
 *Уровень абстракции: α=-1 (инструкция)*
 *Статус: ↔ ГОРИЗОНТ (обзор инструмента)*
-*CYCLE: 1*
+*CYCLE: 2*
+*Версия: v0.3*
 
 ---
 
@@ -9,12 +10,15 @@
 
 `project_template_generator.py` — инструмент для автоматической генерации структуры нового проекта с встроенной методологией **⇑⇓↔** (Параллельная Двунаправленная Разработка).
 
-**Возможности:**
-- 7 типов проектов (software, research, business, education, legal, healthcare, arts)
-- Автоматическое создание иерархии α-уровней
-- Встроенные метрики здоровья (VT, DB, CD, CR)
-- Специфичные для домена документы
-- Копирование инструментов валидации
+**Возможности v0.3:**
+- ✅ **16 типов проектов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
+- ✅ **Интерактивный режим** с пошаговыми вопросами
+- ✅ **Git/GitHub интеграция** — автоматическая инициализация репозитория и создание на GitHub
+- ✅ Автоматическое создание иерархии α-уровней
+- ✅ Встроенные метрики здоровья (VT, DB, CD, CR)
+- ✅ Доменно-специфичные документы для каждого типа
+- ✅ Копирование инструментов валидации
+- ✅ Универсальный шаблон **hobby** для любых доменов
 
 ---
 
@@ -303,6 +307,139 @@ python3 tools/health_metrics.py
 
 ---
 
+### 8. Finance (Финансовый проект)
+
+**Фокус:** α=-3..+2 (от транзакций до финансовой теории)
+
+```bash
+python3 tools/project_template_generator.py --name investment_fund --type finance
+```
+
+**Ключевые документы:** FINANCIAL-STRATEGY.md (α=+1)
+**Примеры:** инвестиционный фонд, финансовое планирование, управление портфелем
+
+---
+
+### 9. Government (Государственное управление)
+
+**Фокус:** α=-1..+3 (от услуг до конституционных принципов)
+
+```bash
+python3 tools/project_template_generator.py --name public_service --type government
+```
+
+**Ключевые документы:** PUBLIC-POLICY.md (α=+2)
+**Примеры:** государственная программа, электронные услуги, муниципальный проект
+
+---
+
+### 10. Nonprofit (Некоммерческая организация)
+
+**Фокус:** α=-1..+3 (от мероприятий до социальной миссии)
+
+```bash
+python3 tools/project_template_generator.py --name charity_org --type nonprofit
+```
+
+**Ключевые документы:** MISSION-IMPACT.md (α=+3)
+**Примеры:** благотворительный фонд, социальный проект, НКО
+
+---
+
+### 11. Manufacturing (Производство)
+
+**Фокус:** α=-4..+2 (от параметров оборудования до производственной стратегии)
+
+```bash
+python3 tools/project_template_generator.py --name factory --type manufacturing
+```
+
+**Ключевые документы:** PRODUCTION-PROCESS.md (α=-1)
+**Примеры:** завод, производственная линия, Lean/Six Sigma проект
+
+---
+
+### 12. Agriculture (Сельское хозяйство)
+
+**Фокус:** α=-3..+2 (от данных полей до агрономической науки)
+
+```bash
+python3 tools/project_template_generator.py --name farm --type agriculture
+```
+
+**Ключевые документы:** CROP-MANAGEMENT.md (α=0)
+**Примеры:** ферма, органическое земледелие, агротехнологии
+
+---
+
+### 13. Sports (Спортивный проект)
+
+**Фокус:** α=-3..+3 (от показателей до спортивной философии)
+
+```bash
+python3 tools/project_template_generator.py --name athletics_team --type sports
+```
+
+**Ключевые документы:** TRAINING-PROGRAM.md (α=+1)
+**Примеры:** спортивная команда, фитнес-программа, спортивная школа
+
+---
+
+### 14. Hospitality (Гостеприимство и туризм)
+
+**Фокус:** α=-2..+2 (от процедур до культуры гостеприимства)
+
+```bash
+python3 tools/project_template_generator.py --name hotel --type hospitality
+```
+
+**Ключевые документы:** SERVICE-STANDARDS.md (α=-1)
+**Примеры:** отель, ресторан, туристическое агентство
+
+---
+
+### 15. Retail (Розничная торговля)
+
+**Фокус:** α=-3..+1 (от транзакций до торговой стратегии)
+
+```bash
+python3 tools/project_template_generator.py --name store_chain --type retail
+```
+
+**Ключевые документы:** RETAIL-STRATEGY.md (α=+1)
+**Примеры:** магазин, торговая сеть, e-commerce
+
+---
+
+### 16. Hobby (Универсальный шаблон)
+
+**Фокус:** α=-3..+3 (универсальный для любого домена)
+
+```bash
+python3 tools/project_template_generator.py --name photography --type hobby
+```
+
+**Ключевые документы:** PROJECT-VISION.md (α=+2)
+
+**⭐ ОСОБЕННОСТЬ:** Универсальный шаблон для доменов, не вошедших в стандартный набор.
+
+**Примеры использования:**
+- Фотография, музыка, живопись
+- Программирование как хобби
+- Кулинария, садоводство
+- Моделирование, DIY проекты
+- Любое личное увлечение
+
+**Пример:**
+```bash
+cd photography
+# Адаптируйте PROJECT-VISION.md под свой домен
+# Создайте структуру под свои нужды
+python3 tools/health_metrics.py
+```
+
+---
+
 ## 🔧 Расширенное использование
 
 ### Проверка доступных типов
@@ -362,6 +499,128 @@ python3 tools/health_metrics.py
 2. **DB слишком высокая** → добавьте явные статусы "Статус: ⇑/⇓/↔" в документы
 3. **CD слишком высокая** → удалите избыточные связи
 4. **CR > 1.3** → уменьшите пересечения между направлениями
+
+---
+
+## 🤖 Интерактивный режим (v0.3)
+
+Интерактивный режим помогает настроить проект с помощью пошаговых вопросов.
+
+### Запуск
+
+```bash
+python3 tools/project_template_generator.py --name my_project --type software --interactive
+```
+
+### Что спрашивает интерактивный режим:
+
+1. **Подтверждение типа проекта**
+   - Показывает выбранный тип и его характеристики
+   - Предлагает изменить тип, если нужно
+
+2. **Выбор нового типа (опционально)**
+   - Показывает все 16 доступных типов
+   - Позволяет выбрать другой тип проекта
+
+3. **Git интеграция**
+   - Инициализировать Git репозиторий?
+   - Создать GitHub репозиторий? (требует gh CLI)
+   - Visibility (public/private)
+   - Описание репозитория
+
+4. **Итоговое подтверждение**
+   - Показывает финальную конфигурацию
+   - Запрашивает подтверждение перед созданием
+
+### Пример интерактивной сессии:
+
+```
+$ python3 tools/project_template_generator.py --name my_app --type software --interactive
+
+🤖 Интерактивный режим настройки проекта
+
+============================================================
+
+Выбран тип проекта: Software Project
+Описание: Проект разработки программного обеспечения
+Фокус α-уровней: α=-4..+3
+
+Изменить тип проекта? (y/N): n
+
+============================================================
+
+📋 Дополнительные параметры
+
+Инициализировать Git репозиторий? (Y/n): y
+Создать GitHub репозиторий? (требует gh CLI) (y/N): y
+  Visibility (public/private) [private]: public
+  Описание репозитория [my_app]: Мое новое приложение
+
+============================================================
+
+📦 Итоговая конфигурация:
+
+  Название:     my_app
+  Тип:          Software Project
+  Директория:   /current/path/my_app
+  Git init:     Да
+  GitHub repo:  Да (public)
+
+Продолжить создание проекта? (Y/n): y
+```
+
+---
+
+## 🔧 Git/GitHub интеграция (v0.3)
+
+### Базовая Git интеграция
+
+Автоматическая инициализация Git репозитория:
+
+```bash
+python3 tools/project_template_generator.py --name my_project --type software --git
+```
+
+**Что создаётся:**
+- Инициализация Git репозитория (`git init`)
+- Создание `.gitignore` с базовыми правилами
+- Автоматический первый коммит
+
+### GitHub интеграция
+
+Создание репозитория на GitHub (требует [gh CLI](https://cli.github.com/)):
+
+```bash
+# Приватный репозиторий (по умолчанию)
+python3 tools/project_template_generator.py --name my_project --type software --github
+
+# Публичный репозиторий
+python3 tools/project_template_generator.py --name open_source --type software --github --github-visibility public
+```
+
+**Что происходит:**
+1. Инициализация Git (автоматически включается с `--github`)
+2. Создание `.gitignore`
+3. Первый коммит
+4. Создание репозитория на GitHub
+5. Автоматический push кода
+
+**Требования:**
+- Установленный [gh CLI](https://cli.github.com/)
+- Авторизация: `gh auth login`
+
+### Примеры
+
+```bash
+# Только Git
+python3 tools/project_template_generator.py --name local_project --type hobby --git
+
+# Git + GitHub (приватный)
+python3 tools/project_template_generator.py --name startup --type business --github
+
+# Git + GitHub (публичный) + интерактивный режим
+python3 tools/project_template_generator.py --name community --type nonprofit --interactive
+```
 
 ---
 
@@ -510,19 +769,45 @@ A: См. раздел "Метрики здоровья проекта" выше.
 **Q: Работает ли генератор для не-русских проектов?**
 A: Да, но шаблоны на русском. Можно легко адаптировать, изменив строки в генераторе.
 
+**Q: Как использовать интерактивный режим?**
+A: Добавьте флаг `--interactive` при запуске. Генератор задаст вопросы о конфигурации проекта.
+
+**Q: Нужен ли gh CLI для работы генератора?**
+A: Нет, gh CLI нужен только для создания GitHub репозитория (флаг `--github`). Git интеграция (`--git`) работает без него.
+
+**Q: Какой тип выбрать, если мой домен не указан?**
+A: Используйте универсальный тип `hobby` — он подходит для любого домена. Адаптируйте PROJECT-VISION.md под вашу область.
+
+**Q: Можно ли создать публичный GitHub репозиторий?**
+A: Да, используйте `--github --github-visibility public`.
+
 ---
 
 ## 🎉 Итоги
 
-`project_template_generator.py` — это:
-- ✅ 7 доменов (software, research, business, education, legal, healthcare, arts)
+`project_template_generator.py` v0.3 — это:
+- ✅ **16 доменов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
+- ✅ **Интерактивный режим** — пошаговая настройка проекта
+- ✅ **Git/GitHub интеграция** — автоматическая инициализация и публикация
 - ✅ Автоматическая структура α-уровней
 - ✅ Встроенные метрики здоровья
-- ✅ Специфичные для домена документы
+- ✅ Доменно-специфичные документы
+- ✅ Универсальный шаблон **hobby** для любых доменов
 - ✅ Копирование инструментов валидации
 
 **Следующие шаги:**
-1. Создайте проект: `python3 tools/project_template_generator.py --name X --type Y`
+1. Создайте проект:
+   ```bash
+   # Быстрый старт
+   python3 tools/project_template_generator.py --name X --type Y
+
+   # С Git/GitHub
+   python3 tools/project_template_generator.py --name X --type Y --github
+
+   # Интерактивный режим
+   python3 tools/project_template_generator.py --name X --type Y --interactive
+   ```
+
 2. Определите философию (⇑)
 3. Детализируйте реализацию (⇓)
 4. Создайте навигацию (↔)
@@ -530,6 +815,15 @@ A: Да, но шаблоны на русском. Можно легко адап
 
 ---
 
-*Версия: v0.2*
+**Что нового в v0.3:**
+- +9 новых доменов (finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
+- Интерактивный режим с вопросами
+- Полная Git/GitHub интеграция
+- Автоматическое создание и публикация репозиториев
+- Универсальный шаблон hobby для любых областей
+
+---
+
+*Версия: v0.3*
 *Дата: 2026-01-24*
-*Проект: info1 — ЭТАП 8 v0.2*
+*Проект: info1 — ЭТАП 8 v0.3*
