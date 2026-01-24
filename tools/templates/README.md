@@ -9,7 +9,7 @@
 
 Эта директория содержит расширенные шаблоны документации для каждого из 16 типов проектов, поддерживаемых генератором `project_template_generator.py`.
 
-**Версия:** v0.8 (Фаза 0.8 — ЭТАП 8)
+**Версия:** v0.8 Part 2 (Фаза 0.8 — ЭТАП 8)
 
 ---
 
@@ -296,22 +296,32 @@ cp tools/templates/software/* my_project/docs/templates/
 
 ## Статистика
 
-**Всего шаблонов:** 48+ (9 реализовано в v0.6-v0.8)
-**Типов проектов покрыто:** 9 из 16 (56%)
-**Реализованные типы:** software, research, business, education, legal, healthcare, arts, finance
-**Общий объём шаблонов:** ~8,550 строк
-**Средний размер шаблона:** 950+ строк
+**Всего шаблонов:** 48+ (12 реализовано в v0.6-v0.8)
+**Типов проектов покрыто:** 12 из 16 (75%)
+**Реализованные типы:** software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing
+**Общий объём шаблонов:** ~11,950 строк
+**Средний размер шаблона:** 995+ строк
 
 ---
 
 ## Обновления
 
-### v0.8 (Фаза 0.8 — 2026-01-24)
+### v0.8 Part 2 (Фаза 0.8 — 2026-01-24)
+- ✅ Добавлены шаблоны для government проектов
+  - POLICY-PROPOSAL-TEMPLATE.md (1050+ lines)
+- ✅ Добавлены шаблоны для nonprofit проектов
+  - GRANT-PROPOSAL-TEMPLATE.md (1100+ lines)
+- ✅ Добавлены шаблоны для manufacturing проектов
+  - PRODUCTION-PLAN-TEMPLATE.md (1250+ lines)
+- ✅ Обновлён TEMPLATE_MAPPING в генераторе
+- ✅ 12 типов проектов покрыты шаблонами (75%)
+- ⏳ Остались: agriculture, sports, hospitality, retail (Part 3)
+
+### v0.8 Part 1 (Фаза 0.8 — 2026-01-24)
 - ✅ Добавлены шаблоны для finance проектов
   - INVESTMENT-THESIS-TEMPLATE.md (900+ lines)
 - ✅ Обновлён TEMPLATE_MAPPING в генераторе
 - ✅ 9 типов проектов покрыты шаблонами (56%)
-- ⏳ В разработке: government, nonprofit, manufacturing (Part 2)
 
 ### v0.7 (Фаза 0.8 — 2026-01-24)
 - ✅ Добавлены шаблоны для education проектов
@@ -371,6 +381,6 @@ Pull Request в директорию `tools/templates/`
 ---
 
 **Создано с помощью методологии ⇑⇓↔**
-**Версия:** 1.2 (v0.8 Part 1)
+**Версия:** 1.3 (v0.8 Part 2)
 **Дата создания:** 2026-01-24
-**Последнее обновление:** 2026-01-24 (v0.8 Part 1 — finance)
+**Последнее обновление:** 2026-01-24 (v0.8 Part 2 — government, nonprofit, manufacturing)

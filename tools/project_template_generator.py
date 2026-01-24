@@ -157,9 +157,15 @@ class ProjectTemplateGenerator:
         "finance": [
             "INVESTMENT-THESIS-TEMPLATE.md"
         ],
-        "government": [],
-        "nonprofit": [],
-        "manufacturing": [],
+        "government": [
+            "POLICY-PROPOSAL-TEMPLATE.md"
+        ],
+        "nonprofit": [
+            "GRANT-PROPOSAL-TEMPLATE.md"
+        ],
+        "manufacturing": [
+            "PRODUCTION-PLAN-TEMPLATE.md"
+        ],
         "agriculture": [],
         "sports": [],
         "hospitality": [],
