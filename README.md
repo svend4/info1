@@ -44,21 +44,72 @@
 
 **Быстрый старт с генератором:**
 ```bash
-# Классические типы
+# 🆕 AI-POWERED (natural language) - РЕКОМЕНДУЕТСЯ!
+python tools/ai_cli_v2.py "Финтех стартап на React, команда 8, MVP"
+python tools/ai_cli_v2.py "Healthcare клиника с бизнес-планом"
+python tools/ai_cli_v2.py "Научное исследование, грант 5 млн ₽"
+
+# Классический способ (явное указание типа)
 python tools/project_template_generator.py software my-app
 python tools/project_template_generator.py healthcare clinic-protocol
-python tools/project_template_generator.py finance investment-thesis
-
-# Новые типы (Q2 2026)
 python tools/project_template_generator.py research microplastic-study
-python tools/project_template_generator.py business saas-startup
-python tools/project_template_generator.py legal tax-dispute
-python tools/project_template_generator.py manufacturing bioplastic-factory
 ```
 
 📄 **Отчёты:**
 - [ЭТАП-8-COMPLETION-REPORT.md](ЭТАП-8-COMPLETION-REPORT.md) — общий отчёт ЭТАПА 8
-- [Q2-2026-EXAMPLES-REPORT.md](Q2-2026-EXAMPLES-REPORT.md) — расширение примеров (100% покрытие) ⭐ **НОВОЕ!**
+- [Q2-2026-EXAMPLES-REPORT.md](Q2-2026-EXAMPLES-REPORT.md) — расширение примеров (100% покрытие)
+
+---
+
+## 🤖 ЭТАП 9 ЗАВЕРШЁН: AI-POWERED ГЕНЕРАЦИЯ ПРОЕКТОВ! 🎉
+
+**Создан полноценный AI-генератор проектов с natural language interface!**
+
+- ✅ **4 фазы реализованы** (Rule-based → ML → Multi-domain → LLM)
+- ✅ **87.5% точность ML классификации** (превзошла rule-based 75%)
+- ✅ **Multi-domain support** (2-3 типа проектов одновременно)
+- ✅ **15+ параметров автоматически извлекаются** (budget, timeline, team, phase, tech...)
+- ✅ **20+ контекстных адаптаций** (структура растёт на 50-100%)
+- ✅ **Автоматическая генерация контента** (README, ARCHITECTURE, CONTRIBUTING, CHECKLIST, code examples)
+
+**Простой в использовании AI CLI:**
+```bash
+# Просто опишите проект на естественном языке!
+python tools/ai_cli_v2.py "Финтех MVP на React, бюджет 3 млн ₽, команда 8, срок 4 месяца"
+
+# Healthcare + бизнес гибридный проект
+python tools/ai_cli_v2.py "Медицинская клиника с бизнес-планом, 15 сотрудников"
+
+# Dry run для preview
+python tools/ai_cli_v2.py "E-commerce на Django с AI рекомендациями" --dry-run
+```
+
+**AI автоматически:**
+- 🔍 Определяет тип проекта (primary + secondary) с ML точностью 87.5%
+- ⚙️ Извлекает параметры (budget, timeline, team, phase, technologies, priority, risk...)
+- 📦 Композирует гибридные шаблоны (healthcare+business, research+software...)
+- 🔧 Адаптирует структуру под контекст (MVP/Production, команда 5/10/20+, tech stack...)
+- 📄 Генерирует персонализированный контент (README с badges, checklists, code examples...)
+
+**Технологии:**
+- ML: TF-IDF + Logistic Regression (scikit-learn)
+- NLP: Enhanced parameter extraction (15+ параметров)
+- Multi-label: 2-3 типа одновременно, 20+ композиций
+- LLM: Template-based generation с rich personalization
+
+📊 **Статистика:**
+- **Код:** 4,900+ строк (20 файлов)
+- **Данные:** 240 training examples
+- **Тесты:** 25 tests (100% success rate)
+- **Документация:** 2,500+ строк (полные отчёты по всем фазам)
+
+📄 **Отчёты:**
+- [ЭТАП-9-ПЛАН.md](ЭТАП-9-ПЛАН.md) — Master plan архитектуры AI-генератора
+- [ЭТАП-9-ФАЗА-1-ЗАВЕРШЁН.md](ЭТАП-9-ФАЗА-1-ЗАВЕРШЁН.md) — Rule-based классификация (75%)
+- [ЭТАП-9-ФАЗА-2-ЗАВЕРШЁН.md](ЭТАП-9-ФАЗА-2-ЗАВЕРШЁН.md) — ML классификация (87.5%) 🏆
+- [ЭТАП-9-ФАЗА-3-ЗАВЕРШЁН.md](ЭТАП-9-ФАЗА-3-ЗАВЕРШЁН.md) — Multi-domain & Context
+- [ЭТАП-9-ФАЗА-4-ЗАВЕРШЁН.md](ЭТАП-9-ФАЗА-4-ЗАВЕРШЁН.md) — LLM Integration
+- [ЭТАП-9-ЗАВЕРШЁН.md](ЭТАП-9-ЗАВЕРШЁН.md) — **Итоговый отчёт** ⭐ **НОВОЕ!**
 
 ---
 
