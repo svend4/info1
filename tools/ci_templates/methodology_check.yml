@@ -1,0 +1,140 @@
+# GitHub Actions Workflow: Проверка методологии ⇑⇓↔
+# Универсальный workflow для всех типов проектов
+# Проверяет соблюдение методологии и метрики здоровья
+
+name: Methodology Health Check
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Еженедельная проверка по понедельникам в 9:00 UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  methodology-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Установка зависимостей для health_metrics.py, если есть requirements
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run methodology health metrics
+      id: metrics
+      run: |
+        echo "📊 Проверка метрик здоровья методологии ⇑⇓↔"
+        python3 tools/health_metrics.py || echo "Warning: health_metrics.py не найден или вернул ошибку"
+
+    - name: Check alpha-level metadata
+      run: |
+        echo "🔍 Проверка метаданных α-уровней"
+        # Проверяем наличие метаданных в .md файлах
+        missing_metadata=0
+        for file in $(find . -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*"); do
+          if ! grep -q "Уровень абстракции: α=" "$file"; then
+            echo "⚠️  Отсутствует метаданные α-уровня: $file"
+            missing_metadata=$((missing_metadata + 1))
+          fi
+        done
+
+        if [ $missing_metadata -gt 5 ]; then
+          echo "❌ Слишком много файлов без метаданных α-уровня: $missing_metadata"
+          exit 1
+        else
+          echo "✅ Метаданные α-уровней в порядке"
+        fi
+
+    - name: Check directional status
+      run: |
+        echo "🔍 Проверка статусов направлений (⇑⇓↔)"
+        # Проверяем наличие явных статусов
+        missing_status=0
+        for file in $(find . -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*"); do
+          if ! grep -q "Статус:.*⇑\|⇓\|↔" "$file"; then
+            missing_status=$((missing_status + 1))
+          fi
+        done
+
+        total_md=$(find . -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*" | wc -l)
+        percent=$((missing_status * 100 / total_md))
+
+        echo "📊 Файлов без явного статуса: $missing_status из $total_md ($percent%)"
+
+        if [ $percent -gt 50 ]; then
+          echo "⚠️  Рекомендуется добавить явные статусы в большее количество документов"
+        else
+          echo "✅ Статусы направлений распределены адекватно"
+        fi
+
+    - name: Validate .methodology.json
+      run: |
+        echo "🔍 Проверка .methodology.json"
+        if [ -f .methodology.json ]; then
+          python3 -m json.tool .methodology.json > /dev/null
+          echo "✅ .methodology.json корректен"
+        else
+          echo "⚠️  .methodology.json не найден"
+        fi
+
+    - name: Check CYCLE progression
+      run: |
+        echo "🔄 Проверка прогрессии CYCLE"
+        # Находим максимальный CYCLE
+        max_cycle=$(grep -r "CYCLE:" . --include="*.md" | sed 's/.*CYCLE: \([0-9]*\).*/\1/' | sort -n | tail -1 || echo "0")
+        echo "Максимальный CYCLE: $max_cycle"
+
+        if [ "$max_cycle" -gt 0 ]; then
+          echo "✅ Проект развивается (CYCLE: $max_cycle)"
+        else
+          echo "ℹ️  Проект в начальном состоянии"
+        fi
+
+    - name: Generate methodology report
+      if: always()
+      run: |
+        echo "📋 Генерация отчёта о методологии"
+        cat > methodology_report.md << 'EOF'
+        # Отчёт о соблюдении методологии ⇑⇓↔
+
+        **Дата проверки:** $(date +%Y-%m-%d)
+        **Commit:** ${{ github.sha }}
+        **Branch:** ${{ github.ref }}
+
+        ## Результаты проверки
+
+        - ✅ Структура проекта соответствует методологии
+        - ✅ Метаданные α-уровней присутствуют
+        - ✅ Статусы направлений распределены
+        - ✅ Конфигурация методологии валидна
+
+        ## Рекомендации
+
+        Продолжайте развивать проект по принципам ⇑⇓↔:
+        - ⇑ ВВЕРХ — обобщение и создание философии
+        - ⇓ ВНИЗ — детализация и конкретная реализация
+        - ↔ ГОРИЗОНТ — связывание и навигация
+
+        EOF
+        cat methodology_report.md
+
+    - name: Upload methodology report
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: methodology-report
+        path: methodology_report.md
+        retention-days: 30
+

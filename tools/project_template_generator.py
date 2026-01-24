@@ -150,7 +150,7 @@ class ProjectTemplateGenerator:
             raise ValueError(f"Неизвестный тип проекта: {project_type}. "
                            f"Доступные: {', '.join(self.PROJECT_TYPES.keys())}")
 
-    def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False):
+    def generate(self, interactive: bool = False, init_git: bool = False, create_github_repo: bool = False, setup_ci: bool = False):
         """
         Генерация структуры проекта
 
@@ -158,6 +158,7 @@ class ProjectTemplateGenerator:
             interactive: Интерактивный режим с вопросами
             init_git: Инициализировать git репозиторий
             create_github_repo: Создать GitHub репозиторий (требует gh CLI)
+            setup_ci: Настроить CI/CD (GitHub Actions workflows)
         """
         # Интерактивный режим: задать вопросы пользователю
         if interactive:
@@ -167,6 +168,8 @@ class ProjectTemplateGenerator:
                 init_git = self._init_git
             if hasattr(self, '_create_github'):
                 create_github_repo = self._create_github
+            if hasattr(self, '_setup_ci'):
+                setup_ci = self._setup_ci
 
         print(f"🚀 Генерация проекта: {self.project_name}")
         print(f"📦 Тип: {self.PROJECT_TYPES[self.project_type]['name']}")
@@ -188,12 +191,20 @@ class ProjectTemplateGenerator:
         if init_git or create_github_repo:
             self._setup_git_integration(init_git=init_git, create_github=create_github_repo)
 
+        # 6. CI/CD интеграция (если запрошено)
+        if setup_ci:
+            self._setup_cicd_integration()
+
         print("\n✅ Проект успешно создан!")
         print(f"\nСледующие шаги:")
         print(f"  1. cd {self.project_name}")
         print(f"  2. Отредактируйте README.md с описанием проекта")
         print(f"  3. Запустите: python3 tools/health_metrics.py")
-        print(f"  4. Начните развивать проект по методологии ⇑⇓↔\n")
+        if setup_ci:
+            print(f"  4. Проверьте GitHub Actions workflows в .github/workflows/")
+            print(f"  5. Начните развивать проект по методологии ⇑⇓↔\n")
+        else:
+            print(f"  4. Начните развивать проект по методологии ⇑⇓↔\n")
 
     def _create_directory_structure(self):
         """Создание базовой структуры директорий"""
@@ -1492,7 +1503,14 @@ python3 health_metrics.py
         else:
             self._create_github = False
 
-        # 4. Подтверждение
+        # 4. CI/CD интеграция
+        setup_ci = input("Настроить CI/CD (GitHub Actions)? (y/N): ").strip().lower()
+        self._setup_ci = setup_ci == 'y'
+
+        if self._setup_ci:
+            print("  ℹ️  Будут созданы GitHub Actions workflows для автоматического тестирования")
+
+        # 5. Подтверждение
         print("\n" + "=" * 60)
         print("\n📦 Итоговая конфигурация:\n")
         print(f"  Название:     {self.project_name}")
@@ -1501,6 +1519,7 @@ python3 health_metrics.py
         print(f"  Git init:     {'Да' if self._init_git else 'Нет'}")
         if self._init_git and self._create_github:
             print(f"  GitHub repo:  Да ({self._github_visibility})")
+        print(f"  CI/CD:        {'Да' if self._setup_ci else 'Нет'}")
         print()
 
         confirm = input("Продолжить создание проекта? (Y/n): ").strip().lower()
@@ -1591,6 +1610,71 @@ env/
 
         finally:
             os.chdir(original_dir)
+
+    def _setup_cicd_integration(self):
+        """Настройка CI/CD (GitHub Actions workflows)"""
+        print("\n⚙️  Настройка CI/CD...")
+
+        # Создаем .github/workflows директорию
+        workflows_dir = self.project_dir / ".github" / "workflows"
+        workflows_dir.mkdir(parents=True, exist_ok=True)
+        print(f"  ✓ Создана директория .github/workflows/")
+
+        # Определяем, какие workflows нужны для этого типа проекта
+        workflows_to_copy = self._get_cicd_workflows_for_type()
+
+        # Путь к CI шаблонам
+        ci_templates_dir = Path(__file__).parent / "ci_templates"
+
+        copied_count = 0
+        for workflow_file in workflows_to_copy:
+            source = ci_templates_dir / workflow_file
+            dest = workflows_dir / workflow_file
+
+            if source.exists():
+                import shutil
+                shutil.copy2(source, dest)
+                print(f"  ✓ {workflow_file}")
+                copied_count += 1
+            else:
+                print(f"  ⚠️  Шаблон {workflow_file} не найден")
+
+        if copied_count > 0:
+            print(f"\n✅ Настроено {copied_count} CI/CD workflow(s)")
+            print(f"   Workflows будут запускаться автоматически при push/PR")
+        else:
+            print(f"  ⚠️  Не удалось скопировать workflows")
+
+    def _get_cicd_workflows_for_type(self) -> list:
+        """Определяет, какие CI/CD workflows нужны для типа проекта"""
+
+        # Универсальные workflows для всех типов
+        common_workflows = [
+            "methodology_check.yml",
+            "documentation_check.yml"
+        ]
+
+        # Специфичные workflows для типов проектов
+        type_specific = {
+            "software": common_workflows + ["software_ci.yml"],
+            "research": common_workflows + ["research_ci.yml"],
+            "business": common_workflows,
+            "education": common_workflows,
+            "legal": common_workflows,
+            "healthcare": common_workflows,
+            "arts": common_workflows,
+            "finance": common_workflows,
+            "government": common_workflows,
+            "nonprofit": common_workflows,
+            "manufacturing": common_workflows,
+            "agriculture": common_workflows,
+            "sports": common_workflows,
+            "hospitality": common_workflows,
+            "retail": common_workflows,
+            "hobby": common_workflows
+        }
+
+        return type_specific.get(self.project_type, common_workflows)
 
 
 def main():
@@ -1718,6 +1802,14 @@ def main():
         help='Visibility GitHub репозитория (по умолчанию: private)'
     )
 
+    parser.add_argument(
+        '--ci',
+        '--cicd',
+        action='store_true',
+        dest='ci',
+        help='Настроить CI/CD (GitHub Actions workflows)'
+    )
+
     args = parser.parse_args()
 
     # Если --github указан, автоматически включить --git
@@ -1738,7 +1830,8 @@ def main():
     generator.generate(
         interactive=args.interactive,
         init_git=args.git,
-        create_github_repo=args.github
+        create_github_repo=args.github,
+        setup_ci=args.ci
     )
 
 

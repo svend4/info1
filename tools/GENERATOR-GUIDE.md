@@ -1,8 +1,8 @@
 # 🚀 Руководство по генератору проектов
 *Уровень абстракции: α=-1 (инструкция)*
 *Статус: ↔ ГОРИЗОНТ (обзор инструмента)*
-*CYCLE: 2*
-*Версия: v0.3*
+*CYCLE: 3*
+*Версия: v0.4*
 
 ---
 
@@ -10,10 +10,11 @@
 
 `project_template_generator.py` — инструмент для автоматической генерации структуры нового проекта с встроенной методологией **⇑⇓↔** (Параллельная Двунаправленная Разработка).
 
-**Возможности v0.3:**
+**Возможности v0.4:**
 - ✅ **16 типов проектов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** с пошаговыми вопросами
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация репозитория и создание на GitHub
+- ✅ **CI/CD интеграция** — GitHub Actions workflows для автоматического тестирования ⭐ НОВОЕ
 - ✅ Автоматическое создание иерархии α-уровней
 - ✅ Встроенные метрики здоровья (VT, DB, CD, CR)
 - ✅ Доменно-специфичные документы для каждого типа
@@ -624,6 +625,99 @@ python3 tools/project_template_generator.py --name community --type nonprofit --
 
 ---
 
+## ⚙️ CI/CD интеграция (v0.4)
+
+### Автоматическое тестирование
+
+Генератор может автоматически настроить CI/CD с помощью GitHub Actions workflows.
+
+```bash
+# С CI/CD
+python3 tools/project_template_generator.py --name my_project --type software --ci
+
+# С Git + GitHub + CI/CD
+python3 tools/project_template_generator.py --name my_project --type software --github --ci
+```
+
+### Что создаётся
+
+Генератор создаёт `.github/workflows/` с workflow файлами:
+
+**Универсальные workflows (для всех типов):**
+1. **methodology_check.yml** — проверка соблюдения методологии ⇑⇓↔
+   - Проверка α-уровней в документах
+   - Проверка статусов направлений (⇑⇓↔)
+   - Валидация .methodology.json
+   - Проверка CYCLE progression
+   - Генерация отчёта о методологии
+
+2. **documentation_check.yml** — проверка качества документации
+   - Markdown linting
+   - Проверка битых ссылок
+   - Проверка структуры (01-Концепция, 02-Архитектура, 03-Реализация)
+   - Проверка метаданных (α-level, статус, CYCLE)
+   - Генерация отчёта о документации
+
+**Специфичные workflows:**
+
+**Software projects:**
+- **software_ci.yml** — полный CI/CD pipeline
+  - Тесты на Python 3.9-3.12
+  - Линтинг (flake8, black, mypy)
+  - Coverage отчёты (Codecov)
+  - Сборка пакетов
+  - Security scanning (Trivy)
+  - Проверка метрик методологии
+
+**Research projects:**
+- **research_ci.yml** — валидация исследований
+  - Проверка структуры данных
+  - Валидация CSV/JSON файлов
+  - Выполнение Jupyter notebooks
+  - Проверка репродуцируемости (requirements.txt)
+  - Проверка исследовательской документации (HYPOTHESIS.md, METHODOLOGY.md)
+
+### Примеры использования
+
+```bash
+# Software проект с полным CI/CD
+python3 tools/project_template_generator.py --name web_app --type software --github --ci
+
+# Research проект с валидацией данных
+python3 tools/project_template_generator.py --name experiment --type research --github --ci
+
+# Hobby проект с базовыми проверками
+python3 tools/project_template_generator.py --name photography --type hobby --ci
+```
+
+### Триггеры workflows
+
+Workflows запускаются автоматически:
+- ✅ При `push` в main/master/develop ветки
+- ✅ При создании Pull Request
+- ✅ По расписанию (еженедельно по понедельникам)
+
+### Метрики и отчёты
+
+CI/CD проверяет метрики методологии:
+- **VT** (Vertical Traceability): 22-44%
+- **DB** (Directional Balance): <30%
+- **CD** (Connectivity Density): 16.5-33%
+- **CR** (Convergence Rate): 0.6-1.3
+
+Отчёты загружаются как артефакты (доступны 30 дней).
+
+### Интерактивный режим
+
+В интерактивном режиме генератор спросит о CI/CD:
+
+```
+Настроить CI/CD (GitHub Actions)? (y/N): y
+  ℹ️  Будут созданы GitHub Actions workflows для автоматического тестирования
+```
+
+---
+
 ## 🎯 Рекомендации по развитию проекта
 
 ### 1. Начните с философии (⇑ ВВЕРХ)
@@ -781,14 +875,24 @@ A: Используйте универсальный тип `hobby` — он п�
 **Q: Можно ли создать публичный GitHub репозиторий?**
 A: Да, используйте `--github --github-visibility public`.
 
+**Q: Как настроить CI/CD?**
+A: Добавьте флаг `--ci` при создании проекта. Генератор создаст GitHub Actions workflows.
+
+**Q: Какие CI/CD workflows создаются?**
+A: Универсальные (проверка методологии и документации) для всех типов + специфичные для software и research проектов.
+
+**Q: Будут ли workflows работать без GitHub?**
+A: Workflows используют GitHub Actions, поэтому требуют GitHub репозиторий. Для локального CI можно адаптировать workflows.
+
 ---
 
 ## 🎉 Итоги
 
-`project_template_generator.py` v0.3 — это:
+`project_template_generator.py` v0.4 — это:
 - ✅ **16 доменов** (software, research, business, education, legal, healthcare, arts, finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
 - ✅ **Интерактивный режим** — пошаговая настройка проекта
 - ✅ **Git/GitHub интеграция** — автоматическая инициализация и публикация
+- ✅ **CI/CD интеграция** — GitHub Actions workflows для автоматического тестирования ⭐ НОВОЕ
 - ✅ Автоматическая структура α-уровней
 - ✅ Встроенные метрики здоровья
 - ✅ Доменно-специфичные документы
@@ -801,8 +905,8 @@ A: Да, используйте `--github --github-visibility public`.
    # Быстрый старт
    python3 tools/project_template_generator.py --name X --type Y
 
-   # С Git/GitHub
-   python3 tools/project_template_generator.py --name X --type Y --github
+   # С Git/GitHub + CI/CD (v0.4)
+   python3 tools/project_template_generator.py --name X --type Y --github --ci
 
    # Интерактивный режим
    python3 tools/project_template_generator.py --name X --type Y --interactive
@@ -812,18 +916,26 @@ A: Да, используйте `--github --github-visibility public`.
 3. Детализируйте реализацию (⇓)
 4. Создайте навигацию (↔)
 5. Проверьте метрики: `python3 tools/health_metrics.py`
+6. (v0.4) Workflows автоматически проверят проект при push
 
 ---
 
-**Что нового в v0.3:**
-- +9 новых доменов (finance, government, nonprofit, manufacturing, agriculture, sports, hospitality, retail, hobby)
-- Интерактивный режим с вопросами
-- Полная Git/GitHub интеграция
-- Автоматическое создание и публикация репозиториев
-- Универсальный шаблон hobby для любых областей
+**Что нового в v0.4:**
+- ⚙️ **CI/CD интеграция** — автоматическое тестирование через GitHub Actions
+- 📊 **Проверка методологии** — автоматическая валидация метрик ⇑⇓↔
+- 📝 **Проверка документации** — линтинг, битые ссылки, структура
+- 🔬 **Специфичные workflows** — software CI (тесты, линтинг), research CI (данные, notebooks)
+- 🔒 **Security scanning** — Trivy для software проектов
+- 📈 **Отчёты** — автоматическая генерация отчётов о качестве
+
+**Changelog v0.3→v0.4:**
+- +4 CI/CD workflow шаблона
+- +1 флаг --ci/--cicd
+- +2 метода в генераторе (_setup_cicd_integration, _get_cicd_workflows_for_type)
+- Обновлён интерактивный режим (вопрос о CI/CD)
 
 ---
 
-*Версия: v0.3*
+*Версия: v0.4*
 *Дата: 2026-01-24*
-*Проект: info1 — ЭТАП 8 v0.3*
+*Проект: info1 — ЭТАП 8 v0.4*

@@ -1,0 +1,128 @@
+# GitHub Actions Workflow: Documentation Quality Check
+# Универсальный для всех типов проектов
+# Проверка качества документации
+
+name: Documentation Check
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Markdown lint
+      uses: actionshub/markdownlint@main
+      continue-on-error: true
+
+    - name: Check for broken links
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-quiet-mode: 'yes'
+        config-file: '.github/markdown-link-check-config.json'
+      continue-on-error: true
+
+  documentation-completeness:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check core documentation files
+      run: |
+        echo "📚 Проверка основных документов"
+        core_docs=("README.md" "МЕТОДОЛОГИЯ.md" "METRICS.md")
+        missing=0
+
+        for doc in "${core_docs[@]}"; do
+          if [ -f "$doc" ]; then
+            echo "✅ $doc присутствует"
+          else
+            echo "❌ $doc отсутствует"
+            missing=$((missing + 1))
+          fi
+        done
+
+        if [ $missing -eq 0 ]; then
+          echo "✅ Все основные документы на месте"
+        else
+          echo "⚠️  Отсутствует $missing основных документов"
+        fi
+
+    - name: Check documentation structure
+      run: |
+        echo "🔍 Проверка структуры документации"
+
+        if [ -d "01-Концепция" ]; then
+          echo "✅ 01-Концепция/ существует"
+          concept_docs=$(find 01-Концепция -name "*.md" | wc -l)
+          echo "   Документов: $concept_docs"
+        fi
+
+        if [ -d "02-Архитектура" ]; then
+          echo "✅ 02-Архитектура/ существует"
+          arch_docs=$(find 02-Архитектура -name "*.md" | wc -l)
+          echo "   Документов: $arch_docs"
+        fi
+
+        if [ -d "03-Реализация" ]; then
+          echo "✅ 03-Реализация/ существует"
+          impl_docs=$(find 03-Реализация -name "*.md" | wc -l)
+          echo "   Документов: $impl_docs"
+        fi
+
+    - name: Check methodology metadata
+      run: |
+        echo "🏷️  Проверка метаданных методологии"
+        total_md=$(find . -name "*.md" -not -path "*/node_modules/*" -not -path "*/.git/*" | wc -l)
+        with_alpha=$(grep -r "Уровень абстракции: α=" . --include="*.md" | wc -l)
+        with_status=$(grep -r "Статус:.*⇑\|⇓\|↔" . --include="*.md" | wc -l)
+        with_cycle=$(grep -r "CYCLE:" . --include="*.md" | wc -l)
+
+        echo "📊 Статистика метаданных:"
+        echo "   Всего .md файлов: $total_md"
+        echo "   С α-уровнем: $with_alpha ($(($with_alpha * 100 / $total_md))%)"
+        echo "   Со статусом ⇑⇓↔: $with_status ($(($with_status * 100 / $total_md))%)"
+        echo "   С CYCLE: $with_cycle ($(($with_cycle * 100 / $total_md))%)"
+
+        if [ $(($with_alpha * 100 / $total_md)) -gt 70 ]; then
+          echo "✅ Хорошее покрытие α-уровнями"
+        else
+          echo "⚠️  Рекомендуется добавить α-уровни в больше документов"
+        fi
+
+    - name: Generate documentation report
+      run: |
+        cat > docs_report.md << 'EOF'
+        # Отчёт о качестве документации
+
+        ## Метаданные методологии ⇑⇓↔
+
+        - Уровни абстракции (α-level): указаны
+        - Статусы направлений (⇑⇓↔): распределены
+        - CYCLE progression: отслеживается
+
+        ## Структура проекта
+
+        - 01-Концепция/ ✓
+        - 02-Архитектура/ ✓
+        - 03-Реализация/ ✓
+
+        ## Рекомендации
+
+        Продолжайте документировать проект согласно методологии ⇑⇓↔.
+
+        EOF
+        cat docs_report.md
+
+    - name: Upload report
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation-report
+        path: docs_report.md

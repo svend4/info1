@@ -1,0 +1,164 @@
+# GitHub Actions Workflow: Research Project CI
+# Для research типа проектов
+# Валидация данных, проверка ноутбуков, репродуцируемость
+
+name: Research CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas numpy jupyter nbformat nbconvert
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Check data structure
+      run: |
+        echo "🔍 Проверка структуры данных"
+        if [ -d "data/" ]; then
+          find data/ -type f -name "*.csv" -o -name "*.json" -o -name "*.xlsx"
+          echo "✅ Данные найдены"
+        else
+          echo "ℹ️  Директория data/ отсутствует"
+        fi
+
+    - name: Validate CSV files
+      run: |
+        echo "📊 Валидация CSV файлов"
+        for file in $(find data/ -name "*.csv" 2>/dev/null || echo ""); do
+          python3 -c "import pandas as pd; pd.read_csv('$file'); print(f'✅ {file} валиден')"
+        done || echo "Нет CSV файлов для проверки"
+
+    - name: Check data documentation
+      run: |
+        echo "📝 Проверка документации данных"
+        if [ -f "data/README.md" ] || [ -f "data/DATA-DICTIONARY.md" ]; then
+          echo "✅ Документация данных присутствует"
+        else
+          echo "⚠️  Рекомендуется добавить data/README.md или DATA-DICTIONARY.md"
+        fi
+
+  validate-notebooks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Jupyter and dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install jupyter nbformat nbconvert
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Find and validate notebooks
+      run: |
+        echo "📓 Поиск Jupyter notebooks"
+        notebooks=$(find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" || echo "")
+        if [ -n "$notebooks" ]; then
+          echo "Найдено notebooks:"
+          echo "$notebooks"
+          for nb in $notebooks; do
+            echo "Проверка: $nb"
+            jupyter nbconvert --to notebook --execute "$nb" --output /tmp/test.ipynb
+            echo "✅ $nb выполнен успешно"
+          done
+        else
+          echo "ℹ️  Jupyter notebooks не найдены"
+        fi
+
+  check-reproducibility:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check for requirements.txt
+      run: |
+        if [ -f requirements.txt ]; then
+          echo "✅ requirements.txt найден"
+          cat requirements.txt
+        else
+          echo "⚠️  requirements.txt отсутствует - рекомендуется для репродуцируемости"
+        fi
+
+    - name: Check for environment.yml
+      run: |
+        if [ -f environment.yml ]; then
+          echo "✅ environment.yml найден (conda environment)"
+        fi
+
+    - name: Check for research documentation
+      run: |
+        echo "📚 Проверка исследовательской документации"
+        docs_found=0
+
+        if [ -f "HYPOTHESIS.md" ]; then
+          echo "✅ HYPOTHESIS.md (гипотеза исследования)"
+          docs_found=$((docs_found + 1))
+        fi
+
+        if [ -f "01-Концепция/HYPOTHESIS.md" ]; then
+          echo "✅ 01-Концепция/HYPOTHESIS.md"
+          docs_found=$((docs_found + 1))
+        fi
+
+        if [ -f "METHODOLOGY.md" ] || [ -f "01-Концепция/RESEARCH-METHODOLOGY.md" ]; then
+          echo "✅ Методология исследования задокументирована"
+          docs_found=$((docs_found + 1))
+        fi
+
+        if [ $docs_found -gt 0 ]; then
+          echo "✅ Найдено $docs_found исследовательских документов"
+        else
+          echo "⚠️  Рекомендуется добавить HYPOTHESIS.md и METHODOLOGY.md"
+        fi
+
+  methodology-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Run methodology health metrics
+      run: |
+        python3 tools/health_metrics.py || echo "health_metrics.py не найден"
+
+    - name: Check alpha-level hierarchy
+      run: |
+        echo "🔍 Проверка иерархии α-уровней для research проекта"
+        echo "Ожидаемые уровни: α=+1..+4 (от методологии до философии науки)"
+
+        # Проверяем наличие документов на разных уровнях
+        if grep -r "α=+4" . --include="*.md" > /dev/null; then
+          echo "✅ Найдены документы уровня α=+4 (философия науки)"
+        fi
+
+        if grep -r "α=+2" . --include="*.md" > /dev/null; then
+          echo "✅ Найдены документы уровня α=+2 (теория)"
+        fi
