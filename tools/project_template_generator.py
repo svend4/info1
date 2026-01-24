@@ -154,7 +154,9 @@ class ProjectTemplateGenerator:
         "arts": [
             "CREATIVE-BRIEF-TEMPLATE.md"
         ],
-        "finance": [],
+        "finance": [
+            "INVESTMENT-THESIS-TEMPLATE.md"
+        ],
         "government": [],
         "nonprofit": [],
         "manufacturing": [],
