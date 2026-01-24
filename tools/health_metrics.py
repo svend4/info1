@@ -163,13 +163,36 @@ class HealthMetricsCalculator:
 
     def _extract_direction(self, content: str, alpha: Optional[int] = None) -> Optional[str]:
         """
-        Extract development direction (⇑, ⇓, ↔) based on abstraction level
+        Extract development direction (⇑, ⇓, ↔) from metadata
 
-        Правильная логика определения направления:
-        - ⇑ UP: обобщающие документы (α > 0) - философия, теория, методология
-        - ⇓ DOWN: детализирующие документы (α < 0) - спецификации, код, примеры
-        - ↔ HORIZONTAL: связующие документы (α = 0) - архитектура, индексы
+        ИСПРАВЛЕНО v0.9: Направление извлекается из явного поля "Статус:",
+        а НЕ из α-уровня, так как α показывает абстракцию, а не направление развития.
+
+        Приоритет извлечения:
+        1. Явное указание в метаданных "Статус: ⇑/⇓/↔"
+        2. Fallback: α-уровень (для обратной совместимости)
+        3. Default: None
+
+        Семантика:
+        - ⇑ UP: обобщающие документы (создают абстракции)
+        - ⇓ DOWN: детализирующие документы (конкретизируют)
+        - ↔ HORIZONTAL: связующие/мостовые документы
         """
+        # Приоритет 1: Явное указание в метаданных "Статус:"
+        status_match = re.search(r'\*?\*?Статус:?\*?\*?\s*([⇑⇓↔]+|ВВЕРХ|ВНИЗ|МОСТ|ГОРИЗОНТ)', content, re.IGNORECASE)
+        if status_match:
+            status_text = status_match.group(1).upper()
+            if '⇑' in status_text or 'ВВЕРХ' in status_text:
+                # Если есть и ⇑ и ⇓ — это мостовой документ
+                if '⇓' in status_text or 'ВНИЗ' in status_text:
+                    return 'horizontal'  # ⇑⇓ МОСТ → horizontal
+                return 'up'
+            elif '⇓' in status_text or 'ВНИЗ' in status_text:
+                return 'down'
+            elif '↔' in status_text or 'МОСТ' in status_text or 'ГОРИЗОНТ' in status_text:
+                return 'horizontal'
+
+        # Приоритет 2: Fallback по α-уровню (для документов без явного статуса)
         if alpha is not None:
             if alpha > 0:
                 return 'up'
@@ -178,13 +201,7 @@ class HealthMetricsCalculator:
             else:  # alpha == 0
                 return 'horizontal'
 
-        # Fallback: старая логика (только если α не определен)
-        if '⇑' in content or 'ВВЕРХ' in content or 'UP' in content.upper():
-            return 'up'
-        elif '⇓' in content or 'ВНИЗ' in content or 'DOWN' in content.upper():
-            return 'down'
-        elif '↔' in content or 'СВЯЗИ' in content or 'HORIZONTAL' in content.upper():
-            return 'horizontal'
+        # Приоритет 3: Default
         return None
 
     def _extract_links(self, content: str) -> List[str]:
