@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Alpha Level Enrichment Tool (ЭТАП 7 v0.5)
+Alpha Level Enrichment Tool (ЭТАП 7 v0.7)
 
 Добавление уровней абстракции α к документам для улучшения VT.
 
@@ -46,7 +46,9 @@ class AlphaEnrichment:
     }
 
     # Явные правила для конкретных файлов
+    # Используется проверка: filename in EXPLICIT_RULES or str(path) in EXPLICIT_RULES
     EXPLICIT_RULES = {
+        # Корневые файлы
         'МЕТРИКИ-ЗДОРОВЬЯ.md': '+2',  # Законы метрик
         'ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md': '+2',  # Законы эволюции
         'ЭТАП-6-САМОСОВЕРШЕНСТВОВАНИЕ.md': '+2',  # Законы ЭТАПА
@@ -62,6 +64,12 @@ class AlphaEnrichment:
         'CONTRIBUTING.md': '+1',  # Руководство
         'РЕЗЮМЕ-ПРОЕКТА.md': '+1',  # Обзор
         'ПРИМЕНЕНИЕ-МЕТОДОЛОГИИ.md': '+1',  # Методология
+        # Поддиректории (полные пути от корня проекта)
+        'ШАБЛОНЫ-КАРТОЧЕК.md': '-1',  # Шаблоны
+        'ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ.md': '-1',  # Спецификации
+        'API-REFERENCE.md': '-1',  # API спецификация
+        # Паттерны для примеров
+        'EXAMPLES.md': '-2',  # Примеры
     }
 
     def __init__(self, dry_run: bool = False):
@@ -73,9 +81,14 @@ class AlphaEnrichment:
         """Определение α-уровня для документа"""
         filename = file_path.name
 
-        # Явное правило
+        # Явное правило по имени файла
         if filename in self.EXPLICIT_RULES:
             return self.EXPLICIT_RULES[filename]
+
+        # Проверка директории Примеры/ - все файлы там α=-2
+        if '/Примеры/' in str(file_path) or '\\Примеры\\' in str(file_path):
+            if not re.search(r'Уровень абстракции:\s*α=', content):
+                return '-2'
 
         # Уже имеет α
         if re.search(r'Уровень абстракции:\s*α=', content):
