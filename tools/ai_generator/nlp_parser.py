@@ -72,9 +72,9 @@ class NLPParser:
                 'образование', 'education', 'обучение', 'learning',
                 'курс', 'course', 'урок', 'lesson', 'студент', 'student',
                 'преподаватель', 'teacher', 'школа', 'университет',
-                'lms', 'elearning', 'онлайн-курс'
+                'lms', 'elearning', 'онлайн-курс', 'учебный', 'педагог'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для education
         },
         'legal': {
             'keywords': [
@@ -89,17 +89,18 @@ class NLPParser:
                 'здравоохранение', 'healthcare', 'медицин', 'medical',
                 'клиника', 'clinic', 'больница', 'hospital', 'врач',
                 'doctor', 'пациент', 'patient', 'лечение', 'treatment',
-                'диагностика', 'ehr', 'emr'
+                'диагностика', 'ehr', 'emr', 'здоровье', 'терапия'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для healthcare
         },
         'arts': {
             'keywords': [
                 'искусство', 'art', 'творчество', 'creative', 'дизайн',
                 'design', 'выставка', 'exhibition', 'галерея', 'gallery',
-                'художник', 'artist', 'музыка', 'music', 'театр', 'theater'
+                'художник', 'artist', 'музыка', 'music', 'театр', 'theater',
+                'культурный', 'арт-проект'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для arts
         },
         'finance': {
             'keywords': [
@@ -113,9 +114,10 @@ class NLPParser:
             'keywords': [
                 'государств', 'government', 'госуслуга', 'public service',
                 'муниципал', 'municipal', 'администрация', 'мэрия',
-                'чиновник', 'official', 'бюджет', 'регулирование'
+                'чиновник', 'official', 'бюджет', 'регулирование',
+                'гос', 'публичный', 'федеральный'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для government
         },
         'nonprofit': {
             'keywords': [
@@ -137,9 +139,10 @@ class NLPParser:
             'keywords': [
                 'сельское хозяйство', 'agriculture', 'ферма', 'farm',
                 'урожай', 'crop', 'животноводство', 'livestock',
-                'агро', 'agro', 'поле', 'field', 'посев'
+                'агро', 'agro', 'поле', 'field', 'посев',
+                'фермер', 'хозяйство'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для agriculture
         },
         'sports': {
             'keywords': [
@@ -169,9 +172,10 @@ class NLPParser:
             'keywords': [
                 'хобби', 'hobby', 'личный', 'personal', 'увлечение',
                 'passion', 'коллекция', 'collection', 'досуг', 'leisure',
-                'творческий проект', 'pet project', 'для себя'
+                'творческий проект', 'pet project', 'для себя',
+                'блог', 'blog', 'дневник'
             ],
-            'weight': 1.0
+            'weight': 1.3  # Увеличен вес для hobby
         }
     }
 
