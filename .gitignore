@@ -152,3 +152,15 @@ cards/
 !08-Программная-реализация/card_system/*.yaml
 backup*.zip
 test_cards/
+
+# ЭТАП 8: Generated projects (keep demo-projects in git)
+# Exclude generated test projects outside demo-projects/
+test-project*/
+temp-project*/
+generated-project*/
+
+# Metrics history (optional, comment out if you want to track it)
+# tools/metrics_history.json
+
+# Generated reports (optional)
+# *_report.txt
