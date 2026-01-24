@@ -1,4 +1,5 @@
 # Параллельное двунаправленное развитие программных систем: методология ⇑⇓↔
+*Уровень абстракции: α=+2 (законы и теория)*
 
 **Parallel Bidirectional Development of Software Systems: The ⇑⇓↔ Methodology**
 
