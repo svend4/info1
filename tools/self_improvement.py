@@ -59,26 +59,26 @@ class SelfImprovementAnalyzer:
 
             output = result.stdout
 
-            # Парсим метрики из вывода
+            # Парсим метрики из вывода (с учетом переносов строк)
             metrics = {}
 
             # CD
-            cd_match = re.search(r'CD.*?Value:\s+([\d.]+)%', output)
+            cd_match = re.search(r'CD.*?Value:\s+([\d.]+)%', output, re.DOTALL)
             if cd_match:
                 metrics['cd'] = float(cd_match.group(1))
 
             # VT
-            vt_match = re.search(r'VT.*?Value:\s+([\d.]+)%', output)
+            vt_match = re.search(r'VT.*?Value:\s+([\d.]+)%', output, re.DOTALL)
             if vt_match:
                 metrics['vt'] = float(vt_match.group(1))
 
             # CR
-            cr_match = re.search(r'CR.*?Value:\s+([\d.]+)', output)
+            cr_match = re.search(r'CR.*?Value:\s+([\d.]+)', output, re.DOTALL)
             if cr_match:
                 metrics['cr'] = float(cr_match.group(1))
 
             # DB
-            db_match = re.search(r'DB.*?Value:\s+([\d.]+)%', output)
+            db_match = re.search(r'DB.*?Value:\s+([\d.]+)%', output, re.DOTALL)
             if db_match:
                 metrics['db'] = float(db_match.group(1))
 

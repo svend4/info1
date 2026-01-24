@@ -84,7 +84,7 @@ class HealthMetricsCalculator:
 
                 alpha = self._extract_alpha(content)
                 cycle = self._extract_cycle(content)
-                direction = self._extract_direction(content)
+                direction = self._extract_direction(content, alpha)
                 lines = len(content.split('\n'))
 
                 self.documents[rel_path] = {
@@ -124,8 +124,24 @@ class HealthMetricsCalculator:
             return int(match.group(1))
         return None
 
-    def _extract_direction(self, content: str) -> Optional[str]:
-        """Extract development direction (⇑, ⇓, ↔)"""
+    def _extract_direction(self, content: str, alpha: Optional[int] = None) -> Optional[str]:
+        """
+        Extract development direction (⇑, ⇓, ↔) based on abstraction level
+
+        Правильная логика определения направления:
+        - ⇑ UP: обобщающие документы (α > 0) - философия, теория, методология
+        - ⇓ DOWN: детализирующие документы (α < 0) - спецификации, код, примеры
+        - ↔ HORIZONTAL: связующие документы (α = 0) - архитектура, индексы
+        """
+        if alpha is not None:
+            if alpha > 0:
+                return 'up'
+            elif alpha < 0:
+                return 'down'
+            else:  # alpha == 0
+                return 'horizontal'
+
+        # Fallback: старая логика (только если α не определен)
         if '⇑' in content or 'ВВЕРХ' in content or 'UP' in content.upper():
             return 'up'
         elif '⇓' in content or 'ВНИЗ' in content or 'DOWN' in content.upper():
