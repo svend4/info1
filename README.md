@@ -1,5 +1,6 @@
 # Концепция Информационно-Операционной Системы для Домашнего Использования
 *Уровень абстракции: α=+1 (методология)*
+*Статус: ↔ ГОРИЗОНТ (обзорный документ проекта)*
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/svend4/info1/tests.yml?branch=main&label=tests)
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
