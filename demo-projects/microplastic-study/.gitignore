@@ -1,0 +1,15 @@
+# Методология ⇑⇓↔
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+
+# Временные файлы
+*.tmp
+*.log
+.cache/
+
+# Виртуальное окружение
+venv/
+env/

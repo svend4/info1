@@ -247,7 +247,7 @@ python3 tools/health_metrics.py
 
 ### Доказательство универсальности
 
-Эти 6 проектов из **6 разных доменов** доказывают, что:
+Эти **9 проектов из 9 разных доменов** доказывают, что:
 
 1. **Методология ⇑⇓↔ применима везде**
    - От IT до сельского хозяйства
@@ -274,6 +274,102 @@ python3 tools/health_metrics.py
 
 ---
 
+## 🆕 Q2 2026: Новые демо-проекты
+
+### 7. 🔬 microplastic-study — Research Project
+**Тип:** research
+**Описание:** Научное исследование воздействия микропластика на морские экосистемы
+
+**Структура:**
+```
+microplastic-study/
+├── 01-Концепция/
+│   └── RESEARCH-PLAN.md    # План исследования (α=+1)
+├── 02-Архитектура/
+├── 03-Реализация/
+├── docs/
+│   └── templates/
+│       └── RESEARCH-PROTOCOL-TEMPLATE.md  # Шаблон протокола
+├── data/          # Данные исследования
+├── experiments/   # Эксперименты
+├── publications/  # Публикации
+├── tools/
+│   ├── health_metrics.py
+│   └── README.md
+├── README.md
+├── МЕТОДОЛОГИЯ.md
+└── METRICS.md
+```
+
+**Особенности:**
+- Научный подход с data/, experiments/, publications/
+- Расширенные шаблоны для research protocol
+- Применение методологии ⇑⇓↔ к научной работе
+
+---
+
+### 8. 🏭 bioplastic-factory — Manufacturing Project
+**Тип:** manufacturing
+**Описание:** Производство биоразлагаемой упаковки из PLA
+
+**Структура:**
+```
+bioplastic-factory/
+├── 01-Концепция/
+│   └── PRODUCTION-PROCESS.md  # Производственный процесс (α=-1)
+├── 02-Архитектура/
+├── 03-Реализация/
+├── docs/
+│   └── templates/
+│       └── PRODUCTION-PLAN-TEMPLATE.md  # Шаблон производства
+├── production/    # Управление производством
+├── quality/       # Контроль качества
+├── inventory/     # Складской учёт
+├── tools/
+│   ├── health_metrics.py
+│   └── README.md
+├── README.md
+├── МЕТОДОЛОГИЯ.md
+└── METRICS.md
+```
+
+**Особенности:**
+- Специализированные папки для производства, качества, складского учёта
+- Интеграция с производственными процессами
+- Quality control интегрированный в методологию
+
+---
+
+### 9. 🎮 travel-blog — Hobby & Personal Project
+**Тип:** hobby
+**Описание:** Блог о путешествиях с маршрутами и фотографиями
+
+**Структура:**
+```
+travel-blog/
+├── 01-Концепция/
+│   └── PROJECT-VISION.md   # Видение проекта (α=+2)
+├── 02-Архитектура/
+├── 03-Реализация/
+├── docs/
+├── projects/      # Проекты и маршруты
+├── resources/     # Ресурсы (фото, видео)
+├── notes/         # Заметки и идеи
+├── tools/
+│   ├── health_metrics.py
+│   └── README.md
+├── README.md
+├── МЕТОДОЛОГИЯ.md
+└── METRICS.md
+```
+
+**Особенности:**
+- Гибкая структура для хобби-проектов
+- Баланс между структурой и творческой свободой
+- Методология ⇑⇓↔ применима даже к личным проектам
+
+---
+
 ## 📈 Сравнение доменов
 
 | Домен | Специализированные папки | Ключевой документ | Применение |
@@ -284,6 +380,11 @@ python3 tools/health_metrics.py
 | Agriculture | crops/, livestock/, equipment/ | CROP-MANAGEMENT.md | Управление фермой |
 | Finance | portfolios/, analysis/, reports/ | FINANCIAL-STRATEGY.md | Инвестиции |
 | Sports | training/, events/, analytics/ | TRAINING-PROGRAM.md | Спортивная академия |
+| **Research** ⭐ | data/, experiments/, publications/ | RESEARCH-PLAN.md | Научные исследования |
+| **Manufacturing** ⭐ | production/, quality/, inventory/ | PRODUCTION-PROCESS.md | Производство |
+| **Hobby** ⭐ | projects/, resources/, notes/ | PROJECT-VISION.md | Личные проекты |
+
+⭐ — **Новые демо-проекты Q2 2026**
 
 ---
 
@@ -353,5 +454,6 @@ python tools/project_template_generator.py \
 ---
 
 *Созданы: 2026-01-24*
+*Q2 2026 обновление: +3 новых демо-проекта (research, manufacturing, hobby)*
 *Генератор: tools/project_template_generator.py v0.8*
 *Методология: ⇑⇓↔ (Parallel Bidirectional Development)*

@@ -44,12 +44,21 @@
 
 **Быстрый старт с генератором:**
 ```bash
+# Классические типы
 python tools/project_template_generator.py software my-app
 python tools/project_template_generator.py healthcare clinic-protocol
 python tools/project_template_generator.py finance investment-thesis
+
+# Новые типы (Q2 2026)
+python tools/project_template_generator.py research microplastic-study
+python tools/project_template_generator.py business saas-startup
+python tools/project_template_generator.py legal tax-dispute
+python tools/project_template_generator.py manufacturing bioplastic-factory
 ```
 
-📄 **Полный отчёт:** [ЭТАП-8-COMPLETION-REPORT.md](ЭТАП-8-COMPLETION-REPORT.md)
+📄 **Отчёты:**
+- [ЭТАП-8-COMPLETION-REPORT.md](ЭТАП-8-COMPLETION-REPORT.md) — общий отчёт ЭТАПА 8
+- [Q2-2026-EXAMPLES-REPORT.md](Q2-2026-EXAMPLES-REPORT.md) — расширение примеров (100% покрытие) ⭐ **НОВОЕ!**
 
 ---
 
@@ -730,6 +739,8 @@ docker-compose up
 - [ЭТАП-7-КОЛЛЕКТИВНЫЙ-ИНТЕЛЛЕКТ.md](ЭТАП-7-КОЛЛЕКТИВНЫЙ-ИНТЕЛЛЕКТ.md) — глобальная сеть взаимообучения (2027-2032) 🔮 **СПРОЕКТИРОВАН**
 - [ЭТАП-8-УНИВЕРСАЛЬНАЯ-МЕТА-МЕТОДОЛОГИЯ.md](ЭТАП-8-УНИВЕРСАЛЬНАЯ-МЕТА-МЕТОДОЛОГИЯ.md) — универсализация для любых областей 🏆 **ЗАВЕРШЁН (100% покрытие)**
 - [ЭТАП-8-COMPLETION-REPORT.md](ЭТАП-8-COMPLETION-REPORT.md) — полный отчёт о завершении ЭТАПА 8 ⭐ **НОВОЕ!**
+- [Q2-2026-EXAMPLES-REPORT.md](Q2-2026-EXAMPLES-REPORT.md) — Q2 2026: расширение примеров для всех 16 типов ⭐ **НОВОЕ!**
+- [NEXT-STEPS.md](NEXT-STEPS.md) — следующие шаги развития (Q2 2026 и далее)
 - [БУДУЩЕЕ-МЕТОДОЛОГИИ.md](БУДУЩЕЕ-МЕТОДОЛОГИИ.md) — долгосрочная стратегия развития
 
 **Участие (↔ сообщество):**
