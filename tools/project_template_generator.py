@@ -142,10 +142,18 @@ class ProjectTemplateGenerator:
         "business": [
             "BUSINESS-PLAN-TEMPLATE.md"
         ],
-        "education": [],
-        "legal": [],
-        "healthcare": [],
-        "arts": [],
+        "education": [
+            "CURRICULUM-DESIGN-TEMPLATE.md"
+        ],
+        "legal": [
+            "LEGAL-MEMORANDUM-TEMPLATE.md"
+        ],
+        "healthcare": [
+            "CLINICAL-PROTOCOL-TEMPLATE.md"
+        ],
+        "arts": [
+            "CREATIVE-BRIEF-TEMPLATE.md"
+        ],
         "finance": [],
         "government": [],
         "nonprofit": [],
