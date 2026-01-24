@@ -10,6 +10,22 @@ Automatically calculates project health metrics:
 
 Part of the Parallel Bidirectional Development Methodology.
 
+Уровень абстракции: α=-4 (исполняемый код)
+
+Вертикальные связи (⇑ к философии и концепциям):
+    ⇑ МЕТРИКИ-ЗДОРОВЬЯ.md (α=+1) — полное описание метрик и их значение
+    ⇑ МЕТА-АНАЛИЗ-МЕТОДОЛОГИИ.md (α=+3) — рефлексивный анализ методологии через метрики
+    ⇑ МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ.md (α=+1) — методология ⇑⇓↔
+    ⇑ ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md (α=+2) — как метрики эволюционировали
+    ⇑ ФИЛОСОФИЯ-ПРОЕКТА.md (α=+3) — принцип измеримости и адаптации
+
+Горизонтальные связи (↔ другие инструменты α=-4):
+    ↔ self_improvement.py — использует метрики для диагностики
+    ↔ predictive_warnings.py — использует метрики для прогнозов
+    ↔ adaptive_metrics.py — адаптирует пороги метрик
+    ↔ save_metrics.py — сохраняет историю метрик
+    ↔ visualize_connections.py — визуализирует связи для расчёта метрик
+
 Usage:
     python3 health_metrics.py                    # Show all metrics
     python3 health_metrics.py --metric cd        # Show only CD
