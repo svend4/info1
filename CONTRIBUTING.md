@@ -1,477 +1,259 @@
-# Contributing — Руководство для контрибьюторов
-*Уровень абстракции: α=+1 (методология)*
-*Статус: ⇓ ВНИЗ (руководство для контрибьюторов)*
+# Contributing to AI Generator Toolkit
 
-Спасибо за интерес к проекту "Информационно-операционная система для домашнего использования"! Мы рады любому вкладу в развитие проекта.
+Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
----
+## Getting Started
 
-## Оглавление
+### Prerequisites
+- Python 3.8 or higher
+- Git
+- Docker (optional, for containerized development)
 
-1. [Философия проекта](#философия-проекта)
-2. [Как внести вклад](#как-внести-вклад)
-3. [Процесс разработки](#процесс-разработки)
-4. [Стандарты кода](#стандарты-кода)
-5. [Структура проекта](#структура-проекта)
-6. [Тестирование](#тестирование)
-7. [Документация](#документация)
-8. [Методология параллельного развития](#методология-параллельного-развития)
-
----
-
-## Философия проекта
-
-Этот проект создан для помощи пожилым людям в организации повседневной жизни. При внесении изменений руководствуйтесь следующими принципами:
-
-1. **Человеко-центричность** — пользователь важнее технологий
-2. **Простота** — понятно бабушке = хорошо реализовано
-3. **Надёжность** — система не должна подводить
-4. **Достоинство** — уважение к пользователю на всех уровнях
-5. **Адаптивность** — система подстраивается под человека, а не наоборот
-
-Подробнее в [ФИЛОСОФИЯ-ПРОЕКТА.md](01-Концепция/ФИЛОСОФИЯ-ПРОЕКТА.md).
-
----
-
-## Как внести вклад
-
-### Типы контрибуций
-
-Мы приветствуем следующие типы вкладов:
-
-#### 1. Код (⇓ детализация)
-- Исправление багов
-- Добавление новых функций
-- Оптимизация производительности
-- Улучшение тестового покрытия
-
-#### 2. Документация (⇑ обобщение)
-- Улучшение существующей документации
-- Добавление примеров использования
-- Перевод на другие языки
-- Создание обучающих материалов
-
-#### 3. Дизайн (↔ связи)
-- Улучшение пользовательского интерфейса
-- Визуализация данных
-- Создание иконок и графики
-
-#### 4. Тестирование
-- Написание новых тестов
-- Нагрузочное тестирование
-- Юзабилити-тестирование с реальными пользователями
-- Отчёты о багах
-
----
-
-## Процесс разработки
-
-### 1. Форк и клонирование
+### Setup Development Environment
 
 ```bash
-# Форкните репозиторий через GitHub
-# Клонируйте ваш форк
-git clone https://github.com/YOUR-USERNAME/info1.git
+# Clone the repository
+git clone https://github.com/yourusername/info1.git
 cd info1
 
-# Добавьте upstream remote
-git remote add upstream https://github.com/svend4/info1.git
+# Install dependencies
+make install-dev
+
+# Or manually:
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+pip install -e .
 ```
 
-### 2. Создание ветки
+## Development Workflow
 
+### 1. Create a Branch
 ```bash
-# Обновите main
-git checkout main
-git pull upstream main
-
-# Создайте feature-ветку
 git checkout -b feature/your-feature-name
 ```
 
-Именование веток:
-- `feature/` — новая функциональность
-- `bugfix/` — исправление бага
-- `docs/` — изменения в документации
-- `test/` — добавление тестов
-- `refactor/` — рефакторинг кода
+### 2. Make Changes
+- Write clean, documented code
+- Follow existing code style
+- Add tests for new features
+- Update documentation
 
-### 3. Разработка
-
-Следуйте [методологии параллельного развития](#методология-параллельного-развития):
-
-**⇑ ВВЕРХ (обобщение):**
-- Обновите документацию на более высоких уровнях абстракции
-- Добавьте связи с существующими концепциями
-
-**⇓ ВНИЗ (детализация):**
-- Напишите код
-- Добавьте тесты
-- Создайте примеры использования
-
-**↔ СВЯЗИ (горизонтальные):**
-- Обновите КАРТА-СВЯЗЕЙ.md
-- Обновите CHANGELOG.md
-
-### 4. Коммиты
-
-Используйте семантические коммиты:
-
+### 3. Run Tests
 ```bash
-git commit -m "тип: краткое описание
+# Run all tests
+make test
 
-Подробное описание изменений.
+# Run with coverage
+make test-coverage
 
-Связь с issue: #123
-"
+# Run specific category
+pytest -m security
 ```
 
-Типы коммитов:
-- `feat:` — новая функциональность
-- `fix:` — исправление бага
-- `docs:` — изменения в документации
-- `test:` — добавление или изменение тестов
-- `refactor:` — рефакторинг без изменения функциональности
-- `perf:` — улучшение производительности
-- `style:` — форматирование кода
-- `chore:` — рутинные задачи (обновление зависимостей и т.п.)
-
-### 5. Пуш и Pull Request
-
+### 4. Format Code
 ```bash
-# Пуш в ваш форк
+# Format code
+make format
+
+# Check code quality
+make lint
+```
+
+### 5. Commit Changes
+```bash
+git add .
+git commit -m "feat: add new feature"
+```
+
+### 6. Push and Create PR
+```bash
 git push origin feature/your-feature-name
-
-# Создайте Pull Request через GitHub
 ```
 
-**Шаблон Pull Request:**
+## Code Style
 
-```markdown
-## Описание
-Краткое описание изменений.
+### Python
+- Follow PEP 8
+- Use type hints
+- Write docstrings for all public functions
+- Maximum line length: 120 characters
 
-## Тип изменений
-- [ ] ⇑ ВВЕРХ (обобщение, документация)
-- [ ] ⇓ ВНИЗ (детализация, код)
-- [ ] ↔ СВЯЗИ (горизонтальные связи)
-
-## Чеклист
-- [ ] Код следует стандартам проекта
-- [ ] Добавлены тесты
-- [ ] Все тесты проходят
-- [ ] Обновлена документация
-- [ ] Обновлён CHANGELOG.md
-
-## Связанные issue
-Fixes #123
-```
-
----
-
-## Стандарты кода
-
-### Python Code Style
-
-Следуйте PEP 8 и используйте инструменты:
-
+### Formatting
 ```bash
-# Форматирование
-black 08-Программная-реализация/card_system/
+# Auto-format with black
+black tools/ai_generator/
 
-# Линтинг
-flake8 08-Программная-реализация/card_system/
+# Sort imports with isort
+isort tools/ai_generator/
 
-# Проверка типов
-mypy 08-Программная-реализация/card_system/
+# Check with flake8
+flake8 tools/ai_generator/ --max-line-length=120
 ```
 
-### Стиль кода
+## Testing
 
+### Writing Tests
 ```python
-# ✅ ХОРОШО: Явность, простота, читаемость
-def get_medicine_cards(self) -> List[MedicineCard]:
-    """
-    Получить все карточки лекарств.
+import pytest
+from pathlib import Path
 
-    Returns:
-        Список карточек лекарств
-    """
-    return [c for c in self.cards.values()
-            if c.type == CardType.MEDICINE]
+@pytest.mark.integration
+@pytest.mark.security
+class TestNewFeature:
+    """Integration tests for new feature"""
 
-# ❌ ПЛОХО: Неявность, сложность
-def gmc(self): return [c for c in self.cards.values() if c.type == CT.MED]
-```
-
-### Документация кода
-
-Используйте docstrings для всех публичных функций и классов:
-
-```python
-def create(self, card: Card) -> Card:
-    """
-    Создать новую карточку в системе.
-
-    Args:
-        card: Карточка для создания
-
-    Returns:
-        Созданная карточка с присвоенным ID
-
-    Raises:
-        ValueError: Если карточка уже имеет ID
-
-    Example:
-        >>> task = TaskCard(title="Купить молоко")
-        >>> created = manager.create(task)
-        >>> print(created.id)
-        '550e8400-e29b-41d4-a716-446655440000'
-    """
-```
-
----
-
-## Структура проекта
-
-Проект организован по уровням абстракции (α):
-
-```
-info1/
-├── 01-Концепция/                    # α=+1 до α=+4 (философия, законы, принципы)
-│   ├── ОНТОЛОГИЯ-СИСТЕМ.md          # α=+4
-│   ├── ФИЛОСОФИЯ-ПРОЕКТА.md         # α=+3
-│   ├── УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md      # α=+2
-│   └── ПРИНЦИПЫ-И-ПАТТЕРНЫ.md       # α=+1
-│
-├── 02-Информационная-система/       # α=-1 до α=-3 (спецификации, шаблоны, примеры)
-│   ├── ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ.md  # α=-1
-│   ├── ШАБЛОНЫ-КАРТОЧЕК.md          # α=-2
-│   ├── USER-GUIDE.md                # α=-3
-│   └── Примеры/                     # α=-3
-│
-├── 03-Принципы/                     # Мостовые документы
-│   └── ЗАКОНЫ-В-КОДЕ.md             # Мост α=+2 ↔ α=-4
-│
-├── 08-Программная-реализация/       # α=-4 (исполняемый код)
-│   ├── card_system/
-│   │   ├── card.py                  # Классы карточек
-│   │   ├── card_manager.py          # CRUD и граф связей
-│   │   ├── export_import.py         # Импорт/экспорт
-│   │   ├── automation.py            # Автоматизация
-│   │   ├── cli.py                   # CLI интерфейс
-│   │   ├── test_card_system.py      # Юнит-тесты
-│   │   └── test_integration.py      # Интеграционные тесты
-│   ├── requirements.txt
-│   ├── setup.py
-│   ├── README.md
-│   ├── API-REFERENCE.md
-│   └── EXAMPLES.md
-│
-├── КАРТА-СВЯЗЕЙ.md                  # Карта всех связей
-├── АНАЛИЗ-КЛАСТЕРОВ-СВЯЗЕЙ.md       # Кластерный анализ
-├── CHANGELOG.md                     # История изменений
-├── README.md                        # Главная страница
-├── CONTRIBUTING.md                  # Этот файл
-└── LICENSE                          # Лицензия MIT
-```
-
----
-
-## Тестирование
-
-### Запуск тестов
-
-```bash
-cd 08-Программная-реализация
-
-# Юнит-тесты
-python -m pytest card_system/test_card_system.py -v
-
-# Интеграционные тесты
-python -m pytest card_system/test_integration.py -v
-
-# Все тесты с покрытием
-python -m pytest --cov=card_system --cov-report=html
-
-# Или через unittest
-python -m unittest discover card_system/ -v
-```
-
-### Написание тестов
-
-Создавайте тесты для:
-- ✅ Всех публичных методов
-- ✅ Граничных случаев
-- ✅ Обработки ошибок
-- ✅ Интеграции компонентов
-
-```python
-import unittest
-from card import TaskCard
-from card_manager import CardManager
-
-class TestNewFeature(unittest.TestCase):
-    def setUp(self):
-        """Подготовка перед каждым тестом"""
-        self.manager = CardManager(Path("./test_cards"))
-
-    def test_feature_works(self):
-        """Тест: новая функция работает корректно"""
+    def test_basic_functionality(self, temp_dir):
+        """Test basic feature functionality"""
         # Arrange
-        card = TaskCard(title="Test")
+        input_data = {...}
 
         # Act
-        result = self.manager.create(card)
+        result = your_function(input_data)
 
         # Assert
-        self.assertIsNotNone(result.id)
-        self.assertEqual(result.title, "Test")
+        assert result is not None
+        assert len(result) > 0
 ```
 
-### Требования к покрытию
+### Running Tests
+```bash
+# All tests
+pytest
 
-- Юнит-тесты: **100%** покрытие основных функций
-- Интеграционные тесты: ключевые workflow
-- Все тесты должны проходить перед мерджем
+# Specific marker
+pytest -m integration
 
----
+# Specific file
+pytest tests/integration/test_security_integration.py
 
-## Документация
+# With coverage
+pytest --cov=tools/ai_generator --cov-report=html
+```
 
-### Уровни документации
+## Documentation
 
-При добавлении функционала обновляйте документацию на всех уровнях:
+### Module Documentation
+Each new module should include:
+- Module-level docstring
+- Function/class docstrings
+- Type hints
+- Usage examples in `tools/ai_generator/examples/`
 
-**α=-4 (Код):**
-- Docstrings в коде
-- Комментарии для сложной логики
-
-**α=-3 (Примеры):**
-- Примеры использования в EXAMPLES.md
-- Примеры в USER-GUIDE.md
-
-**α=-2 (API):**
-- Обновите API-REFERENCE.md
-
-**α=-1 (Спецификации):**
-- Обновите ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ.md
-
-**α=0 и выше (Концепции):**
-- Обновите соответствующие концептуальные документы
-
-**Связи:**
-- Обновите КАРТА-СВЯЗЕЙ.md
-- Обновите CHANGELOG.md
-
-### Markdown стиль
-
-```markdown
-# Заголовок 1 уровня
-
-## Заголовок 2 уровня
-
-### Заголовок 3 уровня
-
-**Жирный текст** для акцентов
-
-`Код inline` для команд и имён переменных
-
+### Example Format
 ```python
-# Блоки кода с указанием языка
-def example():
+"""
+Module for XYZ functionality.
+
+This module provides...
+"""
+
+from typing import Dict, List
+from pathlib import Path
+
+def example_function(param: str) -> Dict[str, any]:
+    """
+    Brief description of function.
+
+    Args:
+        param: Description of parameter
+
+    Returns:
+        Dictionary containing...
+
+    Example:
+        >>> result = example_function("test")
+        >>> print(result)
+        {...}
+    """
     pass
 ```
 
-- Списки с дефисами
-- Пробел после дефиса
+## Commit Messages
 
-1. Нумерованные списки
-2. С точкой после номера
+Follow conventional commits:
 
-> Цитаты для важных замечаний
-
-⭐ — прорывное изменение
-🎯 — достижение цели
-📈 — улучшение метрик
+```
+feat: add new feature
+fix: bug fix
+docs: documentation update
+test: add tests
+refactor: code refactoring
+perf: performance improvement
+chore: maintenance tasks
 ```
 
----
+Examples:
+```
+feat(security): add new encryption algorithm
+fix(mlops): resolve drift detection bug
+docs(readme): update installation instructions
+test(distributed): add microservice tests
+```
 
-## Методология параллельного развития
+## Pull Request Process
 
-Проект использует методологию параллельного двунаправленного развития. При внесении изменений следуйте этим принципам:
+1. **Update Documentation**: Ensure README and relevant docs are updated
+2. **Add Tests**: New features must have tests
+3. **Pass CI Checks**: All CI/CD checks must pass
+4. **Request Review**: Tag maintainers for review
+5. **Address Feedback**: Respond to review comments
+6. **Squash Commits**: Clean up commit history before merge
 
-### Операторы развития
+## Code Review
 
-**⇑ Оператор обобщения (Generalization):**
-- Вход: Конкретные примеры на уровне α
-- Выход: Обобщённый паттерн на уровне α+1
-- Пример: Несколько похожих функций → общий принцип в документации
+Reviewers will check:
+- Code quality and style
+- Test coverage
+- Documentation completeness
+- Performance implications
+- Security considerations
 
-**⇓ Оператор детализации (Specialization):**
-- Вход: Абстрактная концепция на уровне α
-- Выход: Конкретная реализация на уровне α-1
-- Пример: Принцип SSOT → класс CardManager с единым хранилищем
+## Adding New Modules
 
-**↔ Оператор связывания (Linking):**
-- Вход: Два элемента на одном уровне α
-- Выход: Связь между элементами
-- Пример: КАРТА-СВЯЗЕЙ.md связывает все документы
+### Structure
+```
+tools/ai_generator/your_category/
+├── __init__.py
+├── your_module.py
+└── tests/
+    └── test_your_module.py
+```
 
-### Циклы развития
+### Checklist
+- [ ] Module implementation with type hints
+- [ ] Unit tests (>80% coverage)
+- [ ] Integration tests
+- [ ] Documentation and examples
+- [ ] Benchmark implementation
+- [ ] Update category README
+- [ ] Update main README
 
-Каждое значительное изменение должно включать:
+## Performance Guidelines
 
-1. **⇑ ВВЕРХ:** Обобщение и обновление документации высокого уровня
-2. **⇓ ВНИЗ:** Конкретная реализация и тесты
-3. **↔ СВЯЗИ:** Обновление связей и навигационных документов
+- Profile code for performance bottlenecks
+- Add benchmarks for new features
+- Target execution times:
+  - Simple operations: < 10ms
+  - Complex operations: < 100ms
+- Memory efficient implementations
 
-Подробнее в [МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ.md](01-Концепция/МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ.md).
+## Security Guidelines
 
----
+- Never commit secrets or credentials
+- Use parameterized queries for databases
+- Validate all user inputs
+- Follow OWASP Top 10 guidelines
+- Run security scans: `make security-check`
 
-## Вопросы?
+## Questions?
 
-- **Issues:** https://github.com/svend4/info1/issues
-- **Discussions:** https://github.com/svend4/info1/discussions
-- **Documentation:** [README.md](README.md), [ПУТЕВОДИТЕЛЬ.md](ПУТЕВОДИТЕЛЬ.md)
+- Check existing documentation
+- Search existing issues
+- Ask in discussions
+- Contact maintainers
 
----
+## License
 
-## См. также
+By contributing, you agree that your contributions will be licensed under the MIT License.
 
-**Начало работы (⇓ практика):**
-- [README.md](README.md) — главная страница с установкой и быстрым стартом
-- [ПУТЕВОДИТЕЛЬ.md](ПУТЕВОДИТЕЛЬ.md) — навигация по проекту для новичков
-- [РЕЗЮМЕ-ПРОЕКТА.md](РЕЗЮМЕ-ПРОЕКТА.md) — краткое описание проекта
-
-**Методология (⇑ понимание):**
-- [МЕТОДОЛОГИЯ.md](МЕТОДОЛОГИЯ.md) — методология параллельного двунаправленного развития (⇑⇓↔)
-- [ПРИМЕНЕНИЕ-МЕТОДОЛОГИИ.md](ПРИМЕНЕНИЕ-МЕТОДОЛОГИИ.md) — как применить методологию
-- [ФИЛОСОФИЯ-ПРОЕКТА.md](ФИЛОСОФИЯ-ПРОЕКТА.md) — философские основы проекта
-
-**Техническая документация (⇓ детали):**
-- [tools/README.md](tools/README.md) — документация инструментов автоматизации
-- [МЕТРИКИ-ЗДОРОВЬЯ.md](МЕТРИКИ-ЗДОРОВЬЯ.md) — метрики качества кода (CD, VT, CR, DB)
-- [ДОКУМЕНТАЦИЯ.md](ДОКУМЕНТАЦИЯ.md) — полный индекс всей документации
-
-**Развитие проекта (↔ контекст):**
-- [ROADMAP.md](ROADMAP.md) — дорожная карта развития на 2026-2028
-- [CHANGELOG.md](CHANGELOG.md) — история всех изменений
-- [ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md](ЭВОЛЮЦИЯ-МЕТОДОЛОГИИ.md) — 5 этапов эволюции проекта
-
-**Миграция:**
-- [MIGRATION-GUIDE.md](MIGRATION-GUIDE.md) — руководство по миграции на методологию ⇑⇓↔
-
----
-
-## Признательность
-
-Спасибо всем контрибьюторам, которые делают этот проект лучше! Ваш вклад помогает пожилым людям жить более организованно и независимо.
-
----
-
-**Дата создания:** 2026-01-23
-**Версия:** 1.0
-**Статус:** Активный документ (обновляется при изменении процессов)
+Thank you for contributing! 🎉

@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # Main AI Generator Toolkit service
+  ai-generator:
+    build:
+      context: .
+      target: base
+    container_name: ai-generator-toolkit
+    volumes:
+      - ./tools:/app/tools
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    networks:
+      - ai-generator-network
+
+  # Development environment
+  dev:
+    build:
+      context: .
+      target: development
+    container_name: ai-generator-dev
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+    stdin_open: true
+    tty: true
+    networks:
+      - ai-generator-network
+
+  # Test runner
+  test:
+    build:
+      context: .
+      target: test
+    container_name: ai-generator-test
+    volumes:
+      - ./tests:/app/tests
+      - ./tools:/app/tools
+      - ./reports:/app/reports
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTEST_ARGS=-v --cov=tools/ai_generator --cov-report=html
+    networks:
+      - ai-generator-network
+
+  # Benchmark runner
+  benchmark:
+    build:
+      context: .
+      target: benchmark
+    container_name: ai-generator-benchmark
+    volumes:
+      - ./benchmarks:/app/benchmarks
+      - ./tools:/app/tools
+      - ./reports:/app/reports
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ai-generator-network
+
+  # Redis for feature store (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: ai-generator-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - ai-generator-network
+    command: redis-server --appendonly yes
+
+  # PostgreSQL for examples (optional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: ai-generator-postgres
+    environment:
+      - POSTGRES_DB=ai_generator
+      - POSTGRES_USER=ai_generator
+      - POSTGRES_PASSWORD=ai_generator_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ai-generator-network
+
+networks:
+  ai-generator-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:
