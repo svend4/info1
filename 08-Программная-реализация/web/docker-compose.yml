@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # AI Generator API
+  ai-api:
+    build:
+      context: ../..
+      dockerfile: 08-Программная-реализация/web/Dockerfile
+    container_name: ai-generator-api
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+      - ML_MODEL_PATH=/app/tools/ai_generator/models/project_classifier.pkl
+    volumes:
+      # Монтируем модель для hot-reload
+      - ../../tools/ai_generator/models:/app/tools/ai_generator/models:ro
+      # Для сохранения generated проектов
+      - ai-projects:/tmp/ai-projects
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/ai/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+  # Nginx reverse proxy (опционально)
+  nginx:
+    image: nginx:alpine
+    container_name: ai-generator-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ai-generator.html:/usr/share/nginx/html/index.html:ro
+    depends_on:
+      - ai-api
+    restart: unless-stopped
+    networks:
+      - ai-network
+
+volumes:
+  ai-projects:
+    driver: local
+
+networks:
+  ai-network:
+    driver: bridge

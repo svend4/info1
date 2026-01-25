@@ -1,0 +1,42 @@
+name: AI Generator Toolkit - Test Suite
+
+on:
+  push:
+    branches: [ main, develop, claude/* ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      - run: pytest -v --cov=tools/ai_generator --cov-report=xml -n auto
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install black isort flake8 bandit
+      - run: black --check tools/ai_generator/ || true
+      - run: isort --check-only tools/ai_generator/ || true
+      - run: flake8 tools/ai_generator/ --max-line-length=120 || true
+      - run: bandit -r tools/ai_generator/ || true

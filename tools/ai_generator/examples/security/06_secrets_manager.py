@@ -1,0 +1,534 @@
+#!/usr/bin/env python3
+"""
+Example: Secrets Manager
+
+This example demonstrates secure secrets management
+with HashiCorp Vault, AWS Secrets Manager, and Azure Key Vault.
+"""
+
+from pathlib import Path
+from tools.ai_generator.security import (
+    SecretsManager,
+    SecretsConfig,
+    SecretsProvider,
+    SecretType,
+    RotationPolicy
+)
+
+
+def example_vault_setup():
+    """HashiCorp Vault setup and configuration"""
+    print("=" * 60)
+    print("Example 1: HashiCorp Vault Setup")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200",
+        enable_auto_unseal=True
+    )
+
+    manager = SecretsManager(config)
+
+    # Initialize Vault
+    manager.initialize()
+
+    print("✅ HashiCorp Vault initialized")
+    print("\n🔐 Vault configuration:")
+    print("   - Transit auto-unseal enabled")
+    print("   - High availability (HA) mode")
+    print("   - Audit logging to file and syslog")
+
+    # Enable secrets engines
+    manager.enable_engine("kv", version=2, path="secret")
+    manager.enable_engine("database", path="database")
+    manager.enable_engine("pki", path="pki")
+    manager.enable_engine("transit", path="transit")
+
+    print("\n🎯 Secrets engines enabled:")
+    print("   ✓ KV v2 (key-value store)")
+    print("   ✓ Database (dynamic credentials)")
+    print("   ✓ PKI (certificate authority)")
+    print("   ✓ Transit (encryption as a service)")
+    print()
+
+
+def example_store_retrieve_secrets():
+    """Store and retrieve secrets"""
+    print("=" * 60)
+    print("Example 2: Store and Retrieve Secrets")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Store various types of secrets
+    secrets = {
+        "database/prod/postgres": {
+            "username": "dbadmin",
+            "password": "SuperSecureP@ss123!",
+            "host": "db.prod.internal",
+            "port": 5432
+        },
+        "api/stripe": {
+            "api_key": "sk_live_51H...",
+            "webhook_secret": "whsec_..."
+        },
+        "api/openai": {
+            "api_key": "sk-proj-...",
+            "organization": "org-..."
+        }
+    }
+
+    for path, secret_data in secrets.items():
+        manager.store_secret(path, secret_data)
+        print(f"✅ Stored: {path}")
+
+    print("\n🔍 Retrieving secrets:")
+
+    # Retrieve secret
+    db_secret = manager.get_secret("database/prod/postgres")
+    print(f"\n   Database credentials retrieved")
+    print(f"   Host: {db_secret['host']}")
+    print(f"   Port: {db_secret['port']}")
+    print(f"   Username: {db_secret['username']}")
+    print(f"   Password: {'*' * len(db_secret['password'])}")
+    print()
+
+
+def example_dynamic_database_credentials():
+    """Generate dynamic database credentials"""
+    print("=" * 60)
+    print("Example 3: Dynamic Database Credentials")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Configure database connection
+    manager.configure_database(
+        name="postgresql-prod",
+        plugin="postgresql-database-plugin",
+        connection_url="postgresql://{{username}}:{{password}}@db.prod:5432/app",
+        username="vault-admin",
+        password="admin-password"
+    )
+
+    # Create role with TTL
+    manager.create_database_role(
+        name="readonly",
+        db_name="postgresql-prod",
+        creation_statements=[
+            "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
+            "GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";"
+        ],
+        default_ttl="1h",
+        max_ttl="24h"
+    )
+
+    print("✅ Database engine configured")
+
+    # Generate dynamic credentials
+    creds = manager.generate_database_credentials("postgresql-prod/creds/readonly")
+
+    print(f"\n🔑 Dynamic credentials generated:")
+    print(f"   Username: {creds['username']}")
+    print(f"   Password: {'*' * 20}")
+    print(f"   Lease Duration: 1 hour")
+    print(f"   Lease ID: {creds['lease_id']}")
+
+    print(f"\n✨ Benefits:")
+    print(f"   - Credentials are temporary (auto-expire)")
+    print(f"   - No hardcoded passwords")
+    print(f"   - Automatic rotation")
+    print(f"   - Auditable access")
+    print()
+
+
+def example_aws_secrets_manager():
+    """AWS Secrets Manager integration"""
+    print("=" * 60)
+    print("Example 4: AWS Secrets Manager")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.AWS_SECRETS_MANAGER,
+        aws_region="us-east-1"
+    )
+
+    manager = SecretsManager(config)
+
+    # Create secret
+    manager.create_secret(
+        name="prod/database/master",
+        secret_value={
+            "username": "admin",
+            "password": "AutoGeneratedP@ss123!",
+            "engine": "postgres",
+            "host": "prod-db.abc123.us-east-1.rds.amazonaws.com",
+            "port": 5432,
+            "dbname": "production"
+        },
+        description="Production database master credentials"
+    )
+
+    print("✅ Secret created in AWS Secrets Manager")
+
+    # Enable automatic rotation
+    manager.enable_rotation(
+        secret_name="prod/database/master",
+        lambda_arn="arn:aws:lambda:us-east-1:123456789012:function:SecretsManagerRotation",
+        rotation_days=30
+    )
+
+    print(f"\n🔄 Automatic rotation enabled:")
+    print(f"   Rotation period: 30 days")
+    print(f"   Lambda function: SecretsManagerRotation")
+
+    # Retrieve secret
+    secret = manager.get_secret("prod/database/master")
+
+    print(f"\n✅ Secret retrieved")
+    print(f"   ARN: {secret['ARN']}")
+    print(f"   Version: {secret['VersionId']}")
+    print(f"   Last Rotated: {secret['LastRotatedDate']}")
+    print()
+
+
+def example_azure_key_vault():
+    """Azure Key Vault integration"""
+    print("=" * 60)
+    print("Example 5: Azure Key Vault")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.AZURE_KEY_VAULT,
+        vault_url="https://mykeyvault.vault.azure.net/"
+    )
+
+    manager = SecretsManager(config)
+
+    # Store secrets
+    manager.set_secret("app-client-id", "12345678-1234-1234-1234-123456789abc")
+    manager.set_secret("app-client-secret", "SuperSecretValue123!")
+    manager.set_secret("storage-connection-string", "DefaultEndpointsProtocol=https;...")
+
+    print("✅ Secrets stored in Azure Key Vault")
+
+    # Store certificate
+    cert_path = Path("./ssl/certificate.pem")
+    manager.import_certificate(
+        name="ssl-certificate",
+        certificate_path=cert_path,
+        password="cert-password"
+    )
+
+    print("✅ SSL certificate imported")
+
+    # Create encryption key
+    key = manager.create_key(
+        name="encryption-key",
+        key_type="RSA",
+        key_size=4096,
+        key_operations=["encrypt", "decrypt", "sign", "verify"]
+    )
+
+    print(f"\n🔑 Encryption key created:")
+    print(f"   Name: {key['name']}")
+    print(f"   Type: {key['key_type']}")
+    print(f"   Size: {key['key_size']} bits")
+    print()
+
+
+def example_secret_rotation():
+    """Implement secret rotation policies"""
+    print("=" * 60)
+    print("Example 6: Secret Rotation Policies")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Define rotation policies
+    policies = [
+        RotationPolicy(
+            name="api-keys",
+            rotation_period_days=90,
+            notification_days_before=7,
+            auto_rotate=True
+        ),
+        RotationPolicy(
+            name="database-passwords",
+            rotation_period_days=30,
+            notification_days_before=3,
+            auto_rotate=True
+        ),
+        RotationPolicy(
+            name="certificates",
+            rotation_period_days=365,
+            notification_days_before=30,
+            auto_rotate=False  # Manual approval required
+        )
+    ]
+
+    for policy in policies:
+        manager.create_rotation_policy(policy)
+        print(f"✅ Rotation policy: {policy.name}")
+
+    print(f"\n🔄 Rotation schedule:")
+    for policy in policies:
+        print(f"\n   {policy.name}:")
+        print(f"   - Rotation: Every {policy.rotation_period_days} days")
+        print(f"   - Notification: {policy.notification_days_before} days before")
+        print(f"   - Auto-rotate: {'Yes' if policy.auto_rotate else 'No (manual)'}")
+    print()
+
+
+def example_encryption_as_service():
+    """Use Vault Transit engine for encryption"""
+    print("=" * 60)
+    print("Example 7: Encryption as a Service (Transit)")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Create encryption key
+    manager.create_transit_key(
+        name="customer-data",
+        key_type="aes256-gcm96",
+        exportable=False
+    )
+
+    print("✅ Transit encryption key created")
+
+    # Encrypt data
+    plaintext = "Sensitive customer PII: SSN 123-45-6789"
+    ciphertext = manager.encrypt_data("customer-data", plaintext)
+
+    print(f"\n🔒 Data encrypted:")
+    print(f"   Plaintext length: {len(plaintext)} bytes")
+    print(f"   Ciphertext: {ciphertext[:50]}...")
+
+    # Decrypt data
+    decrypted = manager.decrypt_data("customer-data", ciphertext)
+
+    print(f"\n✅ Data decrypted successfully")
+
+    # Rotate encryption key
+    manager.rotate_transit_key("customer-data")
+
+    print(f"\n🔄 Encryption key rotated")
+    print(f"   Old ciphertext still decryptable")
+    print(f"   New encryptions use new key version")
+
+    # Re-encrypt with new key
+    new_ciphertext = manager.rewrap_data("customer-data", ciphertext)
+
+    print(f"   ✅ Data re-encrypted with new key version")
+    print()
+
+
+def example_access_control():
+    """Implement fine-grained access control"""
+    print("=" * 60)
+    print("Example 8: Access Control Policies")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Create policies
+    policies = {
+        "developer": """
+            path "secret/data/dev/*" {
+                capabilities = ["create", "read", "update", "delete", "list"]
+            }
+            path "secret/data/prod/*" {
+                capabilities = ["read", "list"]
+            }
+        """,
+        "admin": """
+            path "secret/*" {
+                capabilities = ["create", "read", "update", "delete", "list"]
+            }
+            path "sys/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+            }
+        """,
+        "ci-cd": """
+            path "secret/data/ci/*" {
+                capabilities = ["read"]
+            }
+            path "database/creds/app" {
+                capabilities = ["read"]
+            }
+        """
+    }
+
+    for policy_name, policy_hcl in policies.items():
+        manager.create_policy(policy_name, policy_hcl)
+        print(f"✅ Policy created: {policy_name}")
+
+    print(f"\n🔐 Access control matrix:")
+    print(f"   Developer:")
+    print(f"      - Full access to dev/* secrets")
+    print(f"      - Read-only access to prod/* secrets")
+    print(f"   Admin:")
+    print(f"      - Full access to all secrets")
+    print(f"      - System administration privileges")
+    print(f"   CI/CD:")
+    print(f"      - Read-only access to CI secrets")
+    print(f"      - Can generate database credentials")
+    print()
+
+
+def example_audit_logging():
+    """Enable and analyze audit logs"""
+    print("=" * 60)
+    print("Example 9: Audit Logging")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200",
+        enable_audit_logging=True
+    )
+
+    manager = SecretsManager(config)
+
+    # Enable audit devices
+    manager.enable_audit_device("file", path="/var/log/vault/audit.log")
+    manager.enable_audit_device("syslog", tag="vault")
+
+    print("✅ Audit logging enabled")
+
+    print(f"\n📝 Audit destinations:")
+    print(f"   - File: /var/log/vault/audit.log")
+    print(f"   - Syslog: tag=vault")
+
+    print(f"\n📊 Logged events:")
+    print(f"   ✓ Secret access (read/write/delete)")
+    print(f"   ✓ Authentication attempts")
+    print(f"   ✓ Policy changes")
+    print(f"   ✓ Token operations")
+    print(f"   ✓ Encryption/decryption requests")
+
+    # Analyze audit logs
+    audit_summary = manager.analyze_audit_logs(days=7)
+
+    print(f"\n📈 Audit summary (last 7 days):")
+    print(f"   Total requests: {audit_summary['total_requests']}")
+    print(f"   Successful: {audit_summary['successful']}")
+    print(f"   Failed: {audit_summary['failed']}")
+    print(f"   Top users: {', '.join(audit_summary['top_users'][:3])}")
+    print(f"   Top paths: {', '.join(audit_summary['top_paths'][:3])}")
+    print()
+
+
+def example_kubernetes_integration():
+    """Integrate with Kubernetes"""
+    print("=" * 60)
+    print("Example 10: Kubernetes Integration")
+    print("=" * 60)
+
+    config = SecretsConfig(
+        provider=SecretsProvider.HASHICORP_VAULT,
+        vault_address="https://vault.example.com:8200"
+    )
+
+    manager = SecretsManager(config)
+
+    # Enable Kubernetes auth
+    manager.enable_kubernetes_auth(
+        kubernetes_host="https://kubernetes.default.svc",
+        kubernetes_ca_cert="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    )
+
+    # Create Kubernetes role
+    manager.create_k8s_role(
+        name="app-role",
+        bound_service_account_names=["app-sa"],
+        bound_service_account_namespaces=["production"],
+        policies=["app-policy"],
+        ttl="1h"
+    )
+
+    print("✅ Kubernetes authentication configured")
+
+    print(f"\n📦 Deployment example:")
+    print("""
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: app
+    spec:
+      serviceAccountName: app-sa
+      containers:
+      - name: app
+        image: myapp:latest
+        env:
+        - name: VAULT_ADDR
+          value: "https://vault.example.com:8200"
+      - name: vault-agent
+        image: vault:latest
+        args:
+          - agent
+          - -config=/vault/config/agent.hcl
+    """)
+
+    print("✅ Vault Agent sidecar injects secrets automatically")
+    print()
+
+
+if __name__ == "__main__":
+    print("\n🔐 Secrets Manager Examples")
+    print("=" * 60)
+    print()
+
+    # Run all examples
+    example_vault_setup()
+    example_store_retrieve_secrets()
+    example_dynamic_database_credentials()
+    example_aws_secrets_manager()
+    example_azure_key_vault()
+    example_secret_rotation()
+    example_encryption_as_service()
+    example_access_control()
+    example_audit_logging()
+    example_kubernetes_integration()
+
+    print("=" * 60)
+    print("✅ All secrets management examples completed!")
+    print("=" * 60)
+    print("\n🔒 Secrets Management Best Practices:")
+    print("   1. Never hardcode secrets in code or configs")
+    print("   2. Use dynamic credentials when possible")
+    print("   3. Rotate secrets regularly (30-90 days)")
+    print("   4. Implement least privilege access")
+    print("   5. Enable audit logging for all secret access")
+    print("   6. Encrypt secrets at rest and in transit")
+    print("   7. Use short-lived tokens and credentials")
+    print("   8. Monitor for unusual access patterns")
+    print("   9. Automate secret rotation and lifecycle")
+    print("   10. Have incident response plan for compromised secrets")

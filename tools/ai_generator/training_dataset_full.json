@@ -1,0 +1,1900 @@
+[
+  {
+    "id": "001",
+    "description": "Хочу создать веб-приложение для управления задачами",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {
+      "platform": "web",
+      "domain": "task management"
+    }
+  },
+  {
+    "id": "002",
+    "description": "Научное исследование воздействия климата на урожайность",
+    "primary_type": "research",
+    "secondary_types": [
+      "agriculture"
+    ],
+    "features": {
+      "domain": "climate science",
+      "methodology": "field study"
+    }
+  },
+  {
+    "id": "003",
+    "description": "Стартап в области fintech для учёта личных финансов",
+    "primary_type": "business",
+    "secondary_types": [
+      "finance",
+      "software"
+    ],
+    "features": {
+      "stage": "startup",
+      "domain": "fintech"
+    }
+  },
+  {
+    "id": "004",
+    "description": "Онлайн-курс по программированию на Python",
+    "primary_type": "education",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "format": "online",
+      "subject": "programming"
+    }
+  },
+  {
+    "id": "005",
+    "description": "Юридическая консультация по налоговым спорам",
+    "primary_type": "legal",
+    "secondary_types": [
+      "finance"
+    ],
+    "features": {
+      "service": "consultation",
+      "specialization": "tax law"
+    }
+  },
+  {
+    "id": "006",
+    "description": "Система управления клиникой с электронными медкартами",
+    "primary_type": "healthcare",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "solution": "EHR system",
+      "size": "clinic"
+    }
+  },
+  {
+    "id": "007",
+    "description": "Выставка современного искусства в галерее",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {
+      "type": "exhibition",
+      "genre": "contemporary art"
+    }
+  },
+  {
+    "id": "008",
+    "description": "Портфельное управление инвестициями на фондовом рынке",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {
+      "service": "investment management",
+      "market": "stocks"
+    }
+  },
+  {
+    "id": "009",
+    "description": "Портал госуслуг для граждан онлайн",
+    "primary_type": "government",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "service": "public services",
+      "platform": "web portal"
+    }
+  },
+  {
+    "id": "010",
+    "description": "Благотворительный фонд помощи животным",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {
+      "mission": "animal welfare",
+      "type": "charity"
+    }
+  },
+  {
+    "id": "011",
+    "description": "Производство биоразлагаемой упаковки",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "bioplastic packaging",
+      "industry": "eco-friendly"
+    }
+  },
+  {
+    "id": "012",
+    "description": "Управление фермерским хозяйством с животноводством",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "type": "farm",
+      "focus": "livestock"
+    }
+  },
+  {
+    "id": "013",
+    "description": "Спортивная академия для юных футболистов",
+    "primary_type": "sports",
+    "secondary_types": [
+      "education"
+    ],
+    "features": {
+      "sport": "football",
+      "target": "youth"
+    }
+  },
+  {
+    "id": "014",
+    "description": "Гостиница в центре города на 50 номеров",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {
+      "type": "hotel",
+      "capacity": 50,
+      "location": "city center"
+    }
+  },
+  {
+    "id": "015",
+    "description": "Интернет-магазин одежды с доставкой",
+    "primary_type": "retail",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "channel": "ecommerce",
+      "product": "clothing"
+    }
+  },
+  {
+    "id": "016",
+    "description": "Блог о путешествиях по России",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "format": "blog",
+      "topic": "travel"
+    }
+  },
+  {
+    "id": "017",
+    "description": "Мобильное приложение для заказа такси с React Native",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {
+      "platform": "mobile",
+      "tech": "React Native",
+      "service": "ride-hailing"
+    }
+  },
+  {
+    "id": "018",
+    "description": "Разработка API для интеграции с платёжными системами",
+    "primary_type": "software",
+    "secondary_types": [
+      "finance"
+    ],
+    "features": {
+      "component": "API",
+      "integration": "payment systems"
+    }
+  },
+  {
+    "id": "019",
+    "description": "Исследование эффективности новых лекарственных препаратов",
+    "primary_type": "research",
+    "secondary_types": [
+      "healthcare"
+    ],
+    "features": {
+      "field": "pharmacology",
+      "method": "clinical trials"
+    }
+  },
+  {
+    "id": "020",
+    "description": "Диссертация по квантовой физике",
+    "primary_type": "research",
+    "secondary_types": [
+      "education"
+    ],
+    "features": {
+      "level": "PhD",
+      "field": "quantum physics"
+    }
+  },
+  {
+    "id": "021",
+    "description": "Открытие ресторана средиземноморской кухни",
+    "primary_type": "business",
+    "secondary_types": [
+      "hospitality"
+    ],
+    "features": {
+      "type": "restaurant",
+      "cuisine": "Mediterranean"
+    }
+  },
+  {
+    "id": "022",
+    "description": "Бизнес-план для привлечения инвестиций в IT-стартап",
+    "primary_type": "business",
+    "secondary_types": [
+      "software",
+      "finance"
+    ],
+    "features": {
+      "document": "business plan",
+      "industry": "IT",
+      "stage": "fundraising"
+    }
+  },
+  {
+    "id": "023",
+    "description": "Курс повышения квалификации для учителей математики",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {
+      "type": "professional development",
+      "target": "teachers",
+      "subject": "mathematics"
+    }
+  },
+  {
+    "id": "024",
+    "description": "Учебная программа по data science для университета",
+    "primary_type": "education",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "level": "university",
+      "subject": "data science"
+    }
+  },
+  {
+    "id": "025",
+    "description": "Юридическое сопровождение сделки M&A",
+    "primary_type": "legal",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "service": "transaction support",
+      "type": "M&A"
+    }
+  },
+  {
+    "id": "026",
+    "description": "Подготовка договоров аренды коммерческой недвижимости",
+    "primary_type": "legal",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "document": "contracts",
+      "focus": "real estate"
+    }
+  },
+  {
+    "id": "027",
+    "description": "Телемедицинская платформа для консультаций врачей",
+    "primary_type": "healthcare",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "service": "telemedicine",
+      "platform": "digital"
+    }
+  },
+  {
+    "id": "028",
+    "description": "Медицинский центр с отделением кардиологии",
+    "primary_type": "healthcare",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "type": "medical center",
+      "specialization": "cardiology"
+    }
+  },
+  {
+    "id": "029",
+    "description": "Музыкальный фестиваль электронной музыки",
+    "primary_type": "arts",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "type": "festival",
+      "genre": "electronic music"
+    }
+  },
+  {
+    "id": "030",
+    "description": "Творческая студия дизайна интерьеров",
+    "primary_type": "arts",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "service": "interior design",
+      "type": "creative studio"
+    }
+  },
+  {
+    "id": "031",
+    "description": "Управление инвестиционным портфелем на 100M$",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {
+      "service": "portfolio management",
+      "aum": "$100M"
+    }
+  },
+  {
+    "id": "032",
+    "description": "Краудфандинговая платформа для стартапов",
+    "primary_type": "finance",
+    "secondary_types": [
+      "software",
+      "business"
+    ],
+    "features": {
+      "type": "crowdfunding",
+      "target": "startups"
+    }
+  },
+  {
+    "id": "033",
+    "description": "Программа цифровизации госуслуг для города",
+    "primary_type": "government",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "initiative": "digitalization",
+      "level": "municipal"
+    }
+  },
+  {
+    "id": "034",
+    "description": "Система мониторинга бюджетных расходов",
+    "primary_type": "government",
+    "secondary_types": [
+      "software",
+      "finance"
+    ],
+    "features": {
+      "system": "budget monitoring",
+      "sector": "public"
+    }
+  },
+  {
+    "id": "035",
+    "description": "НКО по поддержке малого бизнеса",
+    "primary_type": "nonprofit",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "mission": "SME support",
+      "type": "NGO"
+    }
+  },
+  {
+    "id": "036",
+    "description": "Волонтёрская программа помощи пожилым",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {
+      "type": "volunteer program",
+      "target": "elderly"
+    }
+  },
+  {
+    "id": "037",
+    "description": "Завод по производству автокомпонентов",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "auto parts",
+      "type": "factory"
+    }
+  },
+  {
+    "id": "038",
+    "description": "Производственная линия для электроники",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {
+      "product": "electronics",
+      "asset": "production line"
+    }
+  },
+  {
+    "id": "039",
+    "description": "Выращивание органических овощей в теплицах",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "product": "organic vegetables",
+      "method": "greenhouse"
+    }
+  },
+  {
+    "id": "040",
+    "description": "Молочная ферма с 200 коровами",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {
+      "type": "dairy farm",
+      "herd_size": 200
+    }
+  },
+  {
+    "id": "041",
+    "description": "Тренировочная программа для марафонцев",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {
+      "sport": "marathon",
+      "type": "training program"
+    }
+  },
+  {
+    "id": "042",
+    "description": "Фитнес-клуб с бассейном и тренажёрным залом",
+    "primary_type": "sports",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "type": "fitness club",
+      "facilities": [
+        "pool",
+        "gym"
+      ]
+    }
+  },
+  {
+    "id": "043",
+    "description": "Бутик-отель на 20 номеров с рестораном",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {
+      "type": "boutique hotel",
+      "capacity": 20,
+      "amenities": [
+        "restaurant"
+      ]
+    }
+  },
+  {
+    "id": "044",
+    "description": "Туристическое агентство по организации туров",
+    "primary_type": "hospitality",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "service": "tour operator",
+      "type": "travel agency"
+    }
+  },
+  {
+    "id": "045",
+    "description": "Сеть продуктовых магазинов формата у дома",
+    "primary_type": "retail",
+    "secondary_types": [
+      "business"
+    ],
+    "features": {
+      "format": "convenience stores",
+      "product": "groceries",
+      "scale": "chain"
+    }
+  },
+  {
+    "id": "046",
+    "description": "Маркетплейс для продажи товаров ручной работы",
+    "primary_type": "retail",
+    "secondary_types": [
+      "software"
+    ],
+    "features": {
+      "platform": "marketplace",
+      "product": "handmade goods"
+    }
+  },
+  {
+    "id": "047",
+    "description": "Коллекция марок и монет",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "type": "collection",
+      "items": [
+        "stamps",
+        "coins"
+      ]
+    }
+  },
+  {
+    "id": "048",
+    "description": "Канал на YouTube о кулинарии",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {
+      "platform": "YouTube",
+      "topic": "cooking"
+    }
+  },
+  {
+    "id": "001",
+    "description": "мобильного приложения на базе Vue.js",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "002",
+    "description": "Мобильное приложение для улучшения сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "003",
+    "description": "Создание веб-платформы с использованием Node.js",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "004",
+    "description": "Создание системы с использованием Python",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "005",
+    "description": "системы на базе Vue.js",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "006",
+    "description": "Веб-сервис веб-платформы",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "007",
+    "description": "Разработка веб-платформы для улучшения сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "008",
+    "description": "SaaS платформа сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "009",
+    "description": "SaaS платформа сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "010",
+    "description": "Мобильное приложение для оптимизации",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "011",
+    "description": "Мобильное приложение для улучшения сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "012",
+    "description": "Разработка системы для улучшения сервиса",
+    "primary_type": "software",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "013",
+    "description": "Грант на исследование путешествиях",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "014",
+    "description": "Грант на исследование кулинарии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "015",
+    "description": "Исследование кулинарии в области IT",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "016",
+    "description": "Грант на исследование фотографии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "017",
+    "description": "Эксперимент по изучению путешествиях",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "018",
+    "description": "Грант на исследование технологиях",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "019",
+    "description": "Анализ кулинарии методом наблюдения",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "020",
+    "description": "Грант на исследование кулинарии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "021",
+    "description": "Диссертация на тему фотографии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "022",
+    "description": "Диссертация на тему кулинарии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "023",
+    "description": "Диссертация на тему технологиях",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "024",
+    "description": "Эксперимент по изучению фотографии",
+    "primary_type": "research",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "025",
+    "description": "Франшиза агентства",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "026",
+    "description": "Инвестиционный проект в финтех",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "027",
+    "description": "Компания по производству инструмента",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "028",
+    "description": "Инвестиционный проект в финтех",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "029",
+    "description": "Стартап в области здравоохранения",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "030",
+    "description": "Франшиза кафе",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "031",
+    "description": "Компания по производству веб-платформы",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "032",
+    "description": "Открытие компании в сфере финтех",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "033",
+    "description": "Бизнес-план для мобильного приложения",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "034",
+    "description": "Франшиза кафе",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "035",
+    "description": "Открытие кафе в сфере здравоохранения",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "036",
+    "description": "Компания по производству сервиса",
+    "primary_type": "business",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "037",
+    "description": "Учебный план по дизайна",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "038",
+    "description": "Образовательная программа по английского языка",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "039",
+    "description": "Тренинг маркетинга",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "040",
+    "description": "Учебный план по маркетинга",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "041",
+    "description": "Курс английского языка для профессионалов",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "042",
+    "description": "Учебный план по маркетинга",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "043",
+    "description": "Образовательная программа по маркетинга",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "044",
+    "description": "Учебный план по английского языка",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "045",
+    "description": "Онлайн-курс маркетинга",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "046",
+    "description": "Тренинг английского языка",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "047",
+    "description": "Учебный план по программирования",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "048",
+    "description": "Тренинг менеджмента",
+    "primary_type": "education",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "049",
+    "description": "Юридическое сопровождение договоров",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "050",
+    "description": "Консультация по вопросам корпоративного права",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "051",
+    "description": "Юридическое сопровождение споров",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "052",
+    "description": "Правовой аудит дизайна",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "053",
+    "description": "Правовой аудит программирования",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "054",
+    "description": "Консультация по вопросам налогового права",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "055",
+    "description": "Консультация по вопросам налогового права",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "056",
+    "description": "Правовой аудит маркетинга",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "057",
+    "description": "Правовой аудит маркетинга",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "058",
+    "description": "Юридическое сопровождение сделок",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "059",
+    "description": "Консультация по вопросам трудового права",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "060",
+    "description": "Подготовка документов для улучшения сервиса",
+    "primary_type": "legal",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "061",
+    "description": "Телемедицина для оптимизации",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "062",
+    "description": "Программа лечения гипертонии",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "063",
+    "description": "Программа лечения астмы",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "064",
+    "description": "Телемедицина для оптимизации",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "065",
+    "description": "Диагностика и лечение диабета",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "066",
+    "description": "Телемедицина для оптимизации",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "067",
+    "description": "Программа лечения гипертонии",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "068",
+    "description": "Больница с отделением хирургии",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "069",
+    "description": "Телемедицина для повышения качества",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "070",
+    "description": "Медицинский центр хирургии",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "071",
+    "description": "Диагностика и лечение диабета",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "072",
+    "description": "Телемедицина для повышения качества",
+    "primary_type": "healthcare",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "073",
+    "description": "Галерея живописи",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "074",
+    "description": "Арт-инсталляция человека",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "075",
+    "description": "Галерея скульптуры",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "076",
+    "description": "Галерея живописи",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "077",
+    "description": "Выставка скульптуры",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "078",
+    "description": "Галерея современного искусства",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "079",
+    "description": "Выставка фотографии",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "080",
+    "description": "Галерея современного искусства",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "081",
+    "description": "Концерт рока",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "082",
+    "description": "Творческий проект в области музыки",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "083",
+    "description": "Арт-инсталляция городской среды",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "084",
+    "description": "Творческий проект театра",
+    "primary_type": "arts",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "085",
+    "description": "Инвестирование в недвижимость",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "086",
+    "description": "Консультация по налогам",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "087",
+    "description": "Управление активами",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "088",
+    "description": "Консультация по кредитам",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "089",
+    "description": "Инвестирование в облигации",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "090",
+    "description": "Инвестирование в криптовалюту",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "091",
+    "description": "Управление капиталом",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "092",
+    "description": "Финансовое планирование для компаний",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "093",
+    "description": "Портфель облигаций",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "094",
+    "description": "Инвестирование в недвижимость",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "095",
+    "description": "Инвестирование в облигации",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "096",
+    "description": "Инвестирование в криптовалюту",
+    "primary_type": "finance",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "097",
+    "description": "Цифровизация госуслуг",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "098",
+    "description": "Цифровизация госуслуг",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "099",
+    "description": "Программа развития для бизнеса",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "100",
+    "description": "Муниципальная инициатива оптимизации",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "101",
+    "description": "Цифровизация образования",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "102",
+    "description": "Государственный проект оптимизации",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "103",
+    "description": "Государственный проект оптимизации",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "104",
+    "description": "Программа благоустройства для бизнеса",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "105",
+    "description": "Цифровизация образования",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "106",
+    "description": "Государственный проект оптимизации",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "107",
+    "description": "Госуслуга онлайн-записи",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "108",
+    "description": "Программа развития для молодёжи",
+    "primary_type": "government",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "109",
+    "description": "Социальный проект помощи молодёжи",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "110",
+    "description": "Некоммерческая организация помощи детям",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "111",
+    "description": "Социальный проект помощи граждан",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "112",
+    "description": "НКО по поддержке малого бизнеса",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "113",
+    "description": "НКО по защите прав",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "114",
+    "description": "НКО по поддержке малого бизнеса",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "115",
+    "description": "Социальный проект помощи молодёжи",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "116",
+    "description": "Волонтёрская программа повышения качества",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "117",
+    "description": "Волонтёрская программа оптимизации",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "118",
+    "description": "Некоммерческая организация экологии",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "119",
+    "description": "НКО по защите прав",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "120",
+    "description": "НКО по развитию культуры",
+    "primary_type": "nonprofit",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "121",
+    "description": "Производство сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "122",
+    "description": "Завод по выпуску сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "123",
+    "description": "Фабрика сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "124",
+    "description": "Цех по изготовлению сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "125",
+    "description": "Фабрика мобильного приложения",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "126",
+    "description": "Фабрика сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "127",
+    "description": "Производство инструмента",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "128",
+    "description": "Завод по выпуску сервиса",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "129",
+    "description": "Завод по выпуску инструмента",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "130",
+    "description": "Производственная линия системы",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "131",
+    "description": "Фабрика инструмента",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "132",
+    "description": "Завод по выпуску мобильного приложения",
+    "primary_type": "manufacturing",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "133",
+    "description": "Выращивание фруктов",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "134",
+    "description": "Агрокомплекс по производству молока",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "135",
+    "description": "Фермерское хозяйство растениеводческое",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "136",
+    "description": "Выращивание фруктов",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "137",
+    "description": "Животноводческая ферма птицы",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "138",
+    "description": "Агрокомплекс по выращиванию томатов",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "139",
+    "description": "Выращивание овощей",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "140",
+    "description": "Фермерское хозяйство молочного направления",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "141",
+    "description": "Животноводческая ферма крупного рогатого скота",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "142",
+    "description": "Выращивание зерновых",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "143",
+    "description": "Выращивание фруктов",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "144",
+    "description": "Выращивание зерновых",
+    "primary_type": "agriculture",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "145",
+    "description": "Тренировочная программа по футбола",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "146",
+    "description": "Фитнес-клуб с тренажёрным залом",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "147",
+    "description": "Тренировочная программа по бокса",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "148",
+    "description": "Фитнес-клуб с сауной",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "149",
+    "description": "Спортивный лагерь бокса",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "150",
+    "description": "Спортивный лагерь футбола",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "151",
+    "description": "Спортивная секция йоги",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "152",
+    "description": "Спортивный лагерь бокса",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "153",
+    "description": "Спортивный лагерь бокса",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "154",
+    "description": "Тренировочная программа по бокса",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "155",
+    "description": "Спортивный лагерь плавания",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "156",
+    "description": "Академия плавания для детей",
+    "primary_type": "sports",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "157",
+    "description": "Отель категории 4 звёзд",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "158",
+    "description": "Гостиничный комплекс с конференц-залом",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "159",
+    "description": "Туристический кредитам",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "160",
+    "description": "Туристический инвестициям",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "161",
+    "description": "Гостиничный комплекс с рестораном",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "162",
+    "description": "Клиника на 200 мест",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "163",
+    "description": "Отель категории 3 звёзд",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "164",
+    "description": "Гостиничный комплекс с спа-центром",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "165",
+    "description": "Гостиничный комплекс с рестораном",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "166",
+    "description": "Отель категории 3 звёзд",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "167",
+    "description": "Гостиничный комплекс с спа-центром",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "168",
+    "description": "Туристический инвестициям",
+    "primary_type": "hospitality",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "169",
+    "description": "Розничная точка мобильного приложения",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "170",
+    "description": "Интернет-магазин сервиса",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "171",
+    "description": "Розничная точка веб-платформы",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "172",
+    "description": "Розничная точка мобильного приложения",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "173",
+    "description": "Магазин спорттоваров",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "174",
+    "description": "Розничная точка сервиса",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "175",
+    "description": "Маркетплейс детских товаров",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "176",
+    "description": "Торговая сеть супермаркетов",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "177",
+    "description": "Торговая сеть дискаунтеров",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "178",
+    "description": "Интернет-магазин веб-платформы",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "179",
+    "description": "Маркетплейс детских товаров",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "180",
+    "description": "Магазин косметики",
+    "primary_type": "retail",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "181",
+    "description": "Коллекция виниловых пластинок",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "182",
+    "description": "Канал на YouTube про кулинарии",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "183",
+    "description": "Личный проект по рисованию",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "184",
+    "description": "Личный проект по рисованию",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "185",
+    "description": "Творческий дневник городской среды",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "186",
+    "description": "Блог о путешествиях",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "187",
+    "description": "Коллекция монет",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "188",
+    "description": "Канал на YouTube про кулинарии",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "189",
+    "description": "Канал на YouTube про фотографии",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "190",
+    "description": "Канал на YouTube про путешествиях",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "191",
+    "description": "Блог о технологиях",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  },
+  {
+    "id": "192",
+    "description": "Творческий дневник на тему природы",
+    "primary_type": "hobby",
+    "secondary_types": [],
+    "features": {}
+  }
+]

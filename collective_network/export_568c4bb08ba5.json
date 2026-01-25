@@ -1,0 +1,29 @@
+{
+  "protocol_version": "7.0",
+  "project_id": "568c4bb08ba5",
+  "timestamp": "2026-01-24T07:18:53.195676",
+  "project_type": "webapp",
+  "project_size": "large",
+  "project_maturity": "developing",
+  "metrics": {
+    "cd": 18.9,
+    "vt": 42.0,
+    "cr": 1.8,
+    "db": 25.0,
+    "total_docs": 89,
+    "total_connections": 890
+  },
+  "lessons": [
+    {
+      "id": "lesson_fast_cr",
+      "title": "Высокий CR в молодых проектах нормален",
+      "principle": "Активное развитие = высокая скорость изменений",
+      "confidence": 0.88
+    }
+  ],
+  "privacy": {
+    "anonymized": true,
+    "opt_in": true,
+    "simulated": true
+  }
+}

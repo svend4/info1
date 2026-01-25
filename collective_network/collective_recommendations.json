@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-01-24T07:18:53.198528",
+  "total_recommendations": 3,
+  "recommendations": [
+    {
+      "type": "collective_lesson",
+      "title": "Исправление логики определения направлений",
+      "principle": "Семантический анализ надежнее текстового поиска",
+      "confidence": 0.95,
+      "source_type": "methodology",
+      "message": "Урок от methodology проектов: Семантический анализ надежнее текстового поиска"
+    },
+    {
+      "type": "collective_lesson",
+      "title": "Высокая VT критична для библиотек",
+      "principle": "API должен явно прослеживаться до реализации",
+      "confidence": 0.92,
+      "source_type": "library",
+      "message": "Урок от library проектов: API должен явно прослеживаться до реализации"
+    },
+    {
+      "type": "collective_lesson",
+      "title": "Высокий CR в молодых проектах нормален",
+      "principle": "Активное развитие = высокая скорость изменений",
+      "confidence": 0.88,
+      "source_type": "webapp",
+      "message": "Урок от webapp проектов: Активное развитие = высокая скорость изменений"
+    }
+  ]
+}

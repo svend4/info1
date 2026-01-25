@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Граф связей документов</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        #graph {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ccc;
+            background: white;
+        }
+
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font-size: 10px;
+            pointer-events: none;
+        }
+
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+
+        .link.reference {
+            stroke-dasharray: 5,5;
+        }
+
+        #info {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .legend {
+            margin-top: 10px;
+        }
+
+        .legend-item {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Граф связей документов проекта</h1>
+
+    <div class="legend">
+        <strong>Уровни абстракции α:</strong>
+        <div class="legend-item"><span class="legend-color" style="background: #8B0000;"></span>α=+4 (Философия)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #CD5C5C;"></span>α=+3 (Онтология)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #F08080;"></span>α=+2 (Модель)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #FFA500;"></span>α=+1 (Архитектура)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #FFD700;"></span>α=0 (Дизайн)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #90EE90;"></span>α=-1 (Модули)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #32CD32;"></span>α=-2 (Компоненты)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #008000;"></span>α=-3 (Примеры)</div>
+        <div class="legend-item"><span class="legend-color" style="background: #006400;"></span>α=-4 (Код)</div>
+    </div>
+
+    <svg id="graph"></svg>
+
+    <div id="info">
+        <p>💡 <strong>Инструкция:</strong></p>
+        <ul>
+            <li>Кликните на узел для просмотра информации</li>
+            <li>Перетаскивайте узлы для перестановки</li>
+            <li>Сплошные линии — прямые ссылки, пунктирные — упоминания</li>
+        </ul>
+        <div id="node-info"></div>
+    </div>
+
+    <script>
+        const data = {"nodes": [{"id": 0, "name": "CHANGELOG", "path": "CHANGELOG.md", "alpha": -4, "lines": 446}, {"id": 1, "name": "РЕЗЮМЕ-ПРОЕКТА", "path": "РЕЗЮМЕ-ПРОЕКТА.md", "alpha": -4, "lines": 249}, {"id": 2, "name": "CONTRIBUTING", "path": "CONTRIBUTING.md", "alpha": 1, "lines": 449}, {"id": 3, "name": "ROADMAP", "path": "ROADMAP.md", "alpha": null, "lines": 345}, {"id": 4, "name": "ПРИНЦИПЫ-В-КОДЕ", "path": "ПРИНЦИПЫ-В-КОДЕ.md", "alpha": 1, "lines": 930}, {"id": 5, "name": "ПЛАН-РАЗВИТИЯ", "path": "ПЛАН-РАЗВИТИЯ.md", "alpha": 0, "lines": 291}, {"id": 6, "name": "ВИЗУАЛИЗАЦИЯ-ИЕРАРХИИ", "path": "ВИЗУАЛИЗАЦИЯ-ИЕРАРХИИ.md", "alpha": -4, "lines": 706}, {"id": 7, "name": "README", "path": "README.md", "alpha": 1, "lines": 543}, {"id": 8, "name": "QUICKSTART", "path": "QUICKSTART.md", "alpha": null, "lines": 390}, {"id": 9, "name": "КАРТА-СВЯЗЕЙ", "path": "КАРТА-СВЯЗЕЙ.md", "alpha": 4, "lines": 1243}, {"id": 10, "name": "ПУТЕВОДИТЕЛЬ", "path": "ПУТЕВОДИТЕЛЬ.md", "alpha": 3, "lines": 410}, {"id": 11, "name": "МЕТА-АНАЛИЗ-МЕТОДОЛОГИИ", "path": "МЕТА-АНАЛИЗ-МЕТОДОЛОГИИ.md", "alpha": 3, "lines": 727}, {"id": 12, "name": "ARCHITECTURE", "path": "ARCHITECTURE.md", "alpha": 4, "lines": 658}, {"id": 13, "name": "АНАЛИЗ-КЛАСТЕРОВ-СВЯЗЕЙ", "path": "АНАЛИЗ-КЛАСТЕРОВ-СВЯЗЕЙ.md", "alpha": -4, "lines": 1062}, {"id": 14, "name": "README", "path": "03-Робототехника-и-автоматизация/README.md", "alpha": null, "lines": 795}, {"id": 15, "name": "README", "path": "02-Информационная-система/README.md", "alpha": null, "lines": 646}, {"id": 16, "name": "USER-GUIDE", "path": "02-Информационная-система/USER-GUIDE.md", "alpha": -3, "lines": 745}, {"id": 17, "name": "ШАБЛОНЫ-КАРТОЧЕК", "path": "02-Информационная-система/Карточки/ШАБЛОНЫ-КАРТОЧЕК.md", "alpha": -2, "lines": 1263}, {"id": 18, "name": "ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ", "path": "02-Информационная-система/Карточки/ТЕХНИЧЕСКИЕ-СПЕЦИФИКАЦИИ.md", "alpha": -1, "lines": 1036}, {"id": 19, "name": "07-заметки", "path": "02-Информационная-система/Карточки/Примеры/07-заметки.md", "alpha": -3, "lines": 1028}, {"id": 20, "name": "04-контакты", "path": "02-Информационная-система/Карточки/Примеры/04-контакты.md", "alpha": -3, "lines": 1021}, {"id": 21, "name": "03-рецепты", "path": "02-Информационная-система/Карточки/Примеры/03-рецепты.md", "alpha": -3, "lines": 1054}, {"id": 22, "name": "02-лекарства", "path": "02-Информационная-система/Карточки/Примеры/02-лекарства.md", "alpha": -3, "lines": 944}, {"id": 23, "name": "05-встречи", "path": "02-Информационная-система/Карточки/Примеры/05-встречи.md", "alpha": -3, "lines": 1224}, {"id": 24, "name": "01-задачи", "path": "02-Информационная-система/Карточки/Примеры/01-задачи.md", "alpha": -3, "lines": 1404}, {"id": 25, "name": "06-покупки", "path": "02-Информационная-система/Карточки/Примеры/06-покупки.md", "alpha": -3, "lines": 1588}, {"id": 26, "name": "README", "path": "04-Бытовые-циклы-и-задания/README.md", "alpha": null, "lines": 929}, {"id": 27, "name": "УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ", "path": "03-Принципы/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md", "alpha": 2, "lines": 747}, {"id": 28, "name": "ЗАКОНЫ-В-КОДЕ", "path": "03-Принципы/ЗАКОНЫ-В-КОДЕ.md", "alpha": 2, "lines": 1274}, {"id": 29, "name": "README", "path": "06-Исследования-и-аналитика/README.md", "alpha": null, "lines": 690}, {"id": 30, "name": "ПРИНЦИПЫ-И-ПАТТЕРНЫ", "path": "01-Концепция/ПРИНЦИПЫ-И-ПАТТЕРНЫ.md", "alpha": 1, "lines": 501}, {"id": 31, "name": "МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ", "path": "01-Концепция/МЕТОДОЛОГИЯ-ПАРАЛЛЕЛЬНОГО-РАЗВИТИЯ.md", "alpha": 1, "lines": 542}, {"id": 32, "name": "ФИЛОСОФИЯ-ПРИМЕНИМОСТИ", "path": "01-Концепция/ФИЛОСОФИЯ-ПРИМЕНИМОСТИ.md", "alpha": 3, "lines": 579}, {"id": 33, "name": "ОНТОЛОГИЯ-СИСТЕМ", "path": "01-Концепция/ОНТОЛОГИЯ-СИСТЕМ.md", "alpha": 4, "lines": 862}, {"id": 34, "name": "ПРИМЕР-ПРИМЕНЕНИЯ-МЕТОДОЛОГИИ", "path": "01-Концепция/ПРИМЕР-ПРИМЕНЕНИЯ-МЕТОДОЛОГИИ.md", "alpha": 0, "lines": 1166}, {"id": 35, "name": "МЕТОДОЛОГИЯ-РАБОТЫ-С-ИНФОРМАЦИЕЙ", "path": "01-Концепция/МЕТОДОЛОГИЯ-РАБОТЫ-С-ИНФОРМАЦИЕЙ.md", "alpha": 0, "lines": 1731}, {"id": 36, "name": "УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ", "path": "01-Концепция/УНИВЕРСАЛЬНЫЕ-ЗАКОНЫ.md", "alpha": 2, "lines": 495}, {"id": 37, "name": "ФИЛОСОФИЯ-ПРОЕКТА", "path": "01-Концепция/ФИЛОСОФИЯ-ПРОЕКТА.md", "alpha": 3, "lines": 792}, {"id": 38, "name": "README", "path": "08-Программная-реализация/README.md", "alpha": -4, "lines": 442}, {"id": 39, "name": "DOCKER-README", "path": "08-Программная-реализация/DOCKER-README.md", "alpha": null, "lines": 235}, {"id": 40, "name": "API-REFERENCE", "path": "08-Программная-реализация/API-REFERENCE.md", "alpha": -2, "lines": 890}, {"id": 41, "name": "EXAMPLES", "path": "08-Программная-реализация/EXAMPLES.md", "alpha": -3, "lines": 867}, {"id": 42, "name": "README", "path": "08-Программная-реализация/card_system/README.md", "alpha": -4, "lines": 386}, {"id": 43, "name": "README", "path": "07-Практические-примеры/README.md", "alpha": null, "lines": 434}], "links": [{"source": 1, "target": 8, "type": "markdown_link"}, {"source": 1, "target": 31, "type": "markdown_link"}, {"source": 1, "target": 8, "type": "markdown_link"}, {"source": 1, "target": 41, "type": "markdown_link"}, {"source": 1, "target": 12, "type": "markdown_link"}, {"source": 1, "target": 40, "type": "markdown_link"}, {"source": 1, "target": 2, "type": "markdown_link"}, {"source": 1, "target": 37, "type": "markdown_link"}, {"source": 1, "target": 31, "type": "markdown_link"}, {"source": 1, "target": 9, "type": "markdown_link"}, {"source": 1, "target": 13, "type": "markdown_link"}, {"source": 1, "target": 0, "type": "markdown_link"}, {"source": 1, "target": 2, "type": "markdown_link"}, {"source": 1, "target": 8, "type": "markdown_link"}, {"source": 1, "target": 12, "type": "markdown_link"}, {"source": 1, "target": 31, "type": "markdown_link"}, {"source": 1, "target": 7, "type": "markdown_link"}, {"source": 1, "target": 10, "type": "markdown_link"}, {"source": 2, "target": 37, "type": "markdown_link"}, {"source": 2, "target": 31, "type": "markdown_link"}, {"source": 2, "target": 7, "type": "markdown_link"}, {"source": 2, "target": 10, "type": "markdown_link"}, {"source": 3, "target": 2, "type": "markdown_link"}, {"source": 7, "target": 1, "type": "markdown_link"}, {"source": 7, "target": 10, "type": "markdown_link"}, {"source": 7, "target": 37, "type": "markdown_link"}, {"source": 7, "target": 9, "type": "markdown_link"}, {"source": 7, "target": 30, "type": "markdown_link"}, {"source": 7, "target": 36, "type": "markdown_link"}, {"source": 7, "target": 37, "type": "markdown_link"}, {"source": 7, "target": 18, "type": "markdown_link"}, {"source": 7, "target": 17, "type": "markdown_link"}, {"source": 7, "target": 24, "type": "markdown_link"}, {"source": 7, "target": 22, "type": "markdown_link"}, {"source": 7, "target": 21, "type": "markdown_link"}, {"source": 7, "target": 10, "type": "markdown_link"}, {"source": 7, "target": 1, "type": "markdown_link"}, {"source": 7, "target": 9, "type": "markdown_link"}, {"source": 7, "target": 35, "type": "markdown_link"}, {"source": 7, "target": 5, "type": "markdown_link"}, {"source": 7, "target": 28, "type": "markdown_link"}, {"source": 7, "target": 16, "type": "markdown_link"}, {"source": 7, "target": 41, "type": "markdown_link"}, {"source": 7, "target": 9, "type": "markdown_link"}, {"source": 7, "target": 13, "type": "markdown_link"}, {"source": 7, "target": 40, "type": "markdown_link"}, {"source": 7, "target": 0, "type": "markdown_link"}, {"source": 7, "target": 38, "type": "markdown_link"}, {"source": 7, "target": 31, "type": "markdown_link"}, {"source": 7, "target": 2, "type": "markdown_link"}, {"source": 7, "target": 9, "type": "markdown_link"}, {"source": 7, "target": 13, "type": "markdown_link"}, {"source": 7, "target": 0, "type": "markdown_link"}, {"source": 7, "target": 2, "type": "markdown_link"}, {"source": 7, "target": 31, "type": "markdown_link"}, {"source": 7, "target": 38, "type": "markdown_link"}, {"source": 7, "target": 10, "type": "markdown_link"}, {"source": 7, "target": 40, "type": "markdown_link"}, {"source": 8, "target": 41, "type": "markdown_link"}, {"source": 8, "target": 40, "type": "markdown_link"}, {"source": 8, "target": 2, "type": "markdown_link"}, {"source": 8, "target": 12, "type": "markdown_link"}, {"source": 8, "target": 31, "type": "markdown_link"}, {"source": 8, "target": 37, "type": "markdown_link"}, {"source": 8, "target": 2, "type": "markdown_link"}, {"source": 10, "target": 37, "type": "markdown_link"}, {"source": 10, "target": 36, "type": "markdown_link"}, {"source": 10, "target": 30, "type": "markdown_link"}, {"source": 10, "target": 7, "type": "markdown_link"}, {"source": 10, "target": 15, "type": "markdown_link"}, {"source": 10, "target": 14, "type": "markdown_link"}, {"source": 10, "target": 26, "type": "markdown_link"}, {"source": 10, "target": 18, "type": "markdown_link"}, {"source": 10, "target": 17, "type": "markdown_link"}, {"source": 10, "target": 24, "type": "markdown_link"}, {"source": 10, "target": 22, "type": "markdown_link"}, {"source": 10, "target": 21, "type": "markdown_link"}, {"source": 10, "target": 35, "type": "markdown_link"}, {"source": 10, "target": 34, "type": "markdown_link"}, {"source": 10, "target": 5, "type": "markdown_link"}, {"source": 10, "target": 9, "type": "markdown_link"}, {"source": 10, "target": 37, "type": "markdown_link"}, {"source": 10, "target": 36, "type": "markdown_link"}, {"source": 10, "target": 30, "type": "markdown_link"}, {"source": 10, "target": 7, "type": "markdown_link"}, {"source": 10, "target": 15, "type": "markdown_link"}, {"source": 10, "target": 14, "type": "markdown_link"}, {"source": 10, "target": 26, "type": "markdown_link"}, {"source": 10, "target": 29, "type": "markdown_link"}, {"source": 10, "target": 43, "type": "markdown_link"}, {"source": 10, "target": 18, "type": "markdown_link"}, {"source": 10, "target": 17, "type": "markdown_link"}, {"source": 10, "target": 24, "type": "markdown_link"}, {"source": 10, "target": 22, "type": "markdown_link"}, {"source": 10, "target": 21, "type": "markdown_link"}, {"source": 10, "target": 35, "type": "markdown_link"}, {"source": 10, "target": 34, "type": "markdown_link"}, {"source": 10, "target": 5, "type": "markdown_link"}, {"source": 10, "target": 9, "type": "markdown_link"}, {"source": 10, "target": 24, "type": "markdown_link"}, {"source": 10, "target": 17, "type": "markdown_link"}, {"source": 10, "target": 26, "type": "markdown_link"}, {"source": 10, "target": 18, "type": "markdown_link"}, {"source": 10, "target": 37, "type": "markdown_link"}, {"source": 10, "target": 36, "type": "markdown_link"}, {"source": 10, "target": 30, "type": "markdown_link"}, {"source": 10, "target": 35, "type": "markdown_link"}, {"source": 10, "target": 34, "type": "markdown_link"}, {"source": 12, "target": 40, "type": "markdown_link"}, {"source": 12, "target": 31, "type": "markdown_link"}, {"source": 12, "target": 30, "type": "markdown_link"}, {"source": 39, "target": 7, "type": "markdown_link"}]};
+
+        const width = document.getElementById('graph').clientWidth;
+        const height = 800;
+
+        const svg = d3.select("#graph")
+            .attr("viewBox", [0, 0, width, height]);
+
+        const alphaColors = {
+            4: "#8B0000", 3: "#CD5C5C", 2: "#F08080", 1: "#FFA500",
+            0: "#FFD700", "-1": "#90EE90", "-2": "#32CD32", "-3": "#008000", "-4": "#006400"
+        };
+
+        const simulation = d3.forceSimulation(data.nodes)
+            .force("link", d3.forceLink(data.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(30));
+
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(data.links)
+            .join("line")
+            .attr("class", d => "link " + d.type)
+            .attr("stroke-width", 1);
+
+        const node = svg.append("g")
+            .selectAll("g")
+            .data(data.nodes)
+            .join("g")
+            .attr("class", "node")
+            .call(drag(simulation))
+            .on("click", showNodeInfo);
+
+        node.append("circle")
+            .attr("r", d => Math.sqrt(d.lines / 10) + 5)
+            .attr("fill", d => alphaColors[d.alpha] || "#D3D3D3");
+
+        node.append("text")
+            .text(d => d.name.substring(0, 20))
+            .attr("x", 0)
+            .attr("y", -10)
+            .attr("text-anchor", "middle");
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+
+        function showNodeInfo(event, d) {
+            const inLinks = data.links.filter(l => l.target.id === d.id).length;
+            const outLinks = data.links.filter(l => l.source.id === d.id).length;
+
+            document.getElementById("node-info").innerHTML = `
+                <h3>📄 ${d.name}</h3>
+                <p><strong>Путь:</strong> ${d.path}</p>
+                <p><strong>Уровень абстракции:</strong> α=${d.alpha !== null ? d.alpha : 'не указан'}</p>
+                <p><strong>Строк:</strong> ${d.lines}</p>
+                <p><strong>Входящих связей:</strong> ${inLinks}</p>
+                <p><strong>Исходящих связей:</strong> ${outLinks}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

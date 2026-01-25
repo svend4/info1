@@ -1,0 +1,96 @@
+[
+  {
+    "total_docs": 70,
+    "total_connections": 1156,
+    "cycle": 11,
+    "timestamp": "2026-01-24T04:48:37.599749"
+  },
+  {
+    "total_docs": 72,
+    "total_connections": 1174,
+    "cycle": 10,
+    "timestamp": "2026-01-24T05:15:50.220264"
+  },
+  {
+    "total_docs": 74,
+    "total_connections": 1176,
+    "cycle": 10,
+    "timestamp": "2026-01-24T05:39:47.759046"
+  },
+  {
+    "total_docs": 75,
+    "total_connections": 1419,
+    "cycle": 10,
+    "timestamp": "2026-01-24T06:33:33.823629"
+  },
+  {
+    "cd": 51.14,
+    "vt": 28.89,
+    "cr": 1.14,
+    "db": 141.42,
+    "total_docs": 75,
+    "total_connections": 1419,
+    "cycle": 10,
+    "timestamp": "2026-01-24T06:34:21.449643"
+  },
+  {
+    "cd": 51.14,
+    "vt": 28.89,
+    "cr": 1.14,
+    "db": 104.97,
+    "total_docs": 75,
+    "total_connections": 1419,
+    "cycle": 10,
+    "timestamp": "2026-01-24T06:39:34.182758"
+  },
+  {
+    "cd": 51.14,
+    "vt": 28.89,
+    "cr": 1.14,
+    "db": 104.97,
+    "total_docs": 75,
+    "total_connections": 1419,
+    "cycle": 10,
+    "timestamp": "2026-01-24T06:42:47.094311"
+  },
+  {
+    "cd": 48.74,
+    "vt": 28.82,
+    "cr": 1.14,
+    "db": 105.91,
+    "total_docs": 77,
+    "total_connections": 1426,
+    "cycle": 10,
+    "timestamp": "2026-01-24T07:05:46.711830"
+  },
+  {
+    "cd": 45.7,
+    "vt": 28.74,
+    "cr": 1.14,
+    "db": 107.22,
+    "total_docs": 80,
+    "total_connections": 1444,
+    "cycle": 10,
+    "timestamp": "2026-01-24T07:33:39.281905"
+  },
+  {
+    "cd": 45.03,
+    "vt": 28.65,
+    "cr": 1.14,
+    "db": 107.64,
+    "total_docs": 81,
+    "total_connections": 1459,
+    "cycle": 10,
+    "timestamp": "2026-01-24T07:51:42.508130"
+  },
+  {
+    "cd": 45.03,
+    "vt": 34.34,
+    "cr": 1.14,
+    "db": 102.24,
+    "total_docs": 81,
+    "total_connections": 1459,
+    "cycle": 10,
+    "timestamp": "2026-01-24T08:04:50.415901"
+  }
+]

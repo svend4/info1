@@ -1,0 +1,224 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Weekly code quality check on Monday at 10 AM UTC
+    - cron: '0 10 * * 1'
+
+jobs:
+  code-analysis:
+    name: Code Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for better analysis
+
+    - name: Set up Python
+      if: hashFiles('**/*.py') != ''
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Python analysis tools
+      if: hashFiles('**/*.py') != ''
+      run: |
+        pip install flake8 pylint mypy radon black isort
+        pip install -r requirements.txt || true
+
+    - name: Run Black (code formatting check)
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🎨 Checking Python code formatting with Black..."
+        black --check . || echo "⚠️  Code formatting issues found"
+
+    - name: Run isort (import sorting check)
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "📦 Checking import sorting with isort..."
+        isort --check-only . || echo "⚠️  Import sorting issues found"
+
+    - name: Run Flake8 (linting)
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🔍 Running Flake8 linting..."
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run Pylint
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🔍 Running Pylint..."
+        pylint **/*.py --exit-zero || true
+
+    - name: Run MyPy (type checking)
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🔍 Running MyPy type checking..."
+        mypy . --ignore-missing-imports || echo "⚠️  Type checking issues found"
+
+    - name: Calculate code complexity
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "📊 Calculating code complexity with Radon..."
+        echo "Cyclomatic Complexity:"
+        radon cc . -a -nb
+        echo ""
+        echo "Maintainability Index:"
+        radon mi . -nb
+
+  code-coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      if: hashFiles('**/*.py') != ''
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      if: hashFiles('**/*.py') != ''
+      run: |
+        pip install pytest pytest-cov coverage
+        pip install -r requirements.txt || true
+
+    - name: Run tests with coverage
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "🧪 Running tests with coverage..."
+        pytest --cov=. --cov-report=xml --cov-report=term-missing || echo "⚠️  Some tests failed"
+
+    - name: Upload coverage to Codecov
+      if: hashFiles('**/*.py') != ''
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Check coverage threshold
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "📊 Checking coverage threshold..."
+        coverage report --fail-under=70 || echo "⚠️  Coverage below 70%"
+
+  documentation-quality:
+    name: Documentation Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check Python docstrings
+      if: hashFiles('**/*.py') != ''
+      run: |
+        echo "📚 Checking Python docstrings..."
+        pip install pydocstyle
+        pydocstyle . || echo "⚠️  Docstring issues found"
+
+    - name: Check Markdown files
+      run: |
+        echo "📝 Checking Markdown files..."
+        npm install -g markdownlint-cli
+        markdownlint '**/*.md' --ignore node_modules || echo "⚠️  Markdown issues found"
+
+    - name: Check for TODO/FIXME comments
+      run: |
+        echo "📌 Scanning for TODO/FIXME comments..."
+        grep -r "TODO\|FIXME" --include="*.py" --include="*.js" --include="*.ts" . || echo "No TODO/FIXME found"
+
+  code-duplication:
+    name: Code Duplication Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run CPD (Copy/Paste Detector)
+      run: |
+        echo "🔍 Checking for code duplication..."
+        # Install PMD which includes CPD
+        wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F7.0.0/pmd-dist-7.0.0-bin.zip
+        unzip -q pmd-dist-7.0.0-bin.zip
+        ./pmd-bin-7.0.0/bin/pmd cpd --minimum-tokens 100 --files . --language python || echo "⚠️  Code duplication detected"
+
+  methodology-compliance:
+    name: Methodology Compliance (⇑⇓↔)
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check α-level metadata in files
+      run: |
+        echo "📊 Checking methodology compliance..."
+
+        # Check for α-level metadata
+        for file in $(find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*"); do
+          if grep -q "Уровень абстракции: α=" "$file"; then
+            echo "✅ $file has α-level"
+          else
+            echo "⚠️  $file missing α-level metadata"
+          fi
+        done
+
+    - name: Check directional status
+      run: |
+        echo "📊 Checking directional status (⇑⇓↔)..."
+
+        for file in $(find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*"); do
+          if grep -q "Статус: ⇑\|Статус: ⇓\|Статус: ↔" "$file"; then
+            echo "✅ $file has directional status"
+          else
+            echo "⚠️  $file missing directional status"
+          fi
+        done
+
+    - name: Verify .methodology.json exists
+      run: |
+        if [ -f ".methodology.json" ]; then
+          echo "✅ .methodology.json found"
+          cat .methodology.json
+        else
+          echo "⚠️  .methodology.json not found"
+        fi
+
+  quality-summary:
+    name: Quality Summary
+    runs-on: ubuntu-latest
+    needs: [code-analysis, code-coverage, documentation-quality, code-duplication, methodology-compliance]
+    if: always()
+
+    steps:
+    - name: Generate quality report
+      run: |
+        echo "📊 Code Quality Summary"
+        echo "======================="
+        echo "Code Analysis: ${{ needs.code-analysis.result }}"
+        echo "Code Coverage: ${{ needs.code-coverage.result }}"
+        echo "Documentation Quality: ${{ needs.documentation-quality.result }}"
+        echo "Code Duplication: ${{ needs.code-duplication.result }}"
+        echo "Methodology Compliance: ${{ needs.methodology-compliance.result }}"
+        echo ""
+        echo "✅ Code quality checks completed"
+
+    - name: Post PR comment (if PR)
+      if: github.event_name == 'pull_request'
+      run: |
+        echo "Would post quality summary to PR #${{ github.event.pull_request.number }}"
+        # Use github-script or gh CLI to post actual comment

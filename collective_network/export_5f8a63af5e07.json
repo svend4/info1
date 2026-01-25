@@ -1,0 +1,29 @@
+{
+  "protocol_version": "7.0",
+  "project_id": "5f8a63af5e07",
+  "timestamp": "2026-01-24T07:18:53.196012",
+  "project_type": "datascience",
+  "project_size": "small",
+  "project_maturity": "early",
+  "metrics": {
+    "cd": 7.5,
+    "vt": 35.0,
+    "cr": 2.1,
+    "db": 38.0,
+    "total_docs": 28,
+    "total_connections": 95
+  },
+  "lessons": [
+    {
+      "id": "lesson_low_cd_ok",
+      "title": "Низкая CD допустима для экспериментов",
+      "principle": "Notebooks часто изолированы - это нормально",
+      "confidence": 0.85
+    }
+  ],
+  "privacy": {
+    "anonymized": true,
+    "opt_in": true,
+    "simulated": true
+  }
+}

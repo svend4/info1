@@ -1,0 +1,342 @@
+{
+  "total_projects": 4,
+  "correlations": [
+    {
+      "metric1": "CD",
+      "metric2": "DB",
+      "correlation": 0.923,
+      "strength": "strong",
+      "direction": "positive"
+    },
+    {
+      "metric1": "VT",
+      "metric2": "DB",
+      "correlation": -0.718,
+      "strength": "strong",
+      "direction": "negative"
+    },
+    {
+      "metric1": "VT",
+      "metric2": "CR",
+      "correlation": -0.59,
+      "strength": "moderate",
+      "direction": "negative"
+    },
+    {
+      "metric1": "CD",
+      "metric2": "VT",
+      "correlation": -0.542,
+      "strength": "moderate",
+      "direction": "negative"
+    },
+    {
+      "metric1": "CD",
+      "metric2": "CR",
+      "correlation": -0.327,
+      "strength": "weak",
+      "direction": "negative"
+    }
+  ],
+  "clusters": {
+    "successful": [
+      {
+        "protocol_version": "7.0",
+        "project_id": "260721fa6ad3",
+        "timestamp": "2026-01-24T07:18:53.195234",
+        "project_type": "library",
+        "project_size": "medium",
+        "project_maturity": "mature",
+        "metrics": {
+          "cd": 12.3,
+          "vt": 65.0,
+          "cr": 0.7,
+          "db": 18.5,
+          "total_docs": 45,
+          "total_connections": 250
+        },
+        "lessons": [
+          {
+            "id": "lesson_high_vt",
+            "title": "Высокая VT критична для библиотек",
+            "principle": "API должен явно прослеживаться до реализации",
+            "confidence": 0.92
+          }
+        ],
+        "privacy": {
+          "anonymized": true,
+          "opt_in": true,
+          "simulated": true
+        }
+      },
+      {
+        "protocol_version": "7.0",
+        "project_id": "568c4bb08ba5",
+        "timestamp": "2026-01-24T07:18:53.195676",
+        "project_type": "webapp",
+        "project_size": "large",
+        "project_maturity": "developing",
+        "metrics": {
+          "cd": 18.9,
+          "vt": 42.0,
+          "cr": 1.8,
+          "db": 25.0,
+          "total_docs": 89,
+          "total_connections": 890
+        },
+        "lessons": [
+          {
+            "id": "lesson_fast_cr",
+            "title": "Высокий CR в молодых проектах нормален",
+            "principle": "Активное развитие = высокая скорость изменений",
+            "confidence": 0.88
+          }
+        ],
+        "privacy": {
+          "anonymized": true,
+          "opt_in": true,
+          "simulated": true
+        }
+      }
+    ],
+    "problematic": [
+      {
+        "protocol_version": "7.0",
+        "project_id": "5f8a63af5e07",
+        "timestamp": "2026-01-24T07:18:53.196012",
+        "project_type": "datascience",
+        "project_size": "small",
+        "project_maturity": "early",
+        "metrics": {
+          "cd": 7.5,
+          "vt": 35.0,
+          "cr": 2.1,
+          "db": 38.0,
+          "total_docs": 28,
+          "total_connections": 95
+        },
+        "lessons": [
+          {
+            "id": "lesson_low_cd_ok",
+            "title": "Низкая CD допустима для экспериментов",
+            "principle": "Notebooks часто изолированы - это нормально",
+            "confidence": 0.85
+          }
+        ],
+        "privacy": {
+          "anonymized": true,
+          "opt_in": true,
+          "simulated": true
+        }
+      },
+      {
+        "protocol_version": "7.0",
+        "project_id": "8a34b6a2966e",
+        "timestamp": "2026-01-24T07:18:53.194011",
+        "project_type": "methodology",
+        "project_size": "large",
+        "project_maturity": "mature",
+        "metrics": {
+          "cd": 51.14,
+          "vt": 28.89,
+          "cr": 1.14,
+          "db": 104.97,
+          "total_docs": 75,
+          "total_connections": 1419,
+          "cycle": 10
+        },
+        "trends": {
+          "cd": {
+            "values": [
+              51.14,
+              51.14,
+              51.14
+            ],
+            "first_avg": 51.14,
+            "second_avg": 51.14,
+            "change": 0.0,
+            "change_pct": 0.0,
+            "direction": "стабильный",
+            "emoji": "→",
+            "current": 51.14
+          },
+          "vt": {
+            "values": [
+              28.89,
+              28.89,
+              28.89
+            ],
+            "first_avg": 28.89,
+            "second_avg": 28.89,
+            "change": 0.0,
+            "change_pct": 0.0,
+            "direction": "стабильный",
+            "emoji": "→",
+            "current": 28.89
+          },
+          "cr": {
+            "values": [
+              1.14,
+              1.14,
+              1.14
+            ],
+            "first_avg": 1.14,
+            "second_avg": 1.14,
+            "change": 0.0,
+            "change_pct": 0.0,
+            "direction": "стабильный",
+            "emoji": "→",
+            "current": 1.14
+          },
+          "db": {
+            "values": [
+              141.42,
+              104.97,
+              104.97
+            ],
+            "first_avg": 141.42,
+            "second_avg": 104.97,
+            "change": -36.45,
+            "change_pct": -25.77,
+            "direction": "падающий",
+            "emoji": "📉",
+            "current": 104.97
+          }
+        },
+        "improvements": [
+          {
+            "metric": "DB",
+            "timestamp": "2026-01-24T06:39:34.182758",
+            "prev_value": 141.42,
+            "curr_value": 104.97,
+            "change": -36.45,
+            "change_pct": -25.77,
+            "improvement": true
+          }
+        ],
+        "lessons": [
+          {
+            "id": "lesson_db_improvement",
+            "title": "Исправление логики определения направлений",
+            "category": "metrics",
+            "severity": "critical",
+            "evidence": {
+              "before": 141.42,
+              "after": 104.97,
+              "change": -36.45
+            },
+            "principle": "Семантический анализ надежнее текстового поиска",
+            "confidence": 0.95
+          }
+        ],
+        "privacy": {
+          "anonymized": true,
+          "opt_in": true,
+          "data_retention_days": 365
+        }
+      }
+    ]
+  },
+  "patterns": [
+    {
+      "name": "successful_metrics_avg",
+      "type": "statistical",
+      "description": "Средние метрики успешных проектов",
+      "data": {
+        "cd": 15.6,
+        "vt": 53.5,
+        "cr": 1.25,
+        "db": 21.75
+      },
+      "sample_size": 2,
+      "confidence": 0.6
+    },
+    {
+      "name": "successful_project_type",
+      "type": "categorical",
+      "description": "Самый успешный тип проектов",
+      "data": {
+        "type": "library",
+        "count": 1,
+        "distribution": {
+          "library": 1,
+          "webapp": 1
+        }
+      },
+      "confidence": 0.7
+    },
+    {
+      "name": "high_confidence_lessons",
+      "type": "knowledge",
+      "description": "Уроки с высокой уверенностью из успешных проектов",
+      "data": [
+        {
+          "id": "lesson_high_vt",
+          "title": "Высокая VT критична для библиотек",
+          "principle": "API должен явно прослеживаться до реализации",
+          "confidence": 0.92
+        },
+        {
+          "id": "lesson_fast_cr",
+          "title": "Высокий CR в молодых проектах нормален",
+          "principle": "Активное развитие = высокая скорость изменений",
+          "confidence": 0.88
+        }
+      ],
+      "confidence": 0.85
+    }
+  ],
+  "predicted_thresholds": {
+    "library": {
+      "cd": {
+        "min": 12.3,
+        "max": 12.3,
+        "optimal": 12.3,
+        "sample_size": 1
+      },
+      "vt": {
+        "min": 65.0,
+        "max": 65.0,
+        "optimal": 65.0,
+        "sample_size": 1
+      },
+      "cr": {
+        "min": 0.7,
+        "max": 0.7,
+        "optimal": 0.7,
+        "sample_size": 1
+      },
+      "db": {
+        "min": 18.5,
+        "max": 18.5,
+        "optimal": 18.5,
+        "sample_size": 1
+      }
+    },
+    "webapp": {
+      "cd": {
+        "min": 18.9,
+        "max": 18.9,
+        "optimal": 18.9,
+        "sample_size": 1
+      },
+      "vt": {
+        "min": 42.0,
+        "max": 42.0,
+        "optimal": 42.0,
+        "sample_size": 1
+      },
+      "cr": {
+        "min": 1.8,
+        "max": 1.8,
+        "optimal": 1.8,
+        "sample_size": 1
+      },
+      "db": {
+        "min": 25.0,
+        "max": 25.0,
+        "optimal": 25.0,
+        "sample_size": 1
+      }
+    }
+  }
+}

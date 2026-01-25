@@ -1,0 +1,58 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Python cache
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+reports/
+
+# Documentation builds
+docs/_build/
+site/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Output and temporary files
+output/
+*.log
+*.tmp
+
+# GitHub Actions
+.github/
+
+# Development files
+*.md
+!README.md
+LICENSE
+CHANGELOG.md
+PROJECT_SUMMARY.md
