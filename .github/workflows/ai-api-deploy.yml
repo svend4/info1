@@ -1,0 +1,154 @@
+name: AI API CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '08-Программная-реализация/web/**'
+      - 'tools/ai_generator/**'
+      - '.github/workflows/ai-api-deploy.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '08-Программная-реализация/web/**'
+      - 'tools/ai_generator/**'
+
+env:
+  DOCKER_IMAGE: ai-generator-api
+  DOCKER_TAG: ${{ github.sha }}
+
+jobs:
+  test:
+    name: Test AI Components
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('08-Программная-реализация/web/requirements-ai.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r 08-Программная-реализация/web/requirements-ai.txt
+        pip install pytest pytest-cov
+
+    - name: Run AI component tests
+      run: |
+        cd tools/tests
+        python test_phase3_integration.py
+
+    - name: Check ML model
+      run: |
+        python -c "from tools.ai_generator.ml_classifier import MLClassifier; c = MLClassifier(); print('ML model OK' if c else 'FAIL')"
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Docker image
+      run: |
+        cd 08-Программная-реализация/web
+        docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} \
+                     -t ${{ env.DOCKER_IMAGE }}:latest \
+                     -f Dockerfile ../..
+
+    - name: Test Docker image
+      run: |
+        docker run -d --name test-api -p 5001:5001 ${{ env.DOCKER_IMAGE }}:latest
+        sleep 10
+        curl -f http://localhost:5001/api/ai/health || exit 1
+        docker stop test-api
+
+    - name: Save Docker image
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker save ${{ env.DOCKER_IMAGE }}:latest | gzip > ai-api-image.tar.gz
+
+    - name: Upload artifact
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image
+        path: ai-api-image.tar.gz
+        retention-days: 7
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: https://staging.ai-generator.example.com
+
+    steps:
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add actual deployment commands here
+        # Example: SSH to staging server and pull/restart containers
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://ai-generator.example.com
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: docker-image
+
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add actual deployment commands here
+        # Example:
+        # - Load Docker image
+        # - Push to registry
+        # - SSH to production server
+        # - Pull new image
+        # - Restart containers with docker-compose
+
+  notify:
+    name: Notify Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+
+    steps:
+    - name: Send notification
+      run: |
+        echo "Deployment completed!"
+        # Add notification logic here (Slack, Email, etc.)
